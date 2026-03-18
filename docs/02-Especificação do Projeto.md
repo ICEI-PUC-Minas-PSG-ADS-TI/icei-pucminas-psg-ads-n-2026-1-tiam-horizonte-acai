@@ -8,7 +8,16 @@ Apresente uma visão geral do que será abordado nesta parte do documento, enume
 
 ## Personas
 
-Pedro Paulo tem 26 anos, é arquiteto recém-formado e autônomo. Pensa em se desenvolver profissionalmente através de um mestrado fora do país, pois adora viajar, é solteiro e sempre quis fazer um intercâmbio. Está buscando uma agência que o ajude a encontrar universidades na Europa que aceitem alunos estrangeiros.
+Jhonatan Goulart Rocha é sócio administrador da Horizonte do Açaí, atuando no comércio varejista de produtos alimentícios. Ele é responsável pela gestão do negócio, incluindo controle de vendas, estoque e decisões estratégicas.
+Atualmente, utiliza o Excel para realizar o controle das informações, mas enfrenta dificuldades com a falta de integração dos dados e organização. Por isso, busca uma solução prática e intuitiva que otimize os processos e facilite a tomada de decisões.
+
+Márcio Maciel é consultor na Horizonte do Açaí e atua atendendo clientes na região de Betim. Seu trabalho envolve acompanhar pedidos, manter o relacionamento com os clientes e apoiar nas vendas da empresa.
+Ele precisa de acesso rápido às informações de produtos, estoque e clientes para realizar um atendimento eficiente. Atualmente, pode enfrentar dificuldades devido à falta de integração dos dados, o que pode impactar na agilidade e na qualidade do atendimento.
+
+Hiago Carneiro Campos tem 23 anos e é o responsável pelo controle de estoque da fábrica. Ele organiza a entrada e saída de produtos e insumos, sendo uma peça fundamental para o funcionamento do negócio. Marcos precisa manter o estoque sempre atualizado e evitar tanto a falta quanto o excesso de produtos. No entanto, ele enfrenta problemas devido à ausência de um sistema automatizado, o que dificulta o controle preciso e a identificação do momento ideal para reposição dos itens.
+
+Poliana Maciel de Souza Goulart é sócia administradora da Horizonte do Açaí e atua na parte administrativa da empresa. Ela é responsável pela organização de processos, controle de informações e apoio na gestão do negócio.
+No seu dia a dia, precisa lidar com dados de vendas, clientes e estoque, buscando manter tudo organizado e atualizado. No entanto, enfrenta dificuldades com a falta de integração das informações, o que pode gerar retrabalho e dificultar a tomada de decisões. Por isso, busca uma solução prática que facilite a gestão e melhore a eficiência das atividades administrativas.
 
 Enumere e detalhe as personas da sua solução. Para tanto, baseie-se tanto nos documentos disponibilizados na disciplina e/ou nos seguintes links:
 
@@ -28,11 +37,14 @@ Com base na análise das personas forma identificadas as seguintes histórias de
 
 |EU COMO... `PERSONA`| QUERO/PRECISO ... `FUNCIONALIDADE` |PARA ... `MOTIVO/VALOR`                 |
 |--------------------|------------------------------------|----------------------------------------|
-|Estoquista          | Cadastrar, editar e remover        |Não esquecer de fazê-las 
-                     |  produtos do estoque               |
-                     |  PARA manter o controle atualizado |
-                     |  dos insumos                       |             
-|Administrador       | Alterar permissões                 | Permitir que possam administrar contas |
+|Estoquista          | Cadastrar, editar e remover produtos do estoque       |Manter o controle atualizado dos insumos 
+|Gestor              | Visualizar o estoque em tempo real                    |Tomar decisões de compra
+|Vendedor            | Registrar vendas rapidamente                          |Agilizar o atendimento 
+|Sistema             | Atualizar automaticamente o estoque após uma venda    |Evitar inconsistências 
+|Gestor              | Visualizar clientes mais ativos                       |Criar estratégias de fidelização 
+|Administrador       | Cadastrar usuários com diferentes permissões          |Controlar o acesso ao sistema 
+|Gestor              | Gerar relatórios de vendas por período                | Analisar o desempenho da empresa |
+|Gestor              | Visualizar ranking de vendedores                      |Acompanhar produtividade
 
 Apresente aqui as histórias de usuário que são relevantes para o projeto de sua solução. As Histórias de Usuário consistem em uma ferramenta poderosa para a compreensão e elicitação dos requisitos funcionais e não funcionais da sua aplicação. Se possível, agrupe as histórias de usuário por contexto, para facilitar consultas recorrentes à essa parte do documento.
 
