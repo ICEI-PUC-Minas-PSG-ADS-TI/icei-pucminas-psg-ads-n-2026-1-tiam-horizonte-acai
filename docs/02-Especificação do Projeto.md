@@ -49,8 +49,15 @@ As tabelas que se seguem apresentam os requisitos funcionais e não funcionais q
 
 |ID    | Descrição do Requisito  | Prioridade | Responsável |
 |------|-----------------------------------------|----| ----|
-|RF-001| Permitir que o usuário cadastre tarefas | ALTA | Aluno X |
-|RF-002| Emitir um relatório de tarefas no mês   | MÉDIA | Aluno Y |
+|RF-001| O sistema deve permitir que o usuário a inclua, remova e altere itens(produtos/insumos) no estoque | ALTA | Aluno X |
+|RF-002| O sistema deve permitir o cadastro e a edição de clientes para registro de dados para histórico de compras e fidelização | ALTA | Aluno Y |
+|RF-003| O sistema deve permitir o cadastro de colaboradores com perfis de acesso distintos(vendedor, estoque, liderança e administrador) | ALTA | Aluno X |
+|RF-004| O sistema deve abater os itens do estoque automaticamente ao finalizar uma venda | MÉDIA | Aluno X |
+|RF-005| O sistema deve permitir que usuários com o perfil de Vendedor ou Liderança realizem o lançamento de vendas | ALTA | Aluno X |
+|RF-006| O sistema deve permitir a geração de relatórios de desempenho de vendas, oferecendo filtros pré-definidos de períodos fechados. Sendo eles: Mensal: Consolidação de dados do mês anterior completo; Trimestral: Consolidação dos últimos três meses fiscais fechados; Anual: Consolidação do ano civil anterior ou dos últimos 12 meses | ALTA | Aluno X |
+|RF-007| O sistema deve exibir um ranking decrescente de vendas(valor monetário) por funcionário baseado no mês atual | BAIXA | Aluno X |
+|RF-008| O sistema deve permitir a geração de relatórios dos clientes que geraram maior receita para a fábrica em um determinado período (Mensal, Trimestral ou Anual) | ALTA | Aluno X |
+|RF-009| O sistema deve calcular o somatório das vendas realizadas no mês corrente e compará-lo com a meta mensal pré-estabelecida pela gerência | BAIXA | Aluno X |
 
 ### Requisitos não Funcionais
 
@@ -58,6 +65,9 @@ As tabelas que se seguem apresentam os requisitos funcionais e não funcionais q
 |-------|-------------------------|----|
 |RNF-001| O sistema deve ser responsivo para rodar em um dispositivos móvel | MÉDIA | 
 |RNF-002| Deve processar requisições do usuário em no máximo 3s |  BAIXA | 
+|RNF-003| O aplicativo deve permitir o registro de vendas mesmo sem conexão com a internet, armazenando os dados localmente e sincronizando-os assim que a conexão for restabelecida |  BAIXA | 
+|RNF-004| O sistema de estar em conformidade com a Lei Geral de Proteção de Dados(LGPD) |  ALTA | 
+|RNF-005| O sistema deve seguir normas de acessibilidade WCAG 2.2 (Web Content Accessibility Guidelines) |  ALTA | 
 
 Com base nas Histórias de Usuário, enumere os requisitos da sua solução. Classifique esses requisitos em dois grupos:
 
