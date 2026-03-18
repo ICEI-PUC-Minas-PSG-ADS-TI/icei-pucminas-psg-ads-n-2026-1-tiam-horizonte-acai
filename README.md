@@ -1,4 +1,4 @@
-# Gesão Horizonte do Açaí
+# Gestão Horizonte do Açaí
 
 `Análise e Desenvolvimento de Sistemas`
 
@@ -6,7 +6,7 @@
 
 `SEMESTRE`
 
-O projeto Horizonte do Açaí propõe o desenvolvimento de uma aplicação móvel para otimizar a gestão de uma fábrica de açaí, permitindo o controle de estoque, cadastro de clientes e registro de vendas.
+O projeto Gestão Horizonte do Açaí propõe o desenvolvimento de uma aplicação móvel para otimizar a gestão de uma fábrica de açaí, permitindo o controle de estoque, cadastro de clientes e registro de vendas.
 A solução também oferecerá relatórios estratégicos para apoiar a tomada de decisões e melhorar a eficiência operacional da empresa.
 
 ## Integrantes
