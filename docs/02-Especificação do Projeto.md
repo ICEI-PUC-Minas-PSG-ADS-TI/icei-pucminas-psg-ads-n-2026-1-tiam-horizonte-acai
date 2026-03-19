@@ -79,11 +79,12 @@ As tabelas que se seguem apresentam os requisitos funcionais e não funcionais q
 
 |ID     | Descrição do Requisito  |Prioridade |
 |-------|-------------------------|----|
-|RNF-001| O sistema deve ser responsivo para rodar em um dispositivos móvel | MÉDIA | 
-|RNF-002| Deve processar requisições do usuário em no máximo 3s |  BAIXA | 
-|RNF-003| O aplicativo deve permitir o registro de vendas mesmo sem conexão com a internet, armazenando os dados localmente e sincronizando-os assim que a conexão for restabelecida |  BAIXA | 
-|RNF-004| O sistema de estar em conformidade com a Lei Geral de Proteção de Dados(LGPD) |  ALTA | 
-|RNF-005| O sistema deve seguir normas de acessibilidade WCAG 2.2 (Web Content Accessibility Guidelines) |  ALTA | 
+|RNF-01| O sistema deve ser responsivo para rodar em um dispositivos móvel | MÉDIA | 
+|RNF-02| Deve processar requisições do usuário em no máximo 3s |  BAIXA | 
+|RNF-03| O aplicativo deve permitir o registro de vendas mesmo sem conexão com a internet, armazenando os dados localmente e sincronizando-os assim que a conexão for restabelecida |  BAIXA | 
+|RNF-04| O sistema de estar em conformidade com a Lei Geral de Proteção de Dados(LGPD) |  ALTA | 
+|RNF-05| O sistema deve seguir normas de acessibilidade WCAG 2.2 (Web Content Accessibility Guidelines) |  ALTA | 
+|RNF-06| O aplicativo deve ser desenvolvido utilizando o framework React Native (Cross-Platform), garantindo uma experiência próxima à nativa e suporte estável nas últimas 5 versões do sistema operacional Android |  ALTA | 
 
 Com base nas Histórias de Usuário, enumere os requisitos da sua solução. Classifique esses requisitos em dois grupos:
 
