@@ -185,6 +185,21 @@ A matriz deve contemplar todos os elementos relevantes que fazem parte do sistem
 
 ![Exemplo de matriz de rastreabilidade](img/02-matriz-rastreabilidade.png)
 
+|ID    | Descrição do Requisito  | Funcionalidade | Tela | Status |
+|------|-----------------------------------------|----| ----| ---- |
+|RF-01| O sistema deve permitir que os colaboradores acessem as funcionalidades do aplicativo mediante a inserção de credenciais válidas (usuário e senha). | Realizar Login | Tela de Login | Pendente |
+|RF-02| O sistema deve permitir que o usuário a inclua, remova e altere itens(produtos/insumos) no estoque | Gerenciar Estoque | Tela de Estoque | Pendente |
+|RF-03| O sistema deve permitir o cadastro e a edição de clientes para registro de dados para histórico de compras e fidelização | Gerenciar Clientes | Tela de Clientes | Pendente |
+|RF-04| O sistema deve permitir o cadastro de colaboradores com perfis de acesso distintos(vendedor, estoque, gestor e administrador) | Gerenciar Acesso dos Colaboradores | Tela de Funcionários | Pendente |
+|RF-05| O sistema deve abater os itens do estoque automaticamente ao finalizar uma venda | Atualizar Estoque | Tela de Vendas | Pendente |
+|RF-06| O sistema deve permitir que usuários com o perfil de Vendedor ou Gestor realizem o lançamento de vendas | Gerenciar Vendas | Tela de Vendas | Pendente |
+|RF-07| O sistema deve permitir a geração de relatórios de desempenho de vendas, oferecendo filtros pré-definidos de períodos fechados. Sendo eles: Mensal: Consolidação de dados do mês anterior completo; Trimestral: Consolidação dos últimos três meses fiscais fechados; Anual: Consolidação do ano civil anterior ou dos últimos 12 meses | Gerar Relatórios | Tela de Relatórios | Pendente |
+|RF-08| O sistema deve exibir um ranking decrescente de vendas(valor monetário) por funcionário baseado no mês atual | Gerar Ranking | Tela de Rankings | Pendente |
+|RF-09| O sistema deve exibir um ranking decrescente dos clientes que geraram maior receita para a fábrica em períodos selecionados (Mensal, Trimestral ou Anual) | Gerar Ranking | Tela de Rankings | Pendente |
+|RF-10| O sistema deve calcular o somatório das vendas realizadas no mês corrente e compará-lo com a meta mensal pré-estabelecida pela gerência | Gerenciar Metas | Tela de Metas | Pendente |
+
+
+
 > **Links Úteis**:
 > - [Artigo Engenharia de Software 13 - Rastreabilidade](https://www.devmedia.com.br/artigo-engenharia-de-software-13-rastreabilidade/12822/)
 > - [Verificação da rastreabilidade de requisitos usando a integração do IBM Rational RequisitePro e do IBM ClearQuest Test Manager](https://developer.ibm.com/br/tutorials/requirementstraceabilityverificationusingrrpandcctm/)
