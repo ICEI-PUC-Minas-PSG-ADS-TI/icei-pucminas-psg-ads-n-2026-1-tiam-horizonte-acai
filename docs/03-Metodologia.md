@@ -9,9 +9,9 @@ A equipe utiliza metodologias ágeis para o desenvolvimento do projeto, tendo es
 
 | Ambiente | Plataforma | Link de Acesso |
 |-------------|-------------|-------------|
-| Repositório de Código | GitHub | link |
-| Documentação do Projeto | GitHub| link |
-| Gerenciamento de Tarefas | GitHub Projects| link |
+| Repositório de Código | GitHub | [GitHub](https://github.com/ICEI-PUC-Minas-PSG-ADS-TI/icei-pucminas-psg-ads-n-2026-1-tiam-horizonte-acai.git) |
+| Documentação do Projeto | GitHub| [GitHub](https://github.com/ICEI-PUC-Minas-PSG-ADS-TI/icei-pucminas-psg-ads-n-2026-1-tiam-horizonte-acai.git) |
+| Gerenciamento de Tarefas | GitHub Projects| [Kanban board](https://github.com/orgs/ICEI-PUC-Minas-PSG-ADS-TI/projects/79/views/1) |
 | Protótipo de Tela (UI/UX) | Figma | link |
 | Comunicação do Grupo | WhatsApp | N/A |
 | IDE de Desenvolvimento | VS Code / Visual Studio | N/A |
@@ -67,6 +67,7 @@ Para a gestão das tarefas, utilizamos o GitHub Projects, configurado com um qua
 - Backlog: Todas as funcionalidades e requisitos levantados (RFs e RNFs).
 - To Do: Tarefas selecionadas para a Sprint atual.
 - Doing: Tarefas que estão sendo codificadas no momento.
+- In review: Revisão das tarefas finalizadas.
 - Done: Funcionalidades testadas e integradas à branch main.
  
 > **Links Úteis**:
