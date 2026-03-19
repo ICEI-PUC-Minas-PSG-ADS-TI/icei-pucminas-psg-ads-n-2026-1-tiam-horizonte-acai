@@ -64,13 +64,13 @@ As tabelas que se seguem apresentam os requisitos funcionais e não funcionais q
 
 |ID    | Descrição do Requisito  | Prioridade | Responsável |
 |------|-----------------------------------------|----| ----|
-|RF-01| O sistema deve permitir que os colaboradores acessem as funcionalidades do aplicativo mediante a inserção de credenciais válidas (usuário e senha). | ALTA | Aluno X |
-|RF-02| O sistema deve permitir que o usuário a inclua, remova e altere itens(produtos/insumos) no estoque | ALTA | Aluno X |
+|RF-01| O sistema deve permitir que os colaboradores acessem as funcionalidades do aplicativo mediante a inserção de credenciais válidas (usuário e senha). | ALTA | Maria Clara |
+|RF-02| O sistema deve permitir que o usuário a inclua, remova e altere itens(produtos/insumos) no estoque | ALTA | Maria Clara |
 |RF-03| O sistema deve permitir o cadastro e a edição de clientes para registro de dados para histórico de compras e fidelização | ALTA | Samuel Vitor |
 |RF-04| O sistema deve permitir o cadastro de colaboradores com perfis de acesso distintos(vendedor, estoque, gestor e administrador) | ALTA | Samuel Vitor |
-|RF-05| O sistema deve abater os itens do estoque automaticamente ao finalizar uma venda | MÉDIA | Aluno X |
-|RF-06| O sistema deve permitir que usuários com o perfil de Vendedor ou Gestor realizem o lançamento de vendas | ALTA | Aluno X |
-|RF-07| O sistema deve permitir a geração de relatórios de desempenho de vendas, oferecendo filtros pré-definidos de períodos fechados. Sendo eles: Mensal: Consolidação de dados do mês anterior completo; Trimestral: Consolidação dos últimos três meses fiscais fechados; Anual: Consolidação do ano civil anterior ou dos últimos 12 meses | ALTA | Aluno X |
+|RF-05| O sistema deve abater os itens do estoque automaticamente ao finalizar uma venda | MÉDIA | Lucas Vinícius |
+|RF-06| O sistema deve permitir que usuários com o perfil de Vendedor ou Gestor realizem o lançamento de vendas | ALTA | Samuel Vitor |
+|RF-07| O sistema deve permitir a geração de relatórios de desempenho de vendas, oferecendo filtros pré-definidos de períodos fechados. Sendo eles: Mensal: Consolidação de dados do mês anterior completo; Trimestral: Consolidação dos últimos três meses fiscais fechados; Anual: Consolidação do ano civil anterior ou dos últimos 12 meses | ALTA | Lucas Vinícius |
 |RF-08| O sistema deve exibir um ranking decrescente de vendas(valor monetário) por funcionário baseado no mês atual | BAIXA | Carlos Santos |
 |RF-09| O sistema deve exibir um ranking decrescente dos clientes que geraram maior receita para a fábrica em períodos selecionados (Mensal, Trimestral ou Anual) | ALTA | Carlos Santos |
 |RF-10| O sistema deve calcular o somatório das vendas realizadas no mês corrente e compará-lo com a meta mensal pré-estabelecida pela gerência | BAIXA | Carlos Santos |
