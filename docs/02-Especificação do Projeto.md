@@ -333,6 +333,8 @@ A equipe utilizará canais digitais para comunicação rápida e eficiente, gara
 
 Possíveis conflitos serão resolvidos por meio de diálogo entre os membros, com mediação do gerente de projeto quando necessário, visando manter um ambiente colaborativo.
 
+![Simple Project Timeline](img_projeto.png)
+
 ![Simple Project Timeline](img/02-project-timeline.png)
 
 ## Gestão de Orçamento
