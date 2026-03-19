@@ -333,7 +333,8 @@ A equipe utilizará canais digitais para comunicação rápida e eficiente, gara
 
 Possíveis conflitos serão resolvidos por meio de diálogo entre os membros, com mediação do gerente de projeto quando necessário, visando manter um ambiente colaborativo.
 
-![Simple Project Timeline](img_projeto.png)
+<img width="880" height="666" alt="Projeto" src="https://github.com/ICEI-PUC-Minas-PSG-ADS-TI/icei-pucminas-psg-ads-n-2026-1-tiam-horizonte-acai/blob/main/docs/img/img_projeto.png" />
+
 
 ![Simple Project Timeline](img/02-project-timeline.png)
 
