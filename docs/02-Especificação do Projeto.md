@@ -179,25 +179,28 @@ Enumere as restrições à sua solução. Lembre-se de que as restrições geral
 
 # Matriz de Rastreabilidade
 
-A matriz de rastreabilidade é uma ferramenta usada para facilitar a visualização dos relacionamento entre requisitos e outros artefatos ou objetos, permitindo a rastreabilidade entre os requisitos e os objetivos de negócio. 
-
-A matriz deve contemplar todos os elementos relevantes que fazem parte do sistema, conforme a figura meramente ilustrativa apresentada a seguir.
-
-![Exemplo de matriz de rastreabilidade](img/02-matriz-rastreabilidade.png)
-
 |ID    | Descrição do Requisito  | Funcionalidade | Tela | Status |
 |------|-----------------------------------------|----| ----| ---- |
 |RF-01| O sistema deve permitir que os colaboradores acessem as funcionalidades do aplicativo mediante a inserção de credenciais válidas (usuário e senha). | Realizar Login | Tela de Login | Pendente |
 |RF-02| O sistema deve permitir que o usuário a inclua, remova e altere itens(produtos/insumos) no estoque | Gerenciar Estoque | Tela de Estoque | Pendente |
 |RF-03| O sistema deve permitir o cadastro e a edição de clientes para registro de dados para histórico de compras e fidelização | Gerenciar Clientes | Tela de Clientes | Pendente |
-|RF-04| O sistema deve permitir o cadastro de colaboradores com perfis de acesso distintos(vendedor, estoque, gestor e administrador) | Gerenciar Acesso dos Colaboradores | Tela de Funcionários | Pendente |
+|RF-04| O sistema deve permitir o cadastro de colaboradores com perfis de acesso distintos(vendedor, estoque, gestor e administrador) | Gerenciar Colaboradores e Permissões | Tela de Funcionários | Pendente |
 |RF-05| O sistema deve abater os itens do estoque automaticamente ao finalizar uma venda | Atualizar Estoque | Tela de Vendas | Pendente |
 |RF-06| O sistema deve permitir que usuários com o perfil de Vendedor ou Gestor realizem o lançamento de vendas | Gerenciar Vendas | Tela de Vendas | Pendente |
 |RF-07| O sistema deve permitir a geração de relatórios de desempenho de vendas, oferecendo filtros pré-definidos de períodos fechados. Sendo eles: Mensal: Consolidação de dados do mês anterior completo; Trimestral: Consolidação dos últimos três meses fiscais fechados; Anual: Consolidação do ano civil anterior ou dos últimos 12 meses | Gerar Relatórios | Tela de Relatórios | Pendente |
-|RF-08| O sistema deve exibir um ranking decrescente de vendas(valor monetário) por funcionário baseado no mês atual | Gerar Ranking | Tela de Rankings | Pendente |
-|RF-09| O sistema deve exibir um ranking decrescente dos clientes que geraram maior receita para a fábrica em períodos selecionados (Mensal, Trimestral ou Anual) | Gerar Ranking | Tela de Rankings | Pendente |
+|RF-08| O sistema deve exibir um ranking decrescente de vendas(valor monetário) por funcionário baseado no mês atual | Gerar Ranking de Vendas por Funcionário | Tela de Rankings | Pendente |
+|RF-09| O sistema deve exibir um ranking decrescente dos clientes que geraram maior receita para a fábrica em períodos selecionados (Mensal, Trimestral ou Anual) | Gerar Ranking de Clientes por Receita | Tela de Rankings | Pendente |
 |RF-10| O sistema deve calcular o somatório das vendas realizadas no mês corrente e compará-lo com a meta mensal pré-estabelecida pela gerência | Gerenciar Metas | Tela de Metas | Pendente |
 
+
+|ID    | Descrição do Requisito  | Funcionalidade | Tela | Status |
+|------|-----------------------------------------|----| ----| ---- |
+|RNF-001| O sistema deve ser responsivo para rodar em um dispositivos móvel | Adaptar interface para diferentes tamanhos de tela | Todas as Telas | Pendente |
+|RNF-002| Deve processar requisições do usuário em no máximo 3s | Otimizar desempenho das requisições | Todas as Telas |
+Pendente|
+|RNF-003| O aplicativo deve permitir o registro de vendas mesmo sem conexão com a internet, armazenando os dados localmente e sincronizando-os assim que a conexão for restabelecida |  Implementar modo offline e sincronização de dados | Tela de Vendas | Pendente |
+|RNF-004| O sistema de estar em conformidade com a Lei Geral de Proteção de Dados(LGPD) | Garantir segurança e privacidade dos dados dos usuários | Todas as telas | Pendente |
+|RNF-005| O sistema deve seguir normas de acessibilidade WCAG 2.2 (Web Content Accessibility Guidelines) |  Implementar acessibilidade na interface (cores, contraste, navegação) | Todas as telas | Pendente |
 
 
 > **Links Úteis**:
