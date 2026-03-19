@@ -212,7 +212,73 @@ Pendente|
 
 # Gerenciamento de Projeto
 
-De acordo com o PMBoK v6 as dez áreas que constituem os pilares para gerenciar projetos, e que caracterizam a multidisciplinaridade envolvida, são: Integração, Escopo, Cronograma (Tempo), Custos, Qualidade, Recursos, Comunicações, Riscos, Aquisições, Partes Interessadas. Para desenvolver projetos um profissional deve se preocupar em gerenciar todas essas dez áreas. Elas se complementam e se relacionam, de tal forma que não se deve apenas examinar uma área de forma estanque. É preciso considerar, por exemplo, que as áreas de Escopo, Cronograma e Custos estão muito relacionadas. Assim, se eu amplio o escopo de um projeto eu posso afetar seu cronograma e seus custos.
+O gerenciamento do projeto será baseado nas boas práticas do Project Management Institute, conforme descritas no PMBOK, considerando as principais áreas de conhecimento.
+O projeto será conduzido de forma incremental, utilizando conceitos de metodologias ágeis, permitindo entregas contínuas e adaptação às necessidades identificadas ao longo do desenvolvimento.
+
+ **Integração:**
+
+A integração do projeto será realizada por meio de reuniões periódicas da equipe, garantindo alinhamento entre os membros e acompanhamento do progresso das atividades. Ferramentas como quadros Kanban serão utilizadas para organização das tarefas.
+
+**Escopo:**
+
+O escopo do projeto contempla o desenvolvimento de um aplicativo móvel para gestão de uma fábrica de açaí, incluindo funcionalidades como:
+ - Controle de estoque
+ - Registro de vendas
+ - Gestão de clientes
+ - Relatórios e rankings
+   
+Qualquer alteração no escopo deverá ser discutida e validada pela equipe.
+
+**Cronograma:**
+
+O projeto será dividido em Sprints, com entregas incrementais ao longo do semestre. Cada Sprint terá duração definida (ex: 1 ou 2 semanas), com metas específicas, como:
+
+ - Sprint 1: Levantamento de requisitos e prototipação
+ - Sprint 2: Desenvolvimento do módulo de login e usuários
+ - Sprint 3: Implementação do controle de estoque
+ - Sprint 4: Registro de vendas
+ - Sprint 5: Relatórios e rankings
+
+**Custos:**
+
+O orçamento estimado do projeto é de R$ 162.900,00, distribuído entre recursos humanos, infraestrutura, software e serviços. O controle de custos será feito com base no planejamento inicial, evitando extrapolação do orçamento.
+
+**Qualidade:**
+
+Serão adotadas boas práticas de desenvolvimento, testes funcionais e validação com base nos requisitos definidos. O sistema deverá atender aos requisitos não funcionais, como desempenho, acessibilidade e conformidade com a LGPD.
+
+**Recursos:**
+
+A equipe será composta por desenvolvedores, analistas e responsáveis pelos testes. Cada membro terá responsabilidades bem definidas para garantir produtividade e organização.
+
+**Comunicação:**
+
+A comunicação será realizada por meio de:
+
+ - Reuniões semanais
+ - Ferramentas digitais (ex: WhatsApp, Discord ou Teams)
+ - Atualizações no quadro Kanban
+
+**Riscos:**
+
+Alguns riscos identificados incluem:
+
+ - Atraso na entrega das funcionalidades
+ - Dificuldade técnica com o desenvolvimento mobile
+ - Limitação devido à restrição de não utilizar backend
+ - Para mitigar esses riscos, serão realizadas revisões frequentes e divisão equilibrada das tarefas.
+
+**Aquisições:**
+
+Não há previsão de aquisição de softwares pagos, sendo priorizado o uso de ferramentas gratuitas e de código aberto.
+
+**Partes Interessadas:**
+
+As principais partes interessadas incluem:
+
+ - Equipe de desenvolvimento
+ - Professores avaliadores
+ - Usuários finais (gestores, vendedores e estoquistas da fábrica)
 
 <!--
 ## Gerenciamento de Tempo
@@ -228,7 +294,44 @@ O gráfico de Gantt ou diagrama de Gantt também é uma ferramenta visual utiliz
 
 ## Gerenciamento de Equipe
 
-O gerenciamento adequado de tarefas contribuirá para que o projeto alcance altos níveis de produtividade. Por isso, é fundamental que ocorra a gestão de tarefas e de pessoas, de modo que os times envolvidos no projeto possam ser facilmente gerenciados. 
+O gerenciamento da equipe será realizado com foco na organização, colaboração e produtividade dos membros envolvidos no projeto.
+
+**Estrutura da Equipe:**
+
+A equipe será dividida de acordo com as responsabilidades, conforme os requisitos do projeto:
+
+ - Gerente de Projeto: responsável pelo planejamento, acompanhamento e organização geral
+ - Desenvolvedores: responsáveis pela implementação das funcionalidades
+ - Analistas: responsáveis pela modelagem, requisitos e documentação
+ - Testadores: responsáveis por validar o funcionamento do sistema
+
+**Distribuição de Tarefas:**
+
+As tarefas serão distribuídas com base nas competências de cada integrante, conforme definido na tabela de requisitos. Cada membro será responsável por funcionalidades específicas, garantindo maior organização e especialização.
+
+**Metodologia de Trabalho**
+
+Será utilizada uma abordagem baseada em metodologias ágeis, com uso de:
+
+ - Quadro Kanban para controle de tarefas
+ - Sprints para organização das entregas
+ - Revisões periódicas
+
+**Acompanhamento de Atividades:**
+
+O progresso da equipe será monitorado por meio de:
+
+ - Atualização constante das tarefas
+ - Reuniões semanais de alinhamento
+ - Avaliação de entregas por Sprint
+
+**Comunicação Interna:**
+
+A equipe utilizará canais digitais para comunicação rápida e eficiente, garantindo alinhamento contínuo e resolução ágil de problemas.
+
+**Resolução de Conflitos:**
+
+Possíveis conflitos serão resolvidos por meio de diálogo entre os membros, com mediação do gerente de projeto quando necessário, visando manter um ambiente colaborativo.
 
 ![Simple Project Timeline](img/02-project-timeline.png)
 
