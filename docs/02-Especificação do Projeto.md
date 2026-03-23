@@ -67,7 +67,7 @@ As tabelas que se seguem apresentam os requisitos funcionais e não funcionais q
 |RF-01| O sistema deve permitir que os colaboradores acessem as funcionalidades do aplicativo mediante a inserção de credenciais válidas (usuário e senha). | ALTA | Maria Clara |
 |RF-02| O sistema deve permitir que o usuário a inclua, remova e altere itens(produtos/insumos) no estoque | ALTA | Maria Clara |
 |RF-03| O sistema deve permitir o cadastro e a edição de clientes para registro de dados para histórico de compras e fidelização | ALTA | Samuel Vitor |
-|RF-04| O sistema deve permitir o cadastro de colaboradores com perfis de acesso distintos(vendedor, estoque, gestor e administrador) | ALTA | Samuel Vitor |
+|RF-04| O sistema deve permitir o cadastro de colaboradores com perfis de acesso distintos(vendedor, estoquista, gestor e administrador) | ALTA | Samuel Vitor |
 |RF-05| O sistema deve abater os itens do estoque automaticamente ao finalizar uma venda | MÉDIA | Lucas Vinícius |
 |RF-06| O sistema deve permitir que usuários com o perfil de Vendedor ou Gestor realizem o lançamento de vendas | ALTA | Samuel Vitor |
 |RF-07| O sistema deve permitir a geração de relatórios de desempenho de vendas, oferecendo filtros pré-definidos de períodos fechados. Sendo eles: Mensal: Consolidação de dados do mês anterior completo; Trimestral: Consolidação dos últimos três meses fiscais fechados; Anual: Consolidação do ano civil anterior ou dos últimos 12 meses | ALTA | Lucas Vinícius |
@@ -118,55 +118,23 @@ Enumere as restrições à sua solução. Lembre-se de que as restrições geral
 
 ## Diagrama de Casos de Uso
 
-
-**Gerenciar Funcionários**
-
-<img width="880" height="666" alt="Gerenciar Funcionarios" src="https://github.com/user-attachments/assets/557680c3-0a81-4862-a498-ed72cf079713" />
-
-
-**Gerenciar Estoque**
-
-<img width="880" height="666" alt="Gerenciar Estoque" src="https://github.com/user-attachments/assets/6b6bbc53-1751-4a7f-bed1-f8416f171168" />
-
-
-**Gerenciar Clientes**
-
-<img width="880" height="666" alt="Gerenciar Clientes" src="https://github.com/user-attachments/assets/604c38af-305e-4b96-a02a-5cfccfccd085" />
-
-
-**Registrar Venda**
-
-<img width="880" height="666" alt="Registar Venda" src="https://github.com/user-attachments/assets/e01d561b-523b-4989-baaa-cde5dd62f8e9" />
-
-
-**Gerar Relatório de Vendas**
-
-<img width="880" height="666" alt="Consultar Relatorio de Vendas" src="https://github.com/user-attachments/assets/36f677c4-d8de-4bb8-9906-617bffc0836c" />
-
-
-**Consultar Ranking de Vendedores**
-
-<img width="880" height="670" alt="Consultar Ranking Vendedores" src="https://github.com/user-attachments/assets/79af490e-41c5-424b-8184-72ef88bfd701" />
-
-
-**Consultar Ranking de Clientes**
-
-<img width="880" height="666" alt="Consultar Ranking Clientes" src="https://github.com/user-attachments/assets/d0b6cf2c-c817-4457-bbb3-2ecad2430e1a" />
+<img width="1029" height="808" alt="Diagrama Geral" src="https://github.com/user-attachments/assets/a0d2e868-da6e-41f9-ba87-479a42e32ce7" />
 
 | Ator | Descrição                                             |
 |--|-------------------------------------------------------|
 | Funcionário | Ator generalista que representa qualquer colaborador autenticado no sistema |
 | Vendedor | Colaborador responsável pelo atendimento direto e registro de vendas |
-| Estoque | Colaborador responsável pela manutenção física e digital dos insumos e produtos |
+| Estoquista | Colaborador responsável pela manutenção física e digital dos insumos e produtos |
 | Gestor | Usuário com permissões estratégicas para visualização de performance e metas |
 | Administrador | Usuário com permissões totais, incluindo a gestão de contas de outros funcionários |
 
 | Caso de Uso | Descrição        | Ator(es) |
 |--|------------------------------|-------------------------|
-| Gerenciar Funcionários | Funcionários	Criação e manutenção de perfis de acesso dos colaboradores da fábrica | Administrador |
-| Gerenciar Estoque | Permite incluir, alterar e excluir itens (insumos/produtos) e ajustar quantidades | Estoquista, Gestor |
-| Gerenciar Cliente | Cadastro e edição de informações de clientes para histórico e fidelização | Vendedor, Gestor |
-| Registrar Venda | Realiza o lançamento de vendas e dispara a baixa automática de itens no estoque | Vendedor, Gestor |
+| Efetuar Login | Autenticação do usuário no sistema para liberação das funcionalidades de acordo com o perfil | Funcionário |
+| Manter Funcionários |	Criação e manutenção de perfis de acesso dos colaboradores da fábrica | Administrador |
+| Manter Estoque | Permite incluir, alterar e excluir itens (insumos/produtos) e ajustar quantidades | Estoquista, Gestor |
+| Manter Cliente | Cadastro e edição de informações de clientes para histórico e fidelização | Vendedor, Gestor |
+| Registrar Venda | Permite registrar uma transação de venda, vinculando produtos e clientes, e atualizando o estoque automaticamente | Vendedor, Gestor |
 | Gerar Relatório de Vendas | Gera consolidados financeiros mensais, trimestrais ou anuais | Gestor |
 | Consultar Ranking Vendedores | Exibe a performance dos vendedores por volume de vendas no período | Vendedor, Gestor |
 | Consultar Ranking Clientes | Lista os clientes que geraram maior faturamento para a fábrica | Gestor |
