@@ -15,7 +15,7 @@ Definição de como o software é estruturado em termos dos componentes que faze
 
 ## Modelo ER
 
-<img width="3840" height="3238" alt="modelo_er_chen_2" src="https://github.com/user-attachments/assets/8eef0d95-bf26-441b-b75f-f8a6d61f4420" />
+<img width="5258" height="3365" alt="esquema_relacional" src="https://github.com/user-attachments/assets/f2fcdd18-5e0f-401e-a10f-1e75afc7414a" />
 
 > - [Como fazer um diagrama entidade relacionamento | Lucidchart](https://www.lucidchart.com/pages/pt/como-fazer-um-diagrama-entidade-relacionamento)
 
