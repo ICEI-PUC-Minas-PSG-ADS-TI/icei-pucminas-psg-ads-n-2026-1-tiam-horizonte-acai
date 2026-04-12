@@ -31,9 +31,13 @@ Entregar um arquivo banco.sql contendo os scripts de criação das tabelas do ba
 
 ## Tecnologias Utilizadas
 
-Descreva aqui qual(is) tecnologias você vai usar para resolver o seu problema, ou seja, implementar a sua solução. Liste todas as tecnologias envolvidas, linguagens a serem utilizadas, serviços web, frameworks, bibliotecas, IDEs de desenvolvimento, e ferramentas.
+<img width="679" height="416" alt="tecnologias" src="https://github.com/user-attachments/assets/1e16d9a0-aae9-4059-bcd1-f44b1adaa3ba" />
 
-Apresente também uma figura explicando como as tecnologias estão relacionadas ou como uma interação do usuário com o sistema vai ser conduzida, por onde ela passa até retornar uma resposta ao usuário.
+O aplicativo móvel será desenvolvido com React Native utilizando o framework Expo, que permite a criação de aplicações cross-platform em JavaScript com suporte estável nas versões recentes do Android. O Expo também facilita a distribuição do aplicativo durante o desenvolvimento e apresentação, dispensando a publicação em lojas de aplicativos por meio do Expo Go.
+
+Para o backend e persistência de dados, será utilizado o Supabase, plataforma que oferece banco de dados PostgreSQL gerenciado, API REST gerada automaticamente, autenticação de usuários e controle de acesso por meio de políticas de Row Level Security (RLS). O aplicativo se comunicará diretamente com o Supabase por meio do SDK oficial @supabase/supabase-js, sem necessidade de um servidor intermediário.
+
+A prototipação das telas será feita no Figma, permitindo validar o fluxo e a interface antes da implementação. O código será desenvolvido no Visual Studio Code e o versionamento será gerenciado com Git, com repositório hospedado no GitHub.
 
 ## Hospedagem
 
