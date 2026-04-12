@@ -50,12 +50,19 @@ O Supabase concentrará três responsabilidades principais: o armazenamento dos 
 
 ## Qualidade de Software
 
-Conceituar qualidade de fato é uma tarefa complexa, mas ela pode ser vista como um método gerencial que através de procedimentos disseminados por toda a organização, busca garantir um produto final que satisfaça às expectativas dos stakeholders.
+Com base na norma ISO/IEC 25010, a equipe selecionou as subcaracterísticas mais relevantes para o contexto do projeto, considerando o perfil dos usuários, os requisitos levantados e as restrições do ambiente de uso.
 
-No contexto de desenvolvimento de software, qualidade pode ser entendida como um conjunto de características a serem satisfeitas, de modo que o produto de software atenda às necessidades de seus usuários. Entretanto, tal nível de satisfação nem sempre é alcançado de forma espontânea, devendo ser continuamente construído. Assim, a qualidade do produto depende fortemente do seu respectivo processo de desenvolvimento.
+- Adequação funcional: Foi escolhida por ser a base de qualquer avaliação, o sistema precisa realizar corretamente o que foi especificado nos requisitos, como o registro de vendas, o controle de estoque e a geração de relatórios. A métrica utilizada será a proporção de requisitos funcionais implementados e validados em relação ao total especificado.
 
-A norma internacional ISO/IEC 25010, que é uma atualização da ISO/IEC 9126, define oito características e 30 subcaracterísticas de qualidade para produtos de software.
-Com base nessas características e nas respectivas sub-características, identifique as sub-características que sua equipe utilizará como base para nortear o desenvolvimento do projeto de software considerando-se alguns aspectos simples de qualidade. Justifique as subcaracterísticas escolhidas pelo time e elenque as métricas que permitirão a equipe avaliar os objetos de interesse.
+- Usabilidade: É relevante pois os usuários são funcionários de uma fábrica que podem ter pouca familiaridade com tecnologia. O sistema deve ser compreendido e operado sem necessidade de treinamento extenso. A métrica será o tempo médio necessário para que um novo usuário conclua tarefas básicas, como registrar uma venda, sem auxílio externo.
+
+- Confiabilidade: Sob a perspectiva de disponibilidade, é diretamente exigida pelos requisitos do projeto, o aplicativo deve permitir o registro de vendas mesmo sem conexão com a internet. A métrica será a taxa de sucesso na sincronização de registros offline após o restabelecimento da conexão.
+
+- Desempenho: Foi incluído pois o projeto estabelece como requisito não funcional que as requisições devem ser processadas em no máximo três segundos. A métrica será o tempo de resposta médio das operações principais do sistema, medido em condições normais de uso.
+
+- Segurança: É um critério obrigatório dado que o sistema lida com dados de clientes e funcionários, estando sujeito à Lei Geral de Proteção de Dados (LGPD). A subcaracterística de controle de acesso será avaliada pela correta segregação de funcionalidades entre os perfis — Administrador, Gestor, Vendedor e Estoquista —, verificando se nenhum perfil consegue acessar recursos além dos permitidos.
+
+- Portabilidade: É pertinente pela natureza mobile do projeto e pelo requisito de compatibilidade com as últimas cinco versões do sistema operacional Android. A métrica será a execução bem-sucedida das funcionalidades principais nas versões-alvo, sem falhas ou degradação de interface.
 
 > **Links Úteis**:
 >
