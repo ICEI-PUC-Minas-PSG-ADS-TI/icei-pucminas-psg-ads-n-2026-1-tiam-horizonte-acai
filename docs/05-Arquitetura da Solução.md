@@ -37,7 +37,9 @@ Apresente também uma figura explicando como as tecnologias estão relacionadas 
 
 ## Hospedagem
 
-Explique como a hospedagem e o lançamento da plataforma foi feita.
+A hospedagem da plataforma será realizada integralmente por meio do Supabase, um serviço de backend como serviço (BaaS) baseado em PostgreSQL. A escolha se justifica pela disponibilidade de um plano gratuito com recursos suficientes para o escopo do projeto, pela facilidade de integração com React Native e pela eliminação da necessidade de um servidor backend dedicado.
+
+O Supabase concentrará três responsabilidades principais: o armazenamento dos dados em um banco de dados PostgreSQL gerenciado, a exposição automática desses dados via API REST gerada pelo serviço, e o controle de autenticação dos usuários com suporte a login por usuário e senha.
 
 > **Links Úteis**:
 >
