@@ -23,6 +23,8 @@ Esse padrão garante uma navegação intuitiva e reduz a curva de aprendizado do
 
 Exemplo:
 Protótipo de tela de Login
+
+
 ![Processo de login](img/wireframe-login.jpeg)
 
 ## Responsividade
