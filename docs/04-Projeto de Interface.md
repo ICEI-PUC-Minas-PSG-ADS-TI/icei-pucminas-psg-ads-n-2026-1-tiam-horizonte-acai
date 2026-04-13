@@ -9,9 +9,11 @@ As telas foram organizadas de forma objetiva, com menus claros e ações bem def
 
 ## Diagrama de Fluxo
 
-O diagrama apresenta o estudo do fluxo de interação do usuário com o sistema interativo e  muitas vezes sem a necessidade do desenho do design das telas da interface. Isso permite que o design das interações seja bem planejado e gere impacto na qualidade no design do wireframe interativo que será desenvolvido logo em seguida.
+O diagrama de fluxo foi elaborado com o objetivo de representar a interação do usuário com o sistema, evidenciando os caminhos percorridos durante a execução das principais funcionalidades da aplicação.
 
-O diagrama de fluxo pode ser desenvolvido com “boxes” que possuem internamente a indicação dos principais elementos de interface - tais como menus e acessos - e funcionalidades, tais como editar, pesquisar, filtrar, configurar - e a conexão entre esses boxes a partir do processo de interação. Você pode ver mais explicações e exemplos https://www.lucidchart.com/blog/how-to-make-a-user-flow-diagram.
+A construção do fluxo permitiu compreender como os usuários (gestores e funcionários) navegam entre as telas e executam tarefas, sem a necessidade inicial de detalhamento visual das interfaces.
+
+Dessa forma, o diagrama contribuiu para o planejamento da experiência do usuário, garantindo uma navegação simples, intuitiva e eficiente, alinhada às necessidades identificadas na fase de levantamento de requisitos.
 
 ## Modelagem do processo de login
 ![Processo de login](img/processo-de-login-horizonte-do-açai.png)
