@@ -133,22 +133,22 @@ const atingiuMeta = total >= metaMensal;
 
 A implementação está alinhada com a arquitetura definida:
 
-Frontend: React Native (Expo)
-Backend: Supabase
-Banco de dados: PostgreSQL
-Comunicação: API REST automática
+- Frontend: React Native (Expo)
+- Backend: Supabase
+- Banco de dados: PostgreSQL
+- Comunicação: API REST automática
 
 ## Verificação da Implementação
 
 A validação das funcionalidades foi realizada por meio de:
 
-Testes manuais no aplicativo
-Verificação direta no painel do Supabase
-Execução dos fluxos principais:
-Login
-Cadastro
-Venda
-Relatórios
+- Testes manuais no aplicativo
+- Verificação direta no painel do Supabase
+- Execução dos fluxos principais:
+- Login
+- Cadastro
+- Venda
+- Relatórios
 
 > **Links Úteis**:
 >
