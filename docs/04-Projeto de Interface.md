@@ -1,11 +1,11 @@
 
 # Projeto de Interface
 
-<span style="color:red">Pré-requisitos: <a href="2-Especificação do Projeto.md"> Documentação de Especificação</a></span>
+A interface da aplicação foi projetada com foco na simplicidade, usabilidade e eficiência, considerando o perfil dos usuários (gestores e funcionários com conhecimento básico em tecnologia).
 
-Visão geral da interação do usuário pelas telas do sistema e protótipo interativo das telas com as funcionalidades que fazem parte do sistema (wireframes).
+O sistema foi desenvolvido para dispositivos móveis, priorizando uma navegação intuitiva, com acesso rápido às principais funcionalidades, reduzindo o tempo necessário para execução das tarefas do dia a dia.
 
- Apresente as principais interfaces da plataforma. Discuta como ela foi elaborada de forma a atender os requisitos funcionais, não funcionais e histórias de usuário abordados nas <a href="2-Especificação do Projeto.md"> Documentação de Especificação</a>.
+As telas foram organizadas de forma objetiva, com menus claros e ações bem definidas, garantindo uma experiência de uso fluida e eficiente.
 
 ## Diagrama de Fluxo
 
