@@ -8,7 +8,9 @@ A implementação do sistema foi realizada com base nos requisitos funcionais de
 
 ## Requisitos Implementados
 RF-01 – Autenticação de Usuários
+
 Descrição: Login com usuário e senha
+
 Responsável: Maria Clara
 
 Código:
@@ -23,7 +25,9 @@ Código:
 };
 
 RF-02 – Gerenciamento de Estoque
+
 Descrição: Adicionar, editar e remover produtos
+
 Responsável: Maria Clara
 
 Código:
@@ -35,6 +39,7 @@ await supabase.from('produtos').update({ quantidade }).eq('id', id);
 await supabase.from('produtos').delete().eq('id', id);
 
 RF-03 – Cadastro de Clientes
+
 Responsável: Samuel Vitor
 
 Código:
@@ -42,17 +47,23 @@ Código:
 await supabase.from('clientes').insert([{nome, cnpj, endereco, telefone}]);
 
 RF-04 – Cadastro de Colaboradores
+
 Descrição: Controle de perfis (admin, gestor, vendedor, estoquista)
+
 Responsável: Samuel Vitor
+
 Implementação:
+
 Uso de autenticação do Supabase
 Definição de roles no banco
 
 Como testar:
+
 Criar usuários com perfis diferentes
 Validar permissões de acesso
 
 RF-05 – Baixa Automática de Estoque
+
 Responsável: Lucas Vinícius
 
 Código:
@@ -69,6 +80,7 @@ const registrarVenda = async (venda) => {
 };
 
 RF-06 – Registro de Vendas
+
 Responsável: Samuel Vitor
 
 Código:
@@ -76,6 +88,7 @@ Código:
 await supabase.from('vendas').insert([{cliente_id, produto_id, quantidade, data: new Date()}]);
 
 RF-07 – Relatórios de Vendas
+
 Responsável: Lucas Vinícius
 
 Código:
@@ -89,6 +102,7 @@ const relatorioMensal = async () => {
 };
 
 RF-08 – Ranking de Vendedores
+
 Responsável: Carlos Santos
 
 Código:
@@ -100,10 +114,13 @@ await supabase
   .order('sum', { ascending: false });
 
 RF-09 – Ranking de Clientes
+
 Responsável: Carlos Santos
+
 Implementação: Consulta agregada no banco
 
 RF-10 – Comparação com Meta
+
 Responsável: Carlos Santos
 
 Código: 
