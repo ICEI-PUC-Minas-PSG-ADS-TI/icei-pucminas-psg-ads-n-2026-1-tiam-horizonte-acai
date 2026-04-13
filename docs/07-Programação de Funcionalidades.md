@@ -10,6 +10,7 @@ A implementação do sistema foi realizada com base nos requisitos funcionais de
 RF-01 – Autenticação de Usuários
 Descrição: Login com usuário e senha
 Responsável: Maria Clara
+
 Código:
 
   const login = async (email, senha) => {
@@ -24,6 +25,7 @@ Código:
 RF-02 – Gerenciamento de Estoque
 Descrição: Adicionar, editar e remover produtos
 Responsável: Maria Clara
+
 Código:
 
 await supabase.from('produtos').insert([{nome, quantidade, preco]});
@@ -34,6 +36,7 @@ await supabase.from('produtos').delete().eq('id', id);
 
 RF-03 – Cadastro de Clientes
 Responsável: Samuel Vitor
+
 Código:
 
 await supabase.from('clientes').insert([{nome, cnpj, endereco, telefone}]);
@@ -51,6 +54,7 @@ Validar permissões de acesso
 
 RF-05 – Baixa Automática de Estoque
 Responsável: Lucas Vinícius
+
 Código:
 
 const registrarVenda = async (venda) => {
@@ -66,12 +70,14 @@ const registrarVenda = async (venda) => {
 
 RF-06 – Registro de Vendas
 Responsável: Samuel Vitor
+
 Código:
 
 await supabase.from('vendas').insert([{cliente_id, produto_id, quantidade, data: new Date()}]);
 
 RF-07 – Relatórios de Vendas
 Responsável: Lucas Vinícius
+
 Código:
 
 const relatorioMensal = async () => {
@@ -84,6 +90,7 @@ const relatorioMensal = async () => {
 
 RF-08 – Ranking de Vendedores
 Responsável: Carlos Santos
+
 Código:
 
 await supabase
@@ -98,6 +105,7 @@ Implementação: Consulta agregada no banco
 
 RF-10 – Comparação com Meta
 Responsável: Carlos Santos
+
 Código: 
 
 const total = vendas.reduce((acc, v) => acc + v.valor, 0);
