@@ -127,8 +127,6 @@ export default function Home() {
       .sort((a, b) => b.quantidade - a.quantidade)
   }
 
-
-
   async function buscarProdutosMaisVendidos(vendas: any[]) {
     const idsVendas = vendas.map(v => v.id)
 
@@ -162,14 +160,12 @@ export default function Home() {
       }}
     >
 
-      {/* TOPO */}
       <View
         style={{
           marginBottom: 40,
         }}
       >
 
-        {/* LINHA SUPERIOR */}
         <View
           style={{
             flexDirection: 'row',
@@ -179,13 +175,11 @@ export default function Home() {
           }}
         >
 
-          {/* BOTÃO HOME */}
           <Pressable
             onPress={() => {
               console.log('Voltar para menu')
             }}
             style={{
-              //backgroundColor: '#5EB85E',
               width: 52,
               height: 52,
               borderRadius: 14,
@@ -201,7 +195,6 @@ export default function Home() {
             />
           </Pressable>
 
-          {/* LOGO */}
           <Image
             source={require('../../assets/images/logo.png')}
             style={{
@@ -211,7 +204,6 @@ export default function Home() {
             }}
           />
 
-          {/* ESPAÇADOR */}
           <View
             style={{
               width: 52,
@@ -221,7 +213,6 @@ export default function Home() {
 
         </View>
 
-        {/* TÍTULO */}
         <Text
           style={{
             color: 'white',
@@ -233,7 +224,6 @@ export default function Home() {
           Central de Relatórios
         </Text>
 
-        {/* DESCRIÇÃO */}
         <Text
           style={{
             color: '#d6d6d6',
@@ -250,7 +240,6 @@ export default function Home() {
 
       </View>
 
-      {/* CARD INFORMATIVO */}
       <View
         style={{
           backgroundColor: '#5EB85E',
@@ -292,7 +281,6 @@ export default function Home() {
 
       </View>
 
-      {/* BOTÕES */}
       <View
         style={{
           alignItems: 'center',
@@ -310,7 +298,6 @@ export default function Home() {
           Selecionar período
         </Text>
 
-        {/* MENSAL */}
         <Pressable
           onPress={async () => {
 
@@ -342,7 +329,6 @@ export default function Home() {
           </Text>
         </Pressable>
 
-        {/* TRIMESTRAL */}
         <Pressable
           onPress={async () => {
 
@@ -374,7 +360,6 @@ export default function Home() {
           </Text>
         </Pressable>
 
-        {/* ANUAL */}
         <Pressable
           onPress={async () => {
 
@@ -408,7 +393,6 @@ export default function Home() {
 
       </View>
 
-      {/* MODAL */}
       <Modal
         visible={modalVisible}
         transparent
@@ -448,7 +432,6 @@ export default function Home() {
               Relatório de Desempenho
             </Text>
 
-            {/* RESUMO */}
             <View
               style={{
                 backgroundColor: '#5EB85E',
@@ -481,7 +464,6 @@ export default function Home() {
 
             </View>
 
-            {/* PRODUTOS */}
             <Text
               style={{
                 color: 'white',
@@ -528,7 +510,6 @@ export default function Home() {
               ))}
             </ScrollView>
 
-            {/* FECHAR */}
             <Pressable
               onPress={() => setModalVisible(false)}
               style={{
