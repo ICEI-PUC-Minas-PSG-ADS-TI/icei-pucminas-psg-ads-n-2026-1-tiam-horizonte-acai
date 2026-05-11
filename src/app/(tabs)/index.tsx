@@ -1,98 +1,281 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Button } from '@react-navigation/elements'
+import { useState } from 'react'
+import {
+  Modal,
+  Pressable,
+  ScrollView,
+  Text,
+  View
+} from 'react-native'
+import { supabase } from '../../../src/services/supabase'
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+export default function Home() {
+  const [totalVendas, setTotalVendas] = useState(0)
+  const [faturamento, setFaturamento] = useState(0)
+  const [vendas, setVendas] = useState<any[]>([])
 
-export default function HomeScreen() {
+  const [modalVisible, setModalVisible] = useState(false)
+  const [produtosMaisVendidos, setProdutosMaisVendidos] = useState<any[]>([])
+
+  async function buscarRelatorio(dataInicial: Date, dataFinal: Date) {
+    const { data, error } = await supabase
+      .from('Venda')
+      .select('*')
+      .gte('data', dataInicial.toISOString())
+      .lte('data', dataFinal.toISOString())
+
+    if (error) {
+      console.log('ERRO:', error)
+      return
+    }
+
+    setVendas(data)
+
+    const quantidadeVendas = data.length
+
+    const totalFaturamento = data.reduce(
+      (acc, venda) => acc + Number(venda.valor_total),
+      0
+    )
+
+    console.log('RELATORIO MENSAL:', data)
+    setTotalVendas(quantidadeVendas)
+    setFaturamento(totalFaturamento)
+  }
+
+  async function relatorioMensal() {
+    const now = new Date()
+
+    const inicioMesPassado = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      1
+    )
+
+    const fimMesPassado = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      0,
+      23, 59, 59, 999
+    )
+
+    await buscarRelatorio(inicioMesPassado, fimMesPassado)
+  }
+
+  async function relatorioTrimestral() {
+    const now = new Date()
+
+    const inicio = new Date(
+      now.getFullYear(),
+      now.getMonth() - 3,
+      1
+    )
+
+    const fim = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      0,
+      23, 59, 59, 999
+    )
+
+    await buscarRelatorio(inicio, fim)
+  }
+
+  async function relatorioAnual() {
+    const now = new Date()
+
+    const inicioAnoAnterior = new Date(
+      now.getFullYear() - 1,
+      0,
+      1
+    )
+
+    const fimAnoAnterior = new Date(
+      now.getFullYear() - 1,
+      11,
+      31,
+      23, 59, 59, 999
+    )
+
+    await buscarRelatorio(inicioAnoAnterior, fimAnoAnterior)
+  }
+
+
+
+
+  function montarRanking(data: any[]) {
+    const ranking: Record<string, number> = {}
+
+    data.forEach((item: any) => {
+      const nome = item.produtos.nome
+
+      if (!ranking[nome]) {
+        ranking[nome] = 0
+      }
+
+      ranking[nome] += item.quantidade
+    })
+
+    return Object.entries(ranking)
+      .map(([nome, quantidade]) => ({ nome, quantidade }))
+      .sort((a, b) => b.quantidade - a.quantidade)
+  }
+
+
+
+  async function buscarProdutosMaisVendidos(vendas: any[]) {
+    const idsVendas = vendas.map(v => v.id)
+
+    const { data, error } = await supabase
+      .from('Venda_Produto')
+      .select(`
+      id_produto,
+      quantidade,
+      produtos (
+        nome
+      )
+    `)
+      .in('id_venda', idsVendas)
+
+    if (error) {
+      console.log(error)
+      return []
+    }
+
+    return montarRanking(data)
+  }
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'black'
+      }}
+    >
+      <Button
+        style={{
+          margin: 10,
+        }}
+        onPress={relatorioMensal}
+      >
+        Mensal
+      </Button>
+
+
+      <Button
+        style={{
+          margin: 10,
+        }}
+        onPress={relatorioTrimestral}
+      >
+        Trimestral
+      </Button>
+
+
+      <Button
+        style={{
+          margin: 10,
+        }}
+        onPress={relatorioAnual}>
+        Anual
+      </Button>
+
+      <Button
+        style={{
+          margin: 10,
+        }}
+        onPress={async () => {
+
+          const ranking = await buscarProdutosMaisVendidos(vendas)
+
+          setProdutosMaisVendidos(ranking)
+
+          setModalVisible(true)
+        }}
+      >
+        Produtos mais vendidos
+      </Button>
+
+      <Text style={{ color: 'white', marginTop: 20 }}>
+        Total de vendas: {totalVendas}
+      </Text>
+
+      <Text style={{ color: 'white' }}>
+        Faturamento: R$ {faturamento}
+      </Text>
+
+      <Modal
+        visible={modalVisible}
+        transparent
+        animationType="slide"
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0,0,0,0.7)'
+          }}
+        >
+
+          <View
+            style={{
+              width: '85%',
+              maxHeight: '70%',
+              backgroundColor: 'white',
+              borderRadius: 10,
+              padding: 20
+            }}
+          >
+
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                marginBottom: 15
+              }}
+            >
+              Produtos mais vendidos
+            </Text>
+
+            <ScrollView>
+              {produtosMaisVendidos.map((item, index) => (
+                <Text
+                  key={index}
+                  style={{
+                    marginBottom: 10,
+                    fontSize: 16
+                  }}
+                >
+                  {index + 1}. {item.nome} - {item.quantidade} vendidos
+                </Text>
+              ))}
+            </ScrollView>
+
+            <Pressable
+              onPress={() => setModalVisible(false)}
+              style={{
+                marginTop: 15,
+                alignSelf: 'center'
+              }}
+            >
+              <Text
+                style={{
+                  color: 'blue',
+                  fontSize: 16
+                }}
+              >
+                Fechar
+              </Text>
+            </Pressable>
+
+          </View>
+
+        </View>
+      </Modal>
+    </View>
+  )
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
