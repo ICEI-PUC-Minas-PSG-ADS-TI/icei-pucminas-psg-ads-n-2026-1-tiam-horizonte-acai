@@ -1,4 +1,6 @@
 import { Button } from '@react-navigation/elements'
+import { Image } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 import { useState } from 'react'
 import {
   Modal,
@@ -13,6 +15,7 @@ export default function Home() {
   const [totalVendas, setTotalVendas] = useState(0)
   const [faturamento, setFaturamento] = useState(0)
   const [vendas, setVendas] = useState<any[]>([])
+  const [periodoAtual, setPeriodoAtual] = useState('')
 
   const [modalVisible, setModalVisible] = useState(false)
   const [produtosMaisVendidos, setProdutosMaisVendidos] = useState<any[]>([])
@@ -44,6 +47,8 @@ export default function Home() {
   }
 
   async function relatorioMensal() {
+    setPeriodoAtual('Mensal')
+
     const now = new Date()
 
     const inicioMesPassado = new Date(
@@ -63,6 +68,8 @@ export default function Home() {
   }
 
   async function relatorioTrimestral() {
+    setPeriodoAtual('Trimestral')
+
     const now = new Date()
 
     const inicio = new Date(
@@ -82,6 +89,8 @@ export default function Home() {
   }
 
   async function relatorioAnual() {
+    setPeriodoAtual('Anual')
+
     const now = new Date()
 
     const inicioAnoAnterior = new Date(
@@ -99,9 +108,6 @@ export default function Home() {
 
     await buscarRelatorio(inicioAnoAnterior, fimAnoAnterior)
   }
-
-
-
 
   function montarRanking(data: any[]) {
     const ranking: Record<string, number> = {}
@@ -150,92 +156,338 @@ export default function Home() {
     <View
       style={{
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'black'
+        backgroundColor: '#46295A',
+        paddingHorizontal: 25,
+        paddingTop: 30,
       }}
     >
-      <Button
+
+      {/* TOPO */}
+      <View
         style={{
-          margin: 10,
-        }}
-        onPress={relatorioMensal}
-      >
-        Mensal
-      </Button>
-
-
-      <Button
-        style={{
-          margin: 10,
-        }}
-        onPress={relatorioTrimestral}
-      >
-        Trimestral
-      </Button>
-
-
-      <Button
-        style={{
-          margin: 10,
-        }}
-        onPress={relatorioAnual}>
-        Anual
-      </Button>
-
-      <Button
-        style={{
-          margin: 10,
-        }}
-        onPress={async () => {
-
-          const ranking = await buscarProdutosMaisVendidos(vendas)
-
-          setProdutosMaisVendidos(ranking)
-
-          setModalVisible(true)
+          marginBottom: 40,
         }}
       >
-        Produtos mais vendidos
-      </Button>
 
-      <Text style={{ color: 'white', marginTop: 20 }}>
-        Total de vendas: {totalVendas}
-      </Text>
+        {/* LINHA SUPERIOR */}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: 25,
+          }}
+        >
 
-      <Text style={{ color: 'white' }}>
-        Faturamento: R$ {faturamento}
-      </Text>
+          {/* BOTÃO HOME */}
+          <Pressable
+            onPress={() => {
+              console.log('Voltar para menu')
+            }}
+            style={{
+              //backgroundColor: '#5EB85E',
+              width: 52,
+              height: 52,
+              borderRadius: 14,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: -30
+            }}
+          >
+            <Ionicons
+              name="home"
+              size={40}
+              color="white"
+            />
+          </Pressable>
 
+          {/* LOGO */}
+          <Image
+            source={require('../../assets/images/logo.png')}
+            style={{
+              width: 110,
+              height: 110,
+              resizeMode: 'contain',
+            }}
+          />
+
+          {/* ESPAÇADOR */}
+          <View
+            style={{
+              width: 52,
+              height: 52,
+            }}
+          />
+
+        </View>
+
+        {/* TÍTULO */}
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 34,
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}
+        >
+          Central de Relatórios
+        </Text>
+
+        {/* DESCRIÇÃO */}
+        <Text
+          style={{
+            color: '#d6d6d6',
+            fontSize: 16,
+            marginTop: 14,
+            lineHeight: 24,
+            textAlign: 'center',
+          }}
+        >
+          Visualize o desempenho de vendas da operação,
+          acompanhe faturamento e identifique os produtos
+          mais vendidos por período.
+        </Text>
+
+      </View>
+
+      {/* CARD INFORMATIVO */}
+      <View
+        style={{
+          backgroundColor: '#5EB85E',
+          borderRadius: 18,
+          padding: 20,
+          marginBottom: 35,
+        }}
+      >
+
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 18,
+            fontWeight: 'bold',
+            marginBottom: 10,
+          }}
+        >
+          Resumo Atual {periodoAtual ? `- ${periodoAtual}` : ''}
+        </Text>
+
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 16,
+            marginBottom: 6,
+          }}
+        >
+          Total de vendas: {totalVendas}
+        </Text>
+
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 16,
+          }}
+        >
+          Faturamento: R$ {faturamento.toFixed(2)}
+        </Text>
+
+      </View>
+
+      {/* BOTÕES */}
+      <View
+        style={{
+          alignItems: 'center',
+        }}
+      >
+
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 18,
+            fontWeight: '600',
+            marginBottom: 20,
+          }}
+        >
+          Selecionar período
+        </Text>
+
+        {/* MENSAL */}
+        <Pressable
+          onPress={async () => {
+
+            await relatorioMensal()
+
+            const ranking = await buscarProdutosMaisVendidos(vendas)
+
+            setProdutosMaisVendidos(ranking)
+
+            setModalVisible(true)
+          }}
+          style={{
+            backgroundColor: '#5EB85E',
+            width: '100%',
+            paddingVertical: 16,
+            borderRadius: 14,
+            marginBottom: 15,
+            alignItems: 'center',
+          }}
+        >
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 17,
+              fontWeight: 'bold',
+            }}
+          >
+            Relatório Mensal
+          </Text>
+        </Pressable>
+
+        {/* TRIMESTRAL */}
+        <Pressable
+          onPress={async () => {
+
+            await relatorioTrimestral()
+
+            const ranking = await buscarProdutosMaisVendidos(vendas)
+
+            setProdutosMaisVendidos(ranking)
+
+            setModalVisible(true)
+          }}
+          style={{
+            backgroundColor: '#5EB85E',
+            width: '100%',
+            paddingVertical: 16,
+            borderRadius: 14,
+            marginBottom: 15,
+            alignItems: 'center',
+          }}
+        >
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 17,
+              fontWeight: 'bold',
+            }}
+          >
+            Relatório Trimestral
+          </Text>
+        </Pressable>
+
+        {/* ANUAL */}
+        <Pressable
+          onPress={async () => {
+
+            await relatorioAnual()
+
+            const ranking = await buscarProdutosMaisVendidos(vendas)
+
+            setProdutosMaisVendidos(ranking)
+
+            setModalVisible(true)
+          }}
+          style={{
+            backgroundColor: '#5EB85E',
+            width: '100%',
+            paddingVertical: 16,
+            borderRadius: 14,
+            marginBottom: 15,
+            alignItems: 'center',
+          }}
+        >
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 17,
+              fontWeight: 'bold',
+            }}
+          >
+            Relatório Anual
+          </Text>
+        </Pressable>
+
+      </View>
+
+      {/* MODAL */}
       <Modal
         visible={modalVisible}
         transparent
-        animationType="slide"
+        animationType="fade"
       >
+
         <View
           style={{
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: 'rgba(0,0,0,0.7)'
+            backgroundColor: 'rgba(0,0,0,0.75)'
           }}
         >
 
           <View
             style={{
-              width: '85%',
-              maxHeight: '70%',
-              backgroundColor: 'white',
-              borderRadius: 10,
-              padding: 20
+              width: '88%',
+              maxHeight: '75%',
+              backgroundColor: '#46295A',
+              borderRadius: 20,
+              padding: 25,
+              borderWidth: 2,
+              borderColor: '#5EB85E',
             }}
           >
 
             <Text
               style={{
-                fontSize: 20,
+                color: 'white',
+                fontSize: 24,
                 fontWeight: 'bold',
-                marginBottom: 15
+                marginBottom: 25,
+                textAlign: 'center',
+              }}
+            >
+              Relatório de Desempenho
+            </Text>
+
+            {/* RESUMO */}
+            <View
+              style={{
+                backgroundColor: '#5EB85E',
+                borderRadius: 15,
+                padding: 15,
+                marginBottom: 25,
+              }}
+            >
+
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 16,
+                  marginBottom: 8,
+                  fontWeight: 'bold',
+                }}
+              >
+                Total de vendas: {totalVendas}
+              </Text>
+
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                }}
+              >
+                Faturamento total: R$ {faturamento.toFixed(2)}
+              </Text>
+
+            </View>
+
+            {/* PRODUTOS */}
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 18,
+                fontWeight: 'bold',
+                marginBottom: 15,
               }}
             >
               Produtos mais vendidos
@@ -243,39 +495,69 @@ export default function Home() {
 
             <ScrollView>
               {produtosMaisVendidos.map((item, index) => (
-                <Text
+                <View
                   key={index}
                   style={{
+                    backgroundColor: 'rgba(255,255,255,0.08)',
+                    padding: 14,
+                    borderRadius: 12,
                     marginBottom: 10,
-                    fontSize: 16
                   }}
                 >
-                  {index + 1}. {item.nome} - {item.quantidade} vendidos
-                </Text>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 16,
+                      fontWeight: '600',
+                    }}
+                  >
+                    {index + 1}. {item.nome}
+                  </Text>
+
+                  <Text
+                    style={{
+                      color: '#5EB85E',
+                      marginTop: 5,
+                      fontSize: 14,
+                    }}
+                  >
+                    {item.quantidade} unidades vendidas
+                  </Text>
+
+                </View>
               ))}
             </ScrollView>
 
+            {/* FECHAR */}
             <Pressable
               onPress={() => setModalVisible(false)}
               style={{
-                marginTop: 15,
-                alignSelf: 'center'
+                marginTop: 20,
+                backgroundColor: '#5EB85E',
+                paddingVertical: 14,
+                borderRadius: 14,
+                alignItems: 'center',
               }}
             >
+
               <Text
                 style={{
-                  color: 'blue',
-                  fontSize: 16
+                  color: 'white',
+                  fontSize: 16,
+                  fontWeight: 'bold',
                 }}
               >
-                Fechar
+                Fechar relatório
               </Text>
+
             </Pressable>
 
           </View>
 
         </View>
+
       </Modal>
+
     </View>
   )
 }
