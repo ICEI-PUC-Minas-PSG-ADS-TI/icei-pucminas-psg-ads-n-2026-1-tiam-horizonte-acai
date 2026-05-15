@@ -1,7 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../supabaseClient'; // IMPORTANTE: Troca de import
-import { useNavigate } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  ScrollView, 
+  Image, 
+  StyleSheet, 
+  Modal, 
+  Alert,
+  SafeAreaView,
+  StatusBar
+} from 'react-native';
+import { supabase } from '../supabaseClient';
+import { useNavigation } from '@react-navigation/native';
+import Sidebar from '../components/Sidebar'; // Nota: Você precisará converter o Sidebar também
 
 const logoAcai = "https://cdn-icons-png.flaticon.com/512/5917/5917321.png";
 
@@ -12,12 +25,10 @@ const TelaProdutos = () => {
   const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
   const [produtoParaExcluir, setProdutoParaExcluir] = useState(null);
   
-  const navigate = useNavigate();
+  const navigation = useNavigation();
 
-  // Simulação de usuário (depois isso virá do Login)
   const [usuarioLogado] = useState({ nome: 'ADM', cargo: 'Gestor' });
 
-  // 1. Lógica do Supabase para buscar produtos
   useEffect(() => {
     fetchProdutos();
   }, []);
@@ -32,7 +43,6 @@ const TelaProdutos = () => {
     if (error) console.log("Erro ao buscar:", error.message);
   }
 
-  // 2. Lógica do Supabase para excluir
   const handleExcluir = async () => {
     if (produtoParaExcluir) {
       const { error } = await supabase
@@ -43,9 +53,9 @@ const TelaProdutos = () => {
       if (!error) {
         setModalExcluirAberto(false);
         setProdutoParaExcluir(null);
-        fetchProdutos(); // Atualiza a lista
+        fetchProdutos();
       } else {
-        alert("Erro ao excluir: " + error.message);
+        Alert.alert("Erro", "Erro ao excluir: " + error.message);
       }
     }
   };
@@ -55,130 +65,163 @@ const TelaProdutos = () => {
   );
 
   return (
-    <div style={styles.container}>
-      <img src={logoAcai} style={styles.marcaDagua} alt="bg" />
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" />
+      
+      {/* Marca d'água (Fundo) */}
+      <Image source={{ uri: logoAcai }} style={styles.marcaDagua} />
 
-      <div style={styles.box}>
-        <div style={styles.logoContainer}>
-          <img src={logoAcai} style={styles.logoTopo} alt="logo" />
-        </div>
+      <View style={styles.box}>
+        <View style={styles.logoContainer}>
+          <Image source={{ uri: logoAcai }} style={styles.logoTopo} />
+        </View>
 
-        <header style={styles.header}>
-          <span style={styles.icon}>🏠</span>
-          <h2 style={styles.logoText}>PROD<span style={{color: '#7ed957'}}>UTOS</span></h2>
-          <span 
-            style={{...styles.icon, cursor: 'pointer'}} 
-            onClick={() => setMenuAberto(true)}
-          >
-            ☰
-          </span>
-        </header>
+        <View style={styles.header}>
+          <Text style={styles.icon}>🏠</Text>
+          <Text style={styles.logoText}>PROD<Text style={{color: '#7ed957'}}>UTOS</Text></Text>
+          <TouchableOpacity onPress={() => setMenuAberto(true)}>
+            <Text style={styles.icon}>☰</Text>
+          </TouchableOpacity>
+        </View>
 
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Buscar Produto</label>
-          <input 
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Buscar Produto</Text>
+          <TextInput 
             style={styles.input} 
             placeholder="Digite o nome..." 
+            placeholderTextColor="#666"
             value={busca} 
-            onChange={(e) => setBusca(e.target.value)} 
+            onChangeText={(text) => setBusca(text)} 
           />
-        </div>
+        </View>
 
-        <div style={styles.lista}>
+        <ScrollView style={styles.lista} showsVerticalScrollIndicator={false}>
           {produtosFiltrados.map(p => (
-            <div key={p.id} style={styles.card}>
-              <h3 style={styles.cardTitle}>{p.nome}</h3>
+            <View key={p.id} style={styles.card}>
+              <Text style={styles.cardTitle}>{p.nome}</Text>
               
-              <div style={styles.estoqueRow}>
-                <span>Estoque: {p.quantidade} UND</span>
-                {/* Visual exato do status */}
-                <div style={styles.statusGroup}>
-                  <div style={{
-                    ...styles.bolinha, 
-                    backgroundColor: Number(p.quantidade) <= 10 ? 'red' : '#7ed957'
-                  }} />
-                  <span style={{fontSize: '14px', fontWeight: 'bold', color: '#4a3061'}}>
+              <View style={styles.estoqueRow}>
+                <Text style={styles.estoqueText}>Estoque: {p.quantidade} UND</Text>
+                <View style={styles.statusGroup}>
+                  <View style={[
+                    styles.bolinha, 
+                    { backgroundColor: Number(p.quantidade) <= 10 ? 'red' : '#7ed957' }
+                  ]} />
+                  <Text style={styles.statusText}>
                     {Number(p.quantidade) <= 10 ? 'Baixo' : 'OK'}
-                  </span>
-                </div>
-              </div>
+                  </Text>
+                </View>
+              </View>
 
-              {/* Visual exato dos três botões */}
-              <div style={styles.actions}>
-                <button style={styles.btnAction} onClick={() => navigate(`/editar/${p.id}`)}>Editar</button>
-                <button style={styles.btnAction} onClick={() => navigate(`/detalhes/${p.id}`)}>Ver Mais</button>
-                <button 
-                  style={{...styles.btnAction, backgroundColor: 'red'}} 
-                  onClick={() => {
+              <View style={styles.actions}>
+                <TouchableOpacity 
+                  style={styles.btnAction} 
+                  onPress={() => navigation.navigate('EditarProduto', { id: p.id })}
+                >
+                  <Text style={styles.btnActionText}>Editar</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity 
+                  style={styles.btnAction} 
+                  onPress={() => navigation.navigate('DetalhesProduto', { id: p.id })}
+                >
+                  <Text style={styles.btnActionText}>Ver Mais</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity 
+                  style={[styles.btnAction, { backgroundColor: 'red' }]} 
+                  onPress={() => {
                     setProdutoParaExcluir(p);
                     setModalExcluirAberto(true);
                   }}
                 >
-                  Excluir
-                </button>
-              </div>
-            </div>
+                  <Text style={styles.btnActionText}>Excluir</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           ))}
-        </div>
+        </ScrollView>
         
-        <button style={styles.btnNovo} onClick={() => navigate('/novo')}>Novo Produto +</button>
-      </div>
+        <TouchableOpacity 
+          style={styles.btnNovo} 
+          onPress={() => navigation.navigate('NovoProduto')}
+        >
+          <Text style={styles.btnNovoText}>Novo Produto +</Text>
+        </TouchableOpacity>
+      </View>
 
-      {/* MODAL CINZA DE EXCLUIR RESTAURADO */}
-      {modalExcluirAberto && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modalContent}>
-            <div style={styles.modalHeader}>
-              <h3 style={{margin:0, color: 'black'}}>Excluir Produto</h3>
-              <img src={logoAcai} style={{width: '40px'}} alt="logo" />
-            </div>
-            <p style={{color: 'black', margin: '20px 0'}}>Deseja realmente excluir o produto<br/><strong>{produtoParaExcluir?.nome}</strong>?</p>
-            <div style={styles.modalButtons}>
-              <button style={styles.btnModalConfirm} onClick={handleExcluir}>Excluir</button>
-              <button style={styles.btnModalCancel} onClick={() => setModalExcluirAberto(false)}>Cancelar</button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* MODAL DE EXCLUIR */}
+      <Modal
+        visible={modalExcluirAberto}
+        transparent={true}
+        animationType="fade"
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Excluir Produto</Text>
+              <Image source={{ uri: logoAcai }} style={{width: 30, height: 30}} />
+            </View>
+            <Text style={styles.modalBody}>
+              Deseja realmente excluir o produto{"\n"}
+              <Text style={{fontWeight: 'bold'}}>{produtoParaExcluir?.nome}</Text>?
+            </Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity style={styles.btnModalConfirm} onPress={handleExcluir}>
+                <Text style={styles.btnActionText}>Excluir</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btnModalCancel} onPress={() => setModalExcluirAberto(false)}>
+                <Text style={styles.btnActionText}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
+      {/* Nota: O componente Sidebar também precisará ser convertido para View/Text */}
       <Sidebar 
         isOpen={menuAberto} 
         onClose={() => setMenuAberto(false)} 
         user={usuarioLogado} 
       />
-    </div>
+    </SafeAreaView>
   );
 };
 
-// ESTILOS IDÊNTICOS AOS ORIGINAIS
-const styles = {
-  container: { backgroundColor: '#4a3061', minHeight: '100vh', display: 'flex', justifyContent: 'center', padding: '20px', position: 'relative', fontFamily: 'sans-serif', overflowX: 'hidden' },
-  marcaDagua: { position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '320px', opacity: '0.15', zIndex: 1, pointerEvents: 'none' },
-  box: { width: '100%', maxWidth: '400px', zIndex: 2, position: 'relative' },
-  logoContainer: { display: 'flex', justifyContent: 'center', marginBottom: '10px' },
-  logoTopo: { width: '80px' },
-  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '70px' },
-  logoText: { color: 'white', margin: 0, fontWeight: 'bold', fontSize: '24px' },
-  icon: { color: 'white', fontSize: '28px' },
-  inputGroup: { display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' },
-  label: { color: 'white', fontWeight: 'bold', fontSize: '16px' },
-  input: { padding: '12px', borderRadius: '8px', border: 'none', backgroundColor: '#d1d1d1', fontSize: '16px' },
-  lista: { maxHeight: '50vh', overflowY: 'auto', paddingRight: '5px' },
-  card: { backgroundColor: 'white', padding: '15px', borderRadius: '10px', marginBottom: '15px', border: '3px solid #7ed957', boxShadow: '0px 4px 6px rgba(0,0,0,0.2)' },
-  cardTitle: { margin: '0 0 10px 0', color: '#4a3061', fontSize: '18px' },
-  estoqueRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px', color: '#4a3061', fontWeight: 'bold' },
-  statusGroup: { display: 'flex', alignItems: 'center', gap: '8px' },
-  bolinha: { width: '12px', height: '12px', borderRadius: '50%' },
-  actions: { display: 'flex', gap: '8px' },
-  btnAction: { flex: 1, padding: '8px 2px', backgroundColor: '#4a3061', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' },
-  btnNovo: { width: '100%', padding: '15px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', marginTop: '10px', cursor: 'pointer', fontSize: '18px' },
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#4a3061' },
+  marcaDagua: { position: 'absolute', top: '25%', left: '10%', width: 300, height: 300, opacity: 0.1, transform: [{ rotate: '45deg' }] },
+  box: { flex: 1, padding: 20 },
+  logoContainer: { alignItems: 'center', marginBottom: 10 },
+  logoTopo: { width: 60, height: 60 },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 40 },
+  logoText: { color: 'white', fontWeight: 'bold', fontSize: 22 },
+  icon: { color: 'white', fontSize: 24 },
+  inputGroup: { marginBottom: 20 },
+  label: { color: 'white', fontWeight: 'bold', fontSize: 16, marginBottom: 5 },
+  input: { padding: 12, borderRadius: 8, backgroundColor: '#d1d1d1', fontSize: 16, color: '#333' },
+  lista: { flex: 1 },
+  card: { backgroundColor: 'white', padding: 15, borderRadius: 10, marginBottom: 15, borderLeftWidth: 5, borderLeftColor: '#7ed957', elevation: 3 },
+  cardTitle: { color: '#4a3061', fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
+  estoqueRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
+  estoqueText: { color: '#4a3061', fontWeight: 'bold' },
+  statusGroup: { flexDirection: 'row', alignItems: 'center' },
+  bolinha: { width: 10, height: 10, borderRadius: 5, marginRight: 5 },
+  statusText: { fontSize: 12, fontWeight: 'bold', color: '#4a3061' },
+  actions: { flexDirection: 'row', gap: 8 },
+  btnAction: { flex: 1, paddingVertical: 8, backgroundColor: '#4a3061', borderRadius: 4, alignItems: 'center' },
+  btnActionText: { color: 'white', fontSize: 11, fontWeight: 'bold' },
+  btnNovo: { backgroundColor: '#28a745', padding: 15, borderRadius: 8, alignItems: 'center', marginTop: 10 },
+  btnNovoText: { color: 'white', fontWeight: 'bold', fontSize: 18 },
   
-  modalOverlay: { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 },
-  modalContent: { backgroundColor: '#d1d1d1', padding: '20px', borderRadius: '10px', width: '300px', textAlign: 'center' },
-  modalHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  modalButtons: { display: 'flex', gap: '10px', justifyContent: 'center' },
-  btnModalConfirm: { backgroundColor: 'red', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' },
-  btnModalCancel: { backgroundColor: 'gray', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }
-};
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'center', alignItems: 'center' },
+  modalContent: { backgroundColor: '#d1d1d1', padding: 20, borderRadius: 10, width: '80%' },
+  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
+  modalTitle: { fontSize: 18, fontWeight: 'bold', color: '#333' },
+  modalBody: { color: '#333', textAlign: 'center', marginVertical: 15 },
+  modalButtons: { flexDirection: 'row', justifyContent: 'space-around' },
+  btnModalConfirm: { backgroundColor: 'red', padding: 10, borderRadius: 5, width: '40%', alignItems: 'center' },
+  btnModalCancel: { backgroundColor: 'gray', padding: 10, borderRadius: 5, width: '40%', alignItems: 'center' }
+});
 
 export default TelaProdutos;

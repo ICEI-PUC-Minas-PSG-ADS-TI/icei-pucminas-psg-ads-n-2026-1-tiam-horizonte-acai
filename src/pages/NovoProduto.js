@@ -1,6 +1,20 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  StyleSheet, 
+  ScrollView, 
+  Image, 
+  Modal, 
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView
+} from 'react-native';
 import { supabase } from '../supabaseClient';
-import { useNavigate } from 'react-router-dom';
+import { useNavigation } from '@react-navigation/native';
 
 const logoAcai = "https://cdn-icons-png.flaticon.com/512/5917/5917321.png";
 
@@ -14,20 +28,10 @@ const NovoProduto = () => {
   const [modalConfirmarAberto, setModalConfirmarAberto] = useState(false);
   const [modalErroAberto, setModalErroAberto] = useState(false);
   
-  const navigate = useNavigate();
-  const descricaoRef = useRef(null);
+  const navigation = useNavigation();
 
-  // Auto-ajuste do textarea igual ao anterior
-  useEffect(() => {
-    if (descricaoRef.current) {
-      descricaoRef.current.style.height = "auto";
-      descricaoRef.current.style.height = `${descricaoRef.current.scrollHeight}px`;
-    }
-  }, [descricao]);
-
-  const handleSalvarClick = (e) => {
-    e.preventDefault();
-    // Validação: se tentar salvar sem preencher todos os campos
+  const handleSalvarClick = () => {
+    // Validação mobile
     if (!nome || !descricao || !preco || !quantidade || !categoria) {
       setModalErroAberto(true);
       return;
@@ -42,7 +46,7 @@ const NovoProduto = () => {
         .insert([{ 
           nome, 
           descricao, 
-          preco: parseFloat(preco), 
+          preco: parseFloat(preco.replace(',', '.')), 
           quantidade: parseInt(quantidade), 
           categoria 
         }]);
@@ -50,102 +54,152 @@ const NovoProduto = () => {
       if (error) throw error;
 
       setModalConfirmarAberto(false);
-      navigate('/');
+      navigation.navigate('Home');
     } catch (error) {
-      alert("Erro ao cadastrar: " + error.message);
+      Alert.alert("Erro", "Erro ao cadastrar: " + error.message);
     }
   };
 
   return (
-    <div style={styles.container}>
-      <img src={logoAcai} style={styles.logoTop} alt="logo" />
-      <h2 style={styles.titulo}>CADASTRAR <span style={{color: '#7ed957'}}>PRODUTO</span></h2>
-      
-      <form onSubmit={handleSalvarClick} style={styles.form}>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Nome do Produto</label>
-          <input style={styles.input} value={nome} onChange={(e) => setNome(e.target.value)} />
-        </div>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Descrição</label>
-          <textarea 
-            ref={descricaoRef} 
-            style={{...styles.input, ...styles.textarea}} 
-            value={descricao} 
-            onChange={(e) => setDescricao(e.target.value)} 
-            rows="1" 
-          />
-        </div>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Preço</label>
-          <input style={styles.input} type="number" value={preco} onChange={(e) => setPreco(e.target.value)} />
-        </div>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Quantidade</label>
-          <input style={styles.input} type="number" value={quantidade} onChange={(e) => setQuantidade(e.target.value)} />
-        </div>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Categoria</label>
-          <input style={styles.input} value={categoria} onChange={(e) => setCategoria(e.target.value)} />
-        </div>
-        <div style={styles.buttonRow}>
-          <button type="submit" style={styles.btnSalvar}>Salvar</button>
-          <button type="button" style={styles.btnCancelar} onClick={() => navigate('/')}>Cancelar</button>
-        </div>
-      </form>
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <Image source={{ uri: logoAcai }} style={styles.logoTop} />
+          <Text style={styles.titulo}>CADASTRAR <Text style={{color: '#7ed957'}}>PRODUTO</Text></Text>
+          
+          <View style={styles.form}>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Nome do Produto</Text>
+              <TextInput 
+                style={styles.input} 
+                value={nome} 
+                onChangeText={setNome} 
+                placeholder="Ex: Açaí 500ml"
+              />
+            </View>
 
-      {/* MODAL DE ERRO: CAMPOS VAZIOS */}
-      {modalErroAberto && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modalContent}>
-            <div style={styles.modalHeader}>
-              <h3 style={{margin:0, color: 'black'}}>Atenção</h3>
-              <img src={logoAcai} style={{width: '40px'}} alt="logo" />
-            </div>
-            <p style={{color: 'black', margin: '20px 0'}}>Por favor, preencha todos os campos antes de salvar!</p>
-            <button style={styles.btnModalCancel} onClick={() => setModalErroAberto(false)}>OK</button>
-          </div>
-        </div>
-      )}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Descrição</Text>
+              <TextInput 
+                style={[styles.input, styles.textarea]} 
+                value={descricao} 
+                onChangeText={setDescricao} 
+                multiline 
+                placeholder="Detalhes do produto..."
+              />
+            </View>
 
-      {/* MODAL DE CONFIRMAÇÃO: IGUAL ERA */}
-      {modalConfirmarAberto && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modalContent}>
-            <div style={styles.modalHeader}>
-              <h3 style={{margin:0, color: 'black'}}>Confirmar</h3>
-              <img src={logoAcai} style={{width: '40px'}} alt="logo" />
-            </div>
-            <p style={{color: 'black', margin: '20px 0'}}>Deseja realmente cadastrar o produto <strong>{nome}</strong>?</p>
-            <div style={styles.modalButtons}>
-              <button style={styles.btnModalConfirm} onClick={confirmarCadastro}>Salvar</button>
-              <button style={styles.btnModalCancel} onClick={() => setModalConfirmarAberto(false)}>Cancelar</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Preço</Text>
+              <TextInput 
+                style={styles.input} 
+                keyboardType="numeric" 
+                value={preco} 
+                onChangeText={setPreco} 
+                placeholder="0.00"
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Quantidade</Text>
+              <TextInput 
+                style={styles.input} 
+                keyboardType="numeric" 
+                value={quantidade} 
+                onChangeText={setQuantidade} 
+                placeholder="Ex: 50"
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Categoria</Text>
+              <TextInput 
+                style={styles.input} 
+                value={categoria} 
+                onChangeText={setCategoria} 
+                placeholder="Ex: Cremes"
+              />
+            </View>
+
+            <View style={styles.buttonRow}>
+              <TouchableOpacity style={styles.btnSalvar} onPress={handleSalvarClick}>
+                <Text style={styles.btnText}>Salvar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btnCancelar} onPress={() => navigation.goBack()}>
+                <Text style={styles.btnText}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+
+      {/* MODAL DE ERRO */}
+      <Modal visible={modalErroAberto} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Atenção</Text>
+              <Image source={{ uri: logoAcai }} style={{width: 30, height: 30}} />
+            </View>
+            <Text style={styles.modalBody}>Por favor, preencha todos os campos antes de salvar!</Text>
+            <TouchableOpacity style={styles.btnModalOk} onPress={() => setModalErroAberto(false)}>
+              <Text style={styles.btnText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* MODAL DE CONFIRMAÇÃO */}
+      <Modal visible={modalConfirmarAberto} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Confirmar</Text>
+              <Image source={{ uri: logoAcai }} style={{width: 30, height: 30}} />
+            </View>
+            <Text style={styles.modalBody}>Deseja realmente cadastrar o produto {"\n"}<Text style={{fontWeight: 'bold'}}>{nome}</Text>?</Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity style={styles.btnModalConfirm} onPress={confirmarCadastro}>
+                <Text style={styles.btnText}>Salvar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btnModalCancel} onPress={() => setModalConfirmarAberto(false)}>
+                <Text style={styles.btnText}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </SafeAreaView>
   );
 };
 
-const styles = {
-  container: { backgroundColor: '#4a3061', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '40px 20px', fontFamily: 'sans-serif' },
-  logoTop: { width: '80px', marginBottom: '10px' },
-  titulo: { color: 'white', fontSize: '26px', fontWeight: 'bold', marginBottom: '30px' },
-  form: { width: '100%', maxWidth: '350px', display: 'flex', flexDirection: 'column', gap: '15px' },
-  inputGroup: { display: 'flex', flexDirection: 'column', gap: '5px' },
-  label: { color: 'white', fontWeight: 'bold', fontSize: '15px' },
-  input: { width: '100%', padding: '12px', borderRadius: '4px', border: 'none', backgroundColor: '#d1d1d1', boxSizing: 'border-box', fontSize: '16px' },
-  textarea: { resize: 'none', overflow: 'hidden', fontFamily: 'inherit', minHeight: '45px' },
-  buttonRow: { display: 'flex', gap: '15px', marginTop: '10px' },
-  btnSalvar: { flex: 1, padding: '12px', backgroundColor: 'green', color: 'white', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' },
-  btnCancelar: { flex: 1, padding: '12px', backgroundColor: 'red', color: 'white', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' },
-  modalOverlay: { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 },
-  modalContent: { backgroundColor: '#d1d1d1', padding: '20px', borderRadius: '10px', width: '300px', textAlign: 'center' },
-  modalHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  modalButtons: { display: 'flex', gap: '10px', justifyContent: 'center' },
-  btnModalConfirm: { backgroundColor: 'green', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' },
-  btnModalCancel: { backgroundColor: 'gray', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }
-};
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#4a3061' },
+  scrollContent: { alignItems: 'center', padding: 20 },
+  logoTop: { width: 80, height: 80, marginBottom: 10 },
+  titulo: { color: 'white', fontSize: 26, fontWeight: 'bold', marginBottom: 30 },
+  form: { width: '100%', maxWidth: 350, gap: 15 },
+  inputGroup: { gap: 5 },
+  label: { color: 'white', fontWeight: 'bold', fontSize: 15 },
+  input: { width: '100%', padding: 12, borderRadius: 8, backgroundColor: '#d1d1d1', fontSize: 16, color: '#333' },
+  textarea: { minHeight: 80, textAlignVertical: 'top' },
+  buttonRow: { flexDirection: 'row', gap: 15, marginTop: 10 },
+  btnSalvar: { flex: 1, padding: 15, backgroundColor: 'green', borderRadius: 8, alignItems: 'center' },
+  btnCancelar: { flex: 1, padding: 15, backgroundColor: 'red', borderRadius: 8, alignItems: 'center' },
+  btnText: { color: 'white', fontWeight: 'bold' },
+  
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'center', alignItems: 'center' },
+  modalContent: { backgroundColor: '#d1d1d1', padding: 20, borderRadius: 15, width: '80%', alignItems: 'center' },
+  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 10 },
+  modalTitle: { fontSize: 20, fontWeight: 'bold', color: '#333' },
+  modalBody: { color: '#333', textAlign: 'center', marginVertical: 20, fontSize: 16 },
+  btnModalOk: { backgroundColor: '#4a3061', padding: 10, borderRadius: 8, width: '100%', alignItems: 'center' },
+  modalButtons: { flexDirection: 'row', gap: 10 },
+  btnModalConfirm: { backgroundColor: 'green', padding: 12, borderRadius: 8, flex: 1, alignItems: 'center' },
+  btnModalCancel: { backgroundColor: 'gray', padding: 12, borderRadius: 8, flex: 1, alignItems: 'center' }
+});
 
 export default NovoProduto;

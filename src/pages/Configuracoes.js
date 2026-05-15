@@ -1,10 +1,21 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { LuLogOut, LuKey, LuUser } from "react-icons/lu";
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  Image, 
+  TouchableOpacity, 
+  TextInput, 
+  ScrollView,
+  SafeAreaView 
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+// Importando ícones compatíveis com Expo
+import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'; 
 
 const Configuracoes = () => {
-  const navigate = useNavigate();
-  // Simulação de usuário (depois conectamos com supabase.auth)
+  const navigation = useNavigation();
+
   const [user] = useState({
     nome: 'Rique Santos',
     email: 'rique.empresa@acai.com',
@@ -13,60 +24,168 @@ const Configuracoes = () => {
   });
 
   return (
-    <div style={styles.container}>
-      <div style={styles.box}>
-        <h2 style={styles.titulo}>PERFIL DO <span style={{color: '#7ed957'}}>COLABORADOR</span></h2>
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.box}>
+          <Text style={styles.titulo}>
+            PERFIL DO <Text style={{color: '#7ed957'}}>COLABORADOR</Text>
+          </Text>
 
-        <div style={styles.fotoContainer}>
-          <img src={user.foto} alt="Perfil" style={styles.fotoPerfil} />
-          <button style={styles.btnAlterarFoto}>Alterar Foto</button>
-        </div>
+          <View style={styles.fotoContainer}>
+            <Image source={{ uri: user.foto }} style={styles.fotoPerfil} />
+            <TouchableOpacity style={styles.btnAlterarFoto}>
+              <Text style={styles.textoBtnFoto}>Alterar Foto</Text>
+            </TouchableOpacity>
+          </View>
 
-        <div style={styles.infoArea}>
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Nome Completo</label>
-            <input style={styles.input} value={user.nome} readOnly />
-          </div>
+          <View style={styles.infoArea}>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Nome Completo</Text>
+              <TextInput style={styles.input} value={user.nome} editable={false} />
+            </View>
 
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>E-mail Corporativo</label>
-            <input style={styles.input} value={user.email} readOnly />
-          </div>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>E-mail Corporativo</Text>
+              <TextInput style={styles.input} value={user.email} editable={false} />
+            </View>
 
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Cargo</label>
-            <input style={{...styles.input, color: '#000000', fontWeight: 'bold'}} value={user.cargo} readOnly />
-          </div>
-        </div>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Cargo</Text>
+              <TextInput 
+                style={[styles.input, { color: '#000000', fontWeight: 'bold' }]} 
+                value={user.cargo} 
+                editable={false} 
+              />
+            </View>
+          </View>
 
-        <div style={styles.actions}>
-          <button style={styles.btnSenha}><LuKey /> Trocar Senha</button>
-          <button style={styles.btnSair} onClick={() => navigate('/login')}>
-            <LuLogOut /> Sair da Conta
-          </button>
-        </div>
+          <View style={styles.actions}>
+            <TouchableOpacity style={styles.btnSenha}>
+              <Feather name="key" size={18} color="black" />
+              <Text style={styles.textoBtnSenha}>Trocar Senha</Text>
+            </TouchableOpacity>
 
-        <p style={styles.voltar} onClick={() => navigate('/')}>Voltar ao Início</p>
-      </div>
-    </div>
+            <TouchableOpacity 
+              style={styles.btnSair} 
+              onPress={() => navigation.navigate('Login')}
+            >
+              <Feather name="log-out" size={18} color="white" />
+              <Text style={styles.textoBtnSair}>Sair da Conta</Text>
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+            <Text style={styles.voltar}>Voltar ao Início</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
-const styles = {
-  container: { backgroundColor: '#4a3061', minHeight: '100vh', display: 'flex', justifyContent: 'center', padding: '40px 20px' },
-  box: { width: '100%', maxWidth: '400px', textAlign: 'center' },
-  titulo: { color: 'white', fontSize: '20px', fontWeight: 'bold', marginBottom: '30px' },
-  fotoContainer: { display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '25px' },
-  fotoPerfil: { width: '110px', height: '110px', borderRadius: '50%', border: '4px solid #7ed957', backgroundColor: 'white', marginBottom: '10px' },
-  btnAlterarFoto: { background: 'none', color: '#7ed957', border: '1px solid #7ed957', padding: '4px 12px', borderRadius: '20px', cursor: 'pointer', fontSize: '11px' },
-  infoArea: { display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '30px' },
-  inputGroup: { textAlign: 'left' },
-  label: { color: 'white', fontSize: '13px', fontWeight: 'bold', marginBottom: '5px', display: 'block' },
-  input: { width: '100%', padding: '12px', borderRadius: '8px', border: 'none', backgroundColor: '#d1d1d1', fontSize: '16px' },
-  actions: { display: 'flex', flexDirection: 'column', gap: '10px' },
-  btnSenha: { backgroundColor: '#7ed957', border: 'none', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' },
-  btnSair: { backgroundColor: '#ff4b4b', color: 'white', border: 'none', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' },
-  voltar: { color: 'white', marginTop: '20px', cursor: 'pointer', textDecoration: 'underline', fontSize: '14px' }
-};
+const styles = StyleSheet.create({
+  container: { 
+    flex: 1, 
+    backgroundColor: '#4a3061' 
+  },
+  scrollContent: {
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  box: { 
+    width: '100%', 
+    maxWidth: 400, 
+    alignItems: 'center' 
+  },
+  titulo: { 
+    color: 'white', 
+    fontSize: 20, 
+    fontWeight: 'bold', 
+    marginBottom: 30 
+  },
+  fotoContainer: { 
+    alignItems: 'center', 
+    marginBottom: 25 
+  },
+  fotoPerfil: { 
+    width: 110, 
+    height: 110, 
+    borderRadius: 55, 
+    borderWidth: 4, 
+    borderColor: '#7ed957', 
+    backgroundColor: 'white', 
+    marginBottom: 10 
+  },
+  btnAlterarFoto: { 
+    borderWidth: 1, 
+    borderColor: '#7ed957', 
+    paddingVertical: 4, 
+    paddingHorizontal: 12, 
+    borderRadius: 20 
+  },
+  textoBtnFoto: { 
+    color: '#7ed957', 
+    fontSize: 11 
+  },
+  infoArea: { 
+    width: '100%', 
+    gap: 15, 
+    marginBottom: 30 
+  },
+  inputGroup: { 
+    width: '100%' 
+  },
+  label: { 
+    color: 'white', 
+    fontSize: 13, 
+    fontWeight: 'bold', 
+    marginBottom: 5 
+  },
+  input: { 
+    width: '100%', 
+    padding: 12, 
+    borderRadius: 8, 
+    backgroundColor: '#d1d1d1', 
+    fontSize: 16,
+    color: '#333'
+  },
+  actions: { 
+    width: '100%', 
+    gap: 10 
+  },
+  btnSenha: { 
+    backgroundColor: '#7ed957', 
+    padding: 12, 
+    borderRadius: 8, 
+    flexDirection: 'row', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    gap: 8 
+  },
+  textoBtnSenha: { 
+    fontWeight: 'bold', 
+    color: 'black' 
+  },
+  btnSair: { 
+    backgroundColor: '#ff4b4b', 
+    padding: 12, 
+    borderRadius: 8, 
+    flexDirection: 'row', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    gap: 8 
+  },
+  textoBtnSair: { 
+    color: 'white', 
+    fontWeight: 'bold' 
+  },
+  voltar: { 
+    color: 'white', 
+    marginTop: 20, 
+    textDecorationLine: 'underline', 
+    fontSize: 14 
+  }
+});
 
 export default Configuracoes;
