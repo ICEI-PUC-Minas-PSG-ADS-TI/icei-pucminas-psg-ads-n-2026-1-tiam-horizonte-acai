@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "AcaiHorizonte",
+    "slug": "acai-horizonte",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#4a3061"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#4a3061"
+      }
+    }
+  }
+}
