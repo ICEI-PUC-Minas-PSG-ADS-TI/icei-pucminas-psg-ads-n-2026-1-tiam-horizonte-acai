@@ -3,11 +3,15 @@ import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 
 const menus = [
+  { label: 'Relatórios', icon: 'bar-chart-outline', rota: '/(tabs)/index' },
   { label: 'Clientes', icon: 'people-outline', rota: '/(tabs)/clientes' },
   { label: 'Ranking de Clientes', icon: 'trophy-outline', rota: '/(tabs)/ranking-cliente' },
   { label: 'Relatório de Vendas', icon: 'stats-chart-outline', rota: '/(tabs)/relatorio-vendas' },
+  { label: 'Produtos', icon: 'basket-outline', rota: '/(tabs)/produtos' },
+  { label: 'Configurações', icon: 'settings-outline', rota: '/(tabs)/configuracoes' },
   { label: 'Cadastrar Cliente', icon: 'person-add-outline', rota: '/cadastrar-cliente' },
   { label: 'Editar Cliente', icon: 'create-outline', rota: '/editar-cliente' },
+  { label: 'Novo Produto', icon: 'add-circle-outline', rota: '/novo-produto' },
   { label: 'Login', icon: 'log-in-outline', rota: '/login' },
 ]
 
