@@ -19,7 +19,7 @@ import {
     Lexend_700Bold,
     Lexend_800ExtraBold,
 } from "@expo-google-fonts/lexend";
-import { supabase } from '../lib/supabase';
+import { supabase } from '../../lib/supabase';
 import { Ionicons } from "@expo/vector-icons";
 
 const ROXO = "#46295A";
@@ -58,6 +58,7 @@ export default function LoginScreen() {
             }
 
             setMensagem({ tipo: 'sucesso', texto: `Bem-vindo, ${result.data[0].nome}!` });
+            setTimeout(() => router.replace("/(tabs)"), 900);
         } catch (e: any) {
             setMensagem({ tipo: 'erro', texto: 'Ocorreu um erro inesperado. Tente novamente.' });
         } finally {
@@ -80,7 +81,7 @@ export default function LoginScreen() {
                 {/* Logo */}
                 <View style={styles.logoContainer}>
                     <Image
-                        source={require("../assets/images/logo.png")}
+                        source={require("../../assets/images/logo.png")}
                         style={styles.logo}
                         resizeMode="contain"
                     />
