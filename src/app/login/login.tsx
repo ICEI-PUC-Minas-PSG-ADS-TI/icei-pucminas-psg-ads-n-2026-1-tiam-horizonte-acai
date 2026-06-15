@@ -21,6 +21,7 @@ import {
 } from "@expo-google-fonts/lexend";
 import { supabase } from '../../lib/supabase';
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 
 const ROXO = "#46295A";
 const VERDE = "#5EB85E";
@@ -69,91 +70,107 @@ export default function LoginScreen() {
     if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color={VERDE} />;
 
     return (
-        <KeyboardAvoidingView
+        <LinearGradient
+            colors={[ROXO, "#2E1840", "#1A0E26"]}
             style={{ flex: 1 }}
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-            <ScrollView
-                style={styles.container}
-                contentContainerStyle={styles.conteudo}
-                keyboardShouldPersistTaps="handled"
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
-                {/* Logo */}
-                <View style={styles.logoContainer}>
-                    <Image
-                        source={require("../../assets/images/logo.png")}
-                        style={styles.logo}
-                        resizeMode="contain"
-                    />
-                </View>
-
-                {/* Boas vindas */}
-                <Text style={styles.boasVindas}>Seja bem-vindo!</Text>
-
-                {/* Campos agrupados */}
-                <View style={{ width: "60%" }}>
-                    <Text style={styles.label}>Usuário</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Digite seu nome de usuário..."
-                        placeholderTextColor="#aaa"
-                        autoCapitalize="none"
-                        keyboardType="email-address"
-                        value={email}
-                        onChangeText={setEmail}
-                    />
-
-                    <Text style={styles.label}>Senha</Text>
-                    <View style={styles.senhaContainer}>
-                        <TextInput
-                            style={styles.senhaInput}
-                            placeholder="Digite sua senha..."
-                            placeholderTextColor="#aaa"
-                            secureTextEntry={!senhaVisivel}
-                            value={senha}
-                            onChangeText={setSenha}
-                        />
-                        <TouchableOpacity
-                            onPress={() => setSenhaVisivel(!senhaVisivel)}
-                            style={styles.senhaOlho}
-                        >
-                            <Ionicons
-                                name={senhaVisivel ? "eye-off" : "eye"}
-                                size={22}
-                                color="#aaa"
-                            />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-
-                {/* Mensagem */}
-                {mensagem && (
-                    <View style={[styles.mensagem, mensagem.tipo === 'sucesso' ? styles.mensagemSucesso : styles.mensagemErro]}>
-                        <Text style={styles.mensagemTexto}>
-                            {mensagem.tipo === 'sucesso' ? '✅ ' : '❌ '}{mensagem.texto}
-                        </Text>
-                    </View>
-                )}
-
-                {/* Botão Login */}
-                <TouchableOpacity
-                    style={styles.botaoLogin}
-                    onPress={handleLogin}
-                    disabled={carregando}
+                <ScrollView
+                    style={styles.container}
+                    contentContainerStyle={styles.conteudo}
+                    keyboardShouldPersistTaps="handled"
                 >
-                    {carregando ? (
-                        <ActivityIndicator color="#fff" />
-                    ) : (
-                        <Text style={styles.botaoLoginTexto}>Login</Text>
+                    {/* Logo */}
+                    <View style={styles.logoContainer}>
+                        <Image
+                            source={require("../../assets/images/logo-sem-fundo.png")}
+                            style={styles.logo}
+                            resizeMode="contain"
+                        />
+                    </View>
+
+                    {/* Boas vindas */}
+                    <Text style={styles.boasVindas}>Seja bem-vindo!</Text>
+
+                    {/* Campos agrupados */}
+                    <View style={{ width: "60%" }}>
+                        <Text style={styles.label}>Usuário</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Digite seu nome de usuário..."
+                            placeholderTextColor="#aaa"
+                            autoCapitalize="none"
+                            keyboardType="email-address"
+                            value={email}
+                            onChangeText={setEmail}
+                        />
+
+                        <Text style={styles.label}>Senha</Text>
+                        <View style={styles.senhaContainer}>
+                            <TextInput
+                                style={styles.senhaInput}
+                                placeholder="Digite sua senha..."
+                                placeholderTextColor="#aaa"
+                                secureTextEntry={!senhaVisivel}
+                                value={senha}
+                                onChangeText={setSenha}
+                            />
+                            <TouchableOpacity
+                                onPress={() => setSenhaVisivel(!senhaVisivel)}
+                                style={styles.senhaOlho}
+                            >
+                                <Ionicons
+                                    name={senhaVisivel ? "eye-off" : "eye"}
+                                    size={22}
+                                    color="#aaa"
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
+                    {/* Mensagem */}
+                    {mensagem && (
+                        <View
+                            style={[
+                                styles.mensagem,
+                                mensagem.tipo === "sucesso"
+                                    ? styles.mensagemSucesso
+                                    : styles.mensagemErro,
+                            ]}
+                        >
+                            <Text style={styles.mensagemTexto}>
+                                {mensagem.tipo === "sucesso" ? "✅ " : "❌ "}
+                                {mensagem.texto}
+                            </Text>
+                        </View>
                     )}
-                </TouchableOpacity>
-            </ScrollView>
-        </KeyboardAvoidingView>
+
+                    {/* Botão Login */}
+                    <TouchableOpacity
+                        style={styles.botaoLogin}
+                        onPress={handleLogin}
+                        disabled={carregando}
+                    >
+                        {carregando ? (
+                            <ActivityIndicator color="#fff" />
+                        ) : (
+                            <Text style={styles.botaoLoginTexto}>Login</Text>
+                        )}
+                    </TouchableOpacity>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </LinearGradient>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: ROXO },
+    container: {
+        flex: 1,
+        backgroundColor: "transparent",
+    },
     conteudo: {
         flexGrow: 1,
         alignItems: "center",
