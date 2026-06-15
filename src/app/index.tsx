@@ -1,60 +1,232 @@
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
-import { useRouter } from 'expo-router'
-import { Ionicons } from '@expo/vector-icons'
+import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  StatusBar,
+  SafeAreaView,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-const menus = [
-  { label: 'Relatórios', icon: 'bar-chart-outline', rota: '/(tabs)/index' },
-  { label: 'Clientes', icon: 'people-outline', rota: '/(tabs)/clientes' },
-  { label: 'Ranking de Clientes', icon: 'trophy-outline', rota: '/(tabs)/ranking-cliente' },
-  { label: 'Relatório de Vendas', icon: 'stats-chart-outline', rota: '/(tabs)/relatorio-vendas' },
-  { label: 'Produtos', icon: 'basket-outline', rota: '/(tabs)/produtos' },
-  { label: 'Configurações', icon: 'settings-outline', rota: '/(tabs)/configuracoes' },
-  { label: 'Cadastrar Cliente', icon: 'person-add-outline', rota: '/cadastrar-cliente' },
-  { label: 'Editar Cliente', icon: 'create-outline', rota: '/editar-cliente' },
-  { label: 'Novo Produto', icon: 'add-circle-outline', rota: '/novo-produto' },
-  { label: 'Login', icon: 'log-in-outline', rota: '/login' },
-]
+const ROXO = '#46295A';
+const ROXO_CLARO = '#5C3876';
+const VERDE = '#5EB85E';
+const BRANCO = '#FFFFFF';
 
-export default function Menu() {
-  const router = useRouter()
+const menuItems = [
+  {
+    label: 'Produtos',
+    icon: 'cube-outline',
+    route: '/produto',
+  },
+  {
+    label: 'Clientes',
+    icon: 'people-outline',
+    route: '/clientes',
+  },
+  {
+    label: 'Relatório',
+    icon: 'bar-chart-outline',
+    route: '/relatorio',
+  },
+  {
+    label: 'Colaboradores',
+    icon: 'briefcase-outline',
+    route: '/colaboradores',
+  },
+];
+
+export default function Index() {
+  const router = useRouter();
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.conteudo}>
-      <Text style={styles.titulo}>HORIZONTE</Text>
-      <Text style={styles.subtitulo}>AÇAÍ</Text>
-      <Text style={styles.descricao}>Selecione uma tela</Text>
+    <LinearGradient
+      colors={[ROXO, '#2E1840', '#1A0E26']}
+      style={styles.gradient}
+    >
+      <StatusBar barStyle="light-content" />
+      <SafeAreaView style={styles.safe}>
 
-      {menus.map((item) => (
-        <TouchableOpacity
-          key={item.rota}
-          style={styles.botao}
-          onPress={() => router.push(item.rota as any)}
-        >
-          <Ionicons name={item.icon as any} size={24} color="#5EB85E" />
-          <Text style={styles.botaoTexto}>{item.label}</Text>
-          <Ionicons name="chevron-forward" size={20} color="#aaa" />
-        </TouchableOpacity>
-      ))}
-    </ScrollView>
-  )
+        {/* Header */}
+        <View style={styles.header}>
+          <Image
+            source={require('../assets/images/logo-sem-fundo.png')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+          <View style={styles.headerActions}>
+            <TouchableOpacity style={styles.iconBtn} onPress={() => router.push('../login')}>
+              <View style={styles.avatarCircle}>
+                <Ionicons name="person-outline" size={20} color={BRANCO} />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconBtn}>
+              <Ionicons name="menu-outline" size={28} color={BRANCO} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Greeting */}
+        <View style={styles.greeting}>
+          <Text style={styles.greetingLabel}>Bem-vindo de volta 👋</Text>
+          <Text style={styles.greetingTitle}>Horizonte do Açaí</Text>
+        </View>
+
+        {/* Menu Grid */}
+        <View style={styles.grid}>
+          {menuItems.map((item) => (
+            <TouchableOpacity
+              key={item.label}
+              style={styles.card}
+              activeOpacity={0.75}
+              onPress={() => router.push(item.route as any)}
+            >
+              <View style={styles.cardGradient}>
+                <View style={styles.iconWrapper}>
+                  <Ionicons name={item.icon as any} size={26} color={VERDE} />
+                </View>
+                <Text style={styles.cardLabel}>{item.label}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {/* Linha decorativa inferior */}
+        <View style={styles.footer}>
+          <View style={styles.footerLine} />
+          <Text style={styles.footerText}>Gestão simplificada</Text>
+          <View style={styles.footerLine} />
+        </View>
+
+      </SafeAreaView>
+    </LinearGradient>
+  );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#46295A' },
-  conteudo: { paddingHorizontal: 24, paddingTop: 60, paddingBottom: 40 },
-  titulo: { color: '#fff', fontSize: 36, fontWeight: '900', textAlign: 'center', letterSpacing: 4 },
-  subtitulo: { color: '#5EB85E', fontSize: 36, fontWeight: '900', textAlign: 'center', letterSpacing: 4, marginBottom: 8 },
-  descricao: { color: '#aaa', fontSize: 14, textAlign: 'center', marginBottom: 32 },
-  botao: {
+  gradient: {
+    flex: 1,
+  },
+  safe: {
+    flex: 1,
+    paddingHorizontal: 24,
+  },
+
+  // Header
+  header: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 16,
+    paddingBottom: 4,
+  },
+  logo: {
+    width: 120,
+    height: 56,
+  },
+  headerActions: {
+    position: 'absolute',
+    right: 0,
+    top: 16,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.07)',
-    borderRadius: 14,
-    padding: 18,
-    marginBottom: 12,
-    gap: 14,
-    borderWidth: 1,
-    borderColor: 'rgba(94,184,94,0.3)',
+    gap: 12,
   },
-  botaoTexto: { flex: 1, color: '#fff', fontSize: 16, fontWeight: '600' },
-})
+  iconBtn: {
+    padding: 4,
+  },
+  avatarCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1.5,
+    borderColor: VERDE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  // Greeting
+  greeting: {
+    alignItems: 'center',
+    marginTop: 12,
+    marginBottom: 32,
+  },
+  greetingLabel: {
+    color: 'rgba(255,255,255,0.55)',
+    fontSize: 13,
+    letterSpacing: 0.5,
+    marginBottom: 4,
+  },
+  greetingTitle: {
+    color: BRANCO,
+    fontSize: 24,
+    fontWeight: '700',
+    letterSpacing: 0.3,
+  },
+
+  // Grid
+  grid: {
+    flex: 1,
+    flexDirection: 'column',
+    gap: 12,
+    justifyContent: 'center',
+  },
+  card: {
+    width: '47%',
+    height: 160,
+    alignSelf: 'center',
+    borderRadius: 20,
+    backgroundColor: BRANCO,
+    borderWidth: 2,
+    borderColor: VERDE,
+
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+  },
+  cardGradient: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  iconWrapper: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    backgroundColor: 'rgba(94,184,94,0.12)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardLabel: {
+    color: ROXO,
+    fontSize: 16,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginTop: 16,
+  },
+
+  // Footer
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 'auto',
+    paddingVertical: 24,
+  },
+  footerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+  },
+  footerText: {
+    color: 'rgba(255,255,255,0.3)',
+    fontSize: 11,
+    letterSpacing: 1.2,
+    textTransform: 'uppercase',
+  },
+});
