@@ -8,7 +8,7 @@ import {
   SafeAreaView
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../../lib/supabase';
 
 export default function DetalhesProduto() {
   const router = useRouter();

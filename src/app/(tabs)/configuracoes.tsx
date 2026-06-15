@@ -80,7 +80,7 @@ export default function Configuracoes() {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.btnSair}
-              onPress={() => router.replace('/login')}
+              onPress={() => router.replace('../login')}
             >
               <Feather name="log-out" size={18} color="white" />
               <Text style={styles.textoBtnSair}>Sair da Conta</Text>
