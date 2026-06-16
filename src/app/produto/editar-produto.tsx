@@ -1,3 +1,4 @@
+import ProtectedRoute from '@/components/ProtectedRoute';
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, Image,
@@ -57,66 +58,73 @@ export default function EditarProduto() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.box}>
-          <Image source={{ uri: logoAcai }} style={styles.logo} />
-          <Text style={styles.titulo}>EDITAR <Text style={{ color: '#7ed957' }}>PRODUTO</Text></Text>
-          <View style={styles.form}>
-            {[
-              { label: 'Nome do Produto', value: nome, setter: setNome, campo: 'nome' },
-              { label: 'Descrição', value: descricao, setter: setDescricao, campo: 'descricao' },
-              { label: 'Preço', value: preco, setter: setPreco, campo: 'preco', numeric: true },
-              { label: 'Estoque', value: quantidade, setter: setQuantidade, campo: 'quantidade', numeric: true },
-            ].map(({ label, value, setter, campo, numeric }) => (
-              <View key={campo} style={styles.inputGroup}>
-                <Text style={styles.label}>{label}</Text>
-                <View style={styles.inputWrapper}>
-                  <TextInput
-                    style={[styles.input, { backgroundColor: editando[campo as keyof typeof editando] ? '#fff' : '#d1d1d1' }]}
-                    value={value}
-                    onChangeText={setter}
-                    editable={editando[campo as keyof typeof editando]}
-                    keyboardType={numeric ? 'numeric' : 'default'}
-                  />
-                  <TouchableOpacity style={styles.editIcon} onPress={() => liberarCampo(campo)}>
-                    <Feather name="edit-3" size={20} color="#4a3061" />
-                  </TouchableOpacity>
+    <ProtectedRoute
+      permitidos={[
+        'ADMINISTRADOR',
+        'ESTOQUISTA',
+      ]}
+    >
+      <SafeAreaView style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <View style={styles.box}>
+            <Image source={{ uri: logoAcai }} style={styles.logo} />
+            <Text style={styles.titulo}>EDITAR <Text style={{ color: '#7ed957' }}>PRODUTO</Text></Text>
+            <View style={styles.form}>
+              {[
+                { label: 'Nome do Produto', value: nome, setter: setNome, campo: 'nome' },
+                { label: 'Descrição', value: descricao, setter: setDescricao, campo: 'descricao' },
+                { label: 'Preço', value: preco, setter: setPreco, campo: 'preco', numeric: true },
+                { label: 'Estoque', value: quantidade, setter: setQuantidade, campo: 'quantidade', numeric: true },
+              ].map(({ label, value, setter, campo, numeric }) => (
+                <View key={campo} style={styles.inputGroup}>
+                  <Text style={styles.label}>{label}</Text>
+                  <View style={styles.inputWrapper}>
+                    <TextInput
+                      style={[styles.input, { backgroundColor: editando[campo as keyof typeof editando] ? '#fff' : '#d1d1d1' }]}
+                      value={value}
+                      onChangeText={setter}
+                      editable={editando[campo as keyof typeof editando]}
+                      keyboardType={numeric ? 'numeric' : 'default'}
+                    />
+                    <TouchableOpacity style={styles.editIcon} onPress={() => liberarCampo(campo)}>
+                      <Feather name="edit-3" size={20} color="#4a3061" />
+                    </TouchableOpacity>
+                  </View>
                 </View>
+              ))}
+              <View style={styles.buttonRow}>
+                <TouchableOpacity style={styles.btnSalvar} onPress={() => setModalConfirmarAberto(true)}>
+                  <Text style={styles.btnText}>Salvar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btnCancelar} onPress={() => router.back()}>
+                  <Text style={styles.btnText}>Cancelar</Text>
+                </TouchableOpacity>
               </View>
-            ))}
-            <View style={styles.buttonRow}>
-              <TouchableOpacity style={styles.btnSalvar} onPress={() => setModalConfirmarAberto(true)}>
-                <Text style={styles.btnText}>Salvar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btnCancelar} onPress={() => router.back()}>
-                <Text style={styles.btnText}>Cancelar</Text>
-              </TouchableOpacity>
             </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
 
-      <Modal visible={modalConfirmarAberto} transparent animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Confirmar Edição</Text>
-              <Image source={{ uri: logoAcai }} style={{ width: 35, height: 35 }} />
-            </View>
-            <Text style={styles.modalBody}>Deseja salvar as alterações deste produto?</Text>
-            <View style={styles.modalButtons}>
-              <TouchableOpacity style={styles.btnModalConfirm} onPress={salvarAlteracoes}>
-                <Text style={styles.btnText}>Confirmar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btnModalCancel} onPress={() => setModalConfirmarAberto(false)}>
-                <Text style={styles.btnText}>Voltar</Text>
-              </TouchableOpacity>
+        <Modal visible={modalConfirmarAberto} transparent animationType="fade">
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>Confirmar Edição</Text>
+                <Image source={{ uri: logoAcai }} style={{ width: 35, height: 35 }} />
+              </View>
+              <Text style={styles.modalBody}>Deseja salvar as alterações deste produto?</Text>
+              <View style={styles.modalButtons}>
+                <TouchableOpacity style={styles.btnModalConfirm} onPress={salvarAlteracoes}>
+                  <Text style={styles.btnText}>Confirmar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btnModalCancel} onPress={() => setModalConfirmarAberto(false)}>
+                  <Text style={styles.btnText}>Voltar</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
-    </SafeAreaView>
+        </Modal>
+      </SafeAreaView>
+    </ProtectedRoute>
   );
 }
 

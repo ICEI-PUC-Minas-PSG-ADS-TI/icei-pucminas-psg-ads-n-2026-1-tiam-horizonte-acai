@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from "react";
 import {
     View,
@@ -57,7 +58,29 @@ export default function LoginScreen() {
                 return setMensagem({ tipo: 'erro', texto: 'Usuário ou senha incorretos.' });
             }
 
-            setMensagem({ tipo: 'sucesso', texto: `Bem-vindo, ${result.data[0].nome}!` });
+            const funcionario = result.data[0];
+
+            console.log(funcionario);
+
+            await AsyncStorage.setItem(
+                'tipoFuncionario',
+                funcionario.tipo
+            );
+
+            await AsyncStorage.setItem(
+                'nomeFuncionario',
+                funcionario.nome
+            );
+
+            console.log(
+                await AsyncStorage.getItem('tipoFuncionario')
+            );
+
+            setMensagem({
+                tipo: 'sucesso',
+                texto: `Bem-vindo, ${funcionario.nome}!`
+            });
+
             setTimeout(() => router.replace("/(tabs)"), 900);
         } catch (e: any) {
             setMensagem({ tipo: 'erro', texto: 'Ocorreu um erro inesperado. Tente novamente.' });

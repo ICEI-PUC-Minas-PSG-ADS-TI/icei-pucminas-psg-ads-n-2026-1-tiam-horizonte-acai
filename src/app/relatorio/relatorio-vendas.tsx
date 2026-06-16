@@ -1,4 +1,7 @@
 import { Button } from '@react-navigation/elements'
+import { useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
 import { Image } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useState } from 'react'
@@ -19,6 +22,26 @@ export default function Home() {
 
   const [modalVisible, setModalVisible] = useState(false)
   const [produtosMaisVendidos, setProdutosMaisVendidos] = useState<any[]>([])
+
+  const router = useRouter();
+
+  useEffect(() => {
+    async function verificarPermissao() {
+      const perfil =
+        await AsyncStorage.getItem(
+          'tipoFuncionario'
+        );
+
+      if (
+        perfil !== 'GESTOR' &&
+        perfil !== 'ADMINISTRADOR'
+      ) {
+        router.replace('/login/login');
+      }
+    }
+
+    verificarPermissao();
+  }, []);
 
   async function buscarRelatorio(dataInicial: Date, dataFinal: Date) {
     const { data, error } = await supabase

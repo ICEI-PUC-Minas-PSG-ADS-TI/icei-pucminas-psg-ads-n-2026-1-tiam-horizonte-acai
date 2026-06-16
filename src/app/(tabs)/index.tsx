@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
 import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
@@ -15,16 +17,54 @@ const menus = [
   { label: 'Login', icon: 'log-in-outline', rota: '/login' },
 ]
 
+const permissoes: Record<string, string[]> = {
+  ADMINISTRADOR: menus.map(menu => menu.label),
+
+  GESTOR: [
+    'Relatórios',
+    'Clientes',
+    'Ranking de Clientes',
+    'Relatório de Vendas',
+  ],
+
+  VENDEDOR: [
+    'Clientes',
+    'Cadastrar Cliente',
+    'Editar Cliente',
+  ],
+
+  ESTOQUISTA: [
+    'Produtos',
+    'Novo Produto',
+  ],
+};
+
+
 export default function Menu() {
   const router = useRouter()
+  const [perfil, setPerfil] = useState('');
 
+  useEffect(() => {
+  async function carregarPerfil() {
+    const tipo = await AsyncStorage.getItem('tipoFuncionario');
+
+    if (tipo) {
+      setPerfil(tipo);
+    }
+  }
+
+  carregarPerfil();
+}, []);
+  const menusFiltrados = menus.filter(menu =>
+  permissoes[perfil]?.includes(menu.label)
+);
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.conteudo}>
       <Text style={styles.titulo}>HORIZONTE</Text>
       <Text style={styles.subtitulo}>AÇAÍ</Text>
       <Text style={styles.descricao}>Selecione uma tela</Text>
 
-      {menus.map((item) => (
+      {menusFiltrados.map((item) => (
         <TouchableOpacity
           key={item.rota}
           style={styles.botao}
