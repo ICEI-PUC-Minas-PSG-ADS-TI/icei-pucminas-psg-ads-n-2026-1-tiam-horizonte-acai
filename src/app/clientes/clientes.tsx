@@ -193,7 +193,7 @@ export default function ClientesScreen() {
       {/* Botão Novo Cliente */}
       <TouchableOpacity
         style={styles.botaoNovo}
-        onPress={() => router.push('/cadastrar-cliente' as any)}
+        onPress={() => router.push('/clientes/cadastrar-cliente' as any)}
       >
         <Text style={styles.botaoNovoTexto}>Novo Cliente  +</Text>
       </TouchableOpacity>
