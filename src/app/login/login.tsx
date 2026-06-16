@@ -60,8 +60,6 @@ export default function LoginScreen() {
 
             const funcionario = result.data[0];
 
-            console.log(funcionario);
-
             await AsyncStorage.setItem(
                 'tipoFuncionario',
                 funcionario.tipo
@@ -70,10 +68,6 @@ export default function LoginScreen() {
             await AsyncStorage.setItem(
                 'nomeFuncionario',
                 funcionario.nome
-            );
-
-            console.log(
-                await AsyncStorage.getItem('tipoFuncionario')
             );
 
             setMensagem({
