@@ -1,3 +1,4 @@
+import ProtectedRoute from '@/components/ProtectedRoute';
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -99,105 +100,121 @@ export default function ClientesScreen() {
 
   function CardCliente({ item }: { item: Cliente }) {
     return (
-      <View style={styles.card}>
-        <View style={styles.cardBorda} />
-        <View style={styles.cardConteudo}>
-          <Text style={styles.cardNome}>{item.nome}</Text>
-          <Text style={styles.cardInfo}>CNPJ: {formatarCNPJ(item.cnpj)}</Text>
-          <Text style={styles.cardCompras}>Compras: {item.compras ?? 0}</Text>
-          <View style={styles.cardBotoes}>
-            <TouchableOpacity
-              style={[styles.botaoCard, styles.botaoEditar]}
-              onPress={() =>
-                router.push({
-                  pathname: '/editar-cliente' as any,
-                  params: {
-                    id: item.id,
-                    nome: item.nome,
-                    cnpj: item.cnpj,
-                    email: item.email ?? '',
-                    telefone: item.telefone ?? '',
-                  },
-                })
-              }
-            >
-              <Text style={styles.botaoCardTexto}>Editar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.botaoCard, styles.botaoVerMais]}
-              onPress={() =>
-                Alert.alert(
-                  item.nome,
-                  `CNPJ: ${formatarCNPJ(item.cnpj)}\nEmail: ${item.email ?? '—'}\nTelefone: ${item.telefone ? formatarTelefone(item.telefone) : '—'}\nCadastrado em: ${new Date(item.criado_em).toLocaleDateString('pt-BR')}`,
-                )
-              }
-            >
-              <Text style={[styles.botaoCardTexto, { color: '#1a1a1a' }]}>Ver Mais</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.botaoCard, styles.botaoExcluir]}
-              onPress={() => confirmarExclusao(item)}
-            >
-              <Text style={styles.botaoCardTexto}>Excluir</Text>
-            </TouchableOpacity>
+      <ProtectedRoute
+        permitidos={[
+          'GESTOR',
+          'VENDEDOR',
+          'ADMINISTRADOR',
+        ]}
+      >
+        <View style={styles.card}>
+          <View style={styles.cardBorda} />
+          <View style={styles.cardConteudo}>
+            <Text style={styles.cardNome}>{item.nome}</Text>
+            <Text style={styles.cardInfo}>CNPJ: {formatarCNPJ(item.cnpj)}</Text>
+            <Text style={styles.cardCompras}>Compras: {item.compras ?? 0}</Text>
+            <View style={styles.cardBotoes}>
+              <TouchableOpacity
+                style={[styles.botaoCard, styles.botaoEditar]}
+                onPress={() =>
+                  router.push({
+                    pathname: '/editar-cliente' as any,
+                    params: {
+                      id: item.id,
+                      nome: item.nome,
+                      cnpj: item.cnpj,
+                      email: item.email ?? '',
+                      telefone: item.telefone ?? '',
+                    },
+                  })
+                }
+              >
+                <Text style={styles.botaoCardTexto}>Editar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.botaoCard, styles.botaoVerMais]}
+                onPress={() =>
+                  Alert.alert(
+                    item.nome,
+                    `CNPJ: ${formatarCNPJ(item.cnpj)}\nEmail: ${item.email ?? '—'}\nTelefone: ${item.telefone ? formatarTelefone(item.telefone) : '—'}\nCadastrado em: ${new Date(item.criado_em).toLocaleDateString('pt-BR')}`,
+                  )
+                }
+              >
+                <Text style={[styles.botaoCardTexto, { color: '#1a1a1a' }]}>Ver Mais</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.botaoCard, styles.botaoExcluir]}
+                onPress={() => confirmarExclusao(item)}
+              >
+                <Text style={styles.botaoCardTexto}>Excluir</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
+      </ProtectedRoute>
     );
   }
 
   if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color="#4ade80" />;
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity>
-          <Ionicons name="home" size={26} color="#fff" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitulo}>
-          CLI<Text style={styles.headerDestaque}>ENTES</Text>
-        </Text>
-        <TouchableOpacity>
-          <Ionicons name="menu" size={28} color="#fff" />
+    <ProtectedRoute
+      permitidos={[
+        'GESTOR',
+        'VENDEDOR',
+        'ADMINISTRADOR',
+      ]}
+    >
+      <View style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity>
+            <Ionicons name="home" size={26} color="#fff" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitulo}>
+            CLI<Text style={styles.headerDestaque}>ENTES</Text>
+          </Text>
+          <TouchableOpacity>
+            <Ionicons name="menu" size={28} color="#fff" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Busca */}
+        <View style={styles.buscaContainer}>
+          <TextInput
+            style={styles.buscaInput}
+            placeholder="Buscar Cliente"
+            placeholderTextColor="#999"
+            value={busca}
+            onChangeText={setBusca}
+          />
+          <Ionicons name="search" size={20} color="#555" style={styles.buscaIcone} />
+        </View>
+
+        {/* Lista */}
+        {carregando ? (
+          <ActivityIndicator size="large" color="#4ade80" style={{ marginTop: 40 }} />
+        ) : (
+          <FlatList
+            data={filtrados}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => <CardCliente item={item} />}
+            contentContainerStyle={styles.lista}
+            ListEmptyComponent={
+              <Text style={styles.vazio}>Nenhum cliente encontrado.</Text>
+            }
+          />
+        )}
+
+        {/* Botão Novo Cliente */}
+        <TouchableOpacity
+          style={styles.botaoNovo}
+          onPress={() => router.push('/cadastrar-cliente' as any)}
+        >
+          <Text style={styles.botaoNovoTexto}>Novo Cliente  +</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Busca */}
-      <View style={styles.buscaContainer}>
-        <TextInput
-          style={styles.buscaInput}
-          placeholder="Buscar Cliente"
-          placeholderTextColor="#999"
-          value={busca}
-          onChangeText={setBusca}
-        />
-        <Ionicons name="search" size={20} color="#555" style={styles.buscaIcone} />
-      </View>
-
-      {/* Lista */}
-      {carregando ? (
-        <ActivityIndicator size="large" color="#4ade80" style={{ marginTop: 40 }} />
-      ) : (
-        <FlatList
-          data={filtrados}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <CardCliente item={item} />}
-          contentContainerStyle={styles.lista}
-          ListEmptyComponent={
-            <Text style={styles.vazio}>Nenhum cliente encontrado.</Text>
-          }
-        />
-      )}
-
-      {/* Botão Novo Cliente */}
-      <TouchableOpacity
-        style={styles.botaoNovo}
-        onPress={() => router.push('/cadastrar-cliente' as any)}
-      >
-        <Text style={styles.botaoNovoTexto}>Novo Cliente  +</Text>
-      </TouchableOpacity>
-    </View>
+    </ProtectedRoute>
   );
 }
 
@@ -255,7 +272,7 @@ const styles = StyleSheet.create({
   botaoCardTexto: { color: '#fff', fontFamily: 'Lexend_700Bold', fontSize: 12 },
   botaoEditar: { backgroundColor: ROXO },
   botaoVerMais: { backgroundColor: VERDE },
-  botaoExcluir: { backgroundColor: VERMELHO },  
+  botaoExcluir: { backgroundColor: VERMELHO },
 
   botaoNovo: {
     position: 'absolute',

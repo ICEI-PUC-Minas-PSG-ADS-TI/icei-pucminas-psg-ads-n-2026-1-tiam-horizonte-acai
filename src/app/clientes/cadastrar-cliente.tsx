@@ -1,3 +1,4 @@
+import ProtectedRoute from '@/components/ProtectedRoute';
 import React, { useState } from 'react';
 import {
   View,
@@ -77,93 +78,101 @@ export default function CadastrarClienteScreen() {
   if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color="#4ade80" />;
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    <ProtectedRoute
+      permitidos={[
+        'GESTOR',
+        'VENDEDOR',
+        'ADMINISTRADOR',
+      ]}
     >
-      <ScrollView style={styles.container} contentContainerStyle={styles.conteudo} keyboardShouldPersistTaps="handled">
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <ScrollView style={styles.container} contentContainerStyle={styles.conteudo} keyboardShouldPersistTaps="handled">
 
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.botaoVoltar}>
-            <Ionicons name="arrow-back" size={26} color="#fff" />
-          </TouchableOpacity>
-          <View style={styles.headerTituloContainer}>
-            <Text style={styles.headerLinha1}>NOVO</Text>
-            <Text style={styles.headerLinha2}>CLIENTE</Text>
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => router.back()} style={styles.botaoVoltar}>
+              <Ionicons name="arrow-back" size={26} color="#fff" />
+            </TouchableOpacity>
+            <View style={styles.headerTituloContainer}>
+              <Text style={styles.headerLinha1}>NOVO</Text>
+              <Text style={styles.headerLinha2}>CLIENTE</Text>
+            </View>
           </View>
-        </View>
 
-        <Text style={styles.subtitulo}>
-          Preencha os campos para efetuar o{'\n'}cadastro do novo Cliente
-        </Text>
+          <Text style={styles.subtitulo}>
+            Preencha os campos para efetuar o{'\n'}cadastro do novo Cliente
+          </Text>
 
-        {/* Campos */}
-        <Text style={styles.label}>Nome*</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Digite o nome..."
-          placeholderTextColor="#aaa"
-          value={nome}
-          onChangeText={setNome}
-        />
+          {/* Campos */}
+          <Text style={styles.label}>Nome*</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Digite o nome..."
+            placeholderTextColor="#aaa"
+            value={nome}
+            onChangeText={setNome}
+          />
 
-        <Text style={styles.label}>CNPJ*</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="00.000.000/0000-00"
-          placeholderTextColor="#aaa"
-          keyboardType="numeric"
-          value={cnpj}
-          onChangeText={(v) => setCnpj(formatarCNPJ(v))}
-          maxLength={18}
-        />
+          <Text style={styles.label}>CNPJ*</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="00.000.000/0000-00"
+            placeholderTextColor="#aaa"
+            keyboardType="numeric"
+            value={cnpj}
+            onChangeText={(v) => setCnpj(formatarCNPJ(v))}
+            maxLength={18}
+          />
 
-        <Text style={styles.label}>Email</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Digite o email..."
-          placeholderTextColor="#aaa"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          value={email}
-          onChangeText={setEmail}
-        />
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Digite o email..."
+            placeholderTextColor="#aaa"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            value={email}
+            onChangeText={setEmail}
+          />
 
-        <Text style={styles.label}>Telefone</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="(00) 00000-0000"
-          placeholderTextColor="#aaa"
-          keyboardType="numeric"
-          value={telefone}
-          onChangeText={(v) => setTelefone(formatarTelefone(v))}
-          maxLength={15}
-        />
+          <Text style={styles.label}>Telefone</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="(00) 00000-0000"
+            placeholderTextColor="#aaa"
+            keyboardType="numeric"
+            value={telefone}
+            onChangeText={(v) => setTelefone(formatarTelefone(v))}
+            maxLength={15}
+          />
 
-        {/* Botões */}
-        <View style={styles.botoes}>
-          <TouchableOpacity
-            style={[styles.botao, styles.botaoCadastrar]}
-            onPress={cadastrar}
-            disabled={salvando}
-          >
-            {salvando
-              ? <ActivityIndicator color="#1a1a1a" />
-              : <Text style={styles.botaoTextoCadastrar}>CADASTRAR</Text>
-            }
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.botao, styles.botaoCancelar]}
-            onPress={() => router.back()}
-            disabled={salvando}
-          >
-            <Text style={styles.botaoTextoCancelar}>CANCELAR</Text>
-          </TouchableOpacity>
-        </View>
+          {/* Botões */}
+          <View style={styles.botoes}>
+            <TouchableOpacity
+              style={[styles.botao, styles.botaoCadastrar]}
+              onPress={cadastrar}
+              disabled={salvando}
+            >
+              {salvando
+                ? <ActivityIndicator color="#1a1a1a" />
+                : <Text style={styles.botaoTextoCadastrar}>CADASTRAR</Text>
+              }
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.botao, styles.botaoCancelar]}
+              onPress={() => router.back()}
+              disabled={salvando}
+            >
+              <Text style={styles.botaoTextoCancelar}>CANCELAR</Text>
+            </TouchableOpacity>
+          </View>
 
-      </ScrollView>
-    </KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </ProtectedRoute>
   );
 }
 
