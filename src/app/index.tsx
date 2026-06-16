@@ -8,7 +8,14 @@ import {
   Image,
   StatusBar,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
+import {
+  useFonts,
+  Lexend_400Regular,
+  Lexend_700Bold,
+  Lexend_800ExtraBold,
+} from "@expo-google-fonts/lexend";
 import { Ionicons } from '@expo/vector-icons';
 
 const ROXO = '#46295A';
@@ -20,27 +27,37 @@ const menuItems = [
   {
     label: 'Produtos',
     icon: 'cube-outline',
-    route: '/produto',
+    route: '/produto/produtos',
   },
   {
     label: 'Clientes',
     icon: 'people-outline',
-    route: '/clientes',
+    route: '/clientes/clientes',
   },
   {
-    label: 'Relatório',
-    icon: 'bar-chart-outline',
-    route: '/relatorio',
+    label: 'Vendas',
+    icon: 'cash-outline',
+    route: '/venda/vendas',
   },
   {
     label: 'Colaboradores',
     icon: 'briefcase-outline',
-    route: '/colaboradores',
+    route: '/colaborador/colaboradores',
   },
 ];
 
 export default function Index() {
   const router = useRouter();
+
+  const [fontsLoaded] = useFonts({
+    Lexend_400Regular,
+    Lexend_700Bold,
+    Lexend_800ExtraBold,
+  });
+
+  if (!fontsLoaded) {
+    return <ActivityIndicator style={{ flex: 1 }} color={VERDE} />;
+  }
 
   return (
     <LinearGradient
@@ -57,22 +74,29 @@ export default function Index() {
             style={styles.logo}
             resizeMode="contain"
           />
+
           <View style={styles.headerActions}>
-            <TouchableOpacity style={styles.iconBtn} onPress={() => router.push('../login')}>
+            <TouchableOpacity
+              style={styles.iconBtn}
+              onPress={() => router.push('../login')}
+            >
               <View style={styles.avatarCircle}>
-                <Ionicons name="person-outline" size={20} color={BRANCO} />
+                <Ionicons
+                  name="person-outline"
+                  size={22}
+                  color={BRANCO}
+                />
               </View>
             </TouchableOpacity>
+
             <TouchableOpacity style={styles.iconBtn}>
-              <Ionicons name="menu-outline" size={28} color={BRANCO} />
+              <Ionicons
+                name="menu-outline"
+                size={34}
+                color={BRANCO}
+              />
             </TouchableOpacity>
           </View>
-        </View>
-
-        {/* Greeting */}
-        <View style={styles.greeting}>
-          <Text style={styles.greetingLabel}>Bem-vindo de volta 👋</Text>
-          <Text style={styles.greetingTitle}>Horizonte do Açaí</Text>
         </View>
 
         {/* Menu Grid */}
@@ -86,9 +110,16 @@ export default function Index() {
             >
               <View style={styles.cardGradient}>
                 <View style={styles.iconWrapper}>
-                  <Ionicons name={item.icon as any} size={26} color={VERDE} />
+                  <Ionicons
+                    name={item.icon as any}
+                    size={40}
+                    color={VERDE}
+                  />
                 </View>
-                <Text style={styles.cardLabel}>{item.label}</Text>
+
+                <Text style={styles.cardLabel}>
+                  {item.label}
+                </Text>
               </View>
             </TouchableOpacity>
           ))}
@@ -96,8 +127,6 @@ export default function Index() {
 
         {/* Linha decorativa inferior */}
         <View style={styles.footer}>
-          <View style={styles.footerLine} />
-          <Text style={styles.footerText}>Gestão simplificada</Text>
           <View style={styles.footerLine} />
         </View>
 
@@ -110,6 +139,7 @@ const styles = StyleSheet.create({
   gradient: {
     flex: 1,
   },
+
   safe: {
     flex: 1,
     paddingHorizontal: 24,
@@ -117,26 +147,31 @@ const styles = StyleSheet.create({
 
   // Header
   header: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 16,
-    paddingBottom: 4,
+    paddingTop: 20,
+    paddingBottom: 12,
   },
+
   logo: {
-    width: 120,
-    height: 56,
+    width: 200,
+    height: 100,
   },
+
   headerActions: {
-    position: 'absolute',
-    right: 0,
-    top: 16,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    marginRight: 10,
+    gap: 14,
+    height: 80,
   },
+
   iconBtn: {
     padding: 4,
   },
+
   avatarCircle: {
     width: 36,
     height: 36,
@@ -146,26 +181,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
-  // Greeting
-  greeting: {
-    alignItems: 'center',
-    marginTop: 12,
-    marginBottom: 32,
-  },
-  greetingLabel: {
-    color: 'rgba(255,255,255,0.55)',
-    fontSize: 13,
-    letterSpacing: 0.5,
-    marginBottom: 4,
-  },
-  greetingTitle: {
-    color: BRANCO,
-    fontSize: 24,
-    fontWeight: '700',
-    letterSpacing: 0.3,
-  },
-
+  
   // Grid
   grid: {
     flex: 1,
@@ -173,39 +189,46 @@ const styles = StyleSheet.create({
     gap: 12,
     justifyContent: 'center',
   },
+
   card: {
-    width: '47%',
-    height: 160,
+    width: '75%',
+    height: 145,
     alignSelf: 'center',
     borderRadius: 20,
     backgroundColor: BRANCO,
     borderWidth: 2,
     borderColor: VERDE,
-
+    margin: 'auto',
     elevation: 4,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
     shadowOpacity: 0.15,
     shadowRadius: 6,
   },
+
   cardGradient: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
+
   iconWrapper: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
+    width: 70,
+    height: 70,
+    borderRadius: 20,
     backgroundColor: 'rgba(94,184,94,0.12)',
     alignItems: 'center',
     justifyContent: 'center',
   },
+
   cardLabel: {
     color: ROXO,
     fontSize: 16,
-    fontWeight: '700',
+    fontFamily: 'Lexend_700Bold',
     textAlign: 'center',
     marginTop: 16,
   },
@@ -218,14 +241,17 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
     paddingVertical: 24,
   },
+
   footerLine: {
     flex: 1,
     height: 1,
     backgroundColor: 'rgba(255,255,255,0.1)',
   },
+
   footerText: {
     color: 'rgba(255,255,255,0.3)',
     fontSize: 11,
+    fontFamily: 'Lexend_400Regular',
     letterSpacing: 1.2,
     textTransform: 'uppercase',
   },
