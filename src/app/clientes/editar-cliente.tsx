@@ -1,3 +1,4 @@
+import ProtectedRoute from '@/components/ProtectedRoute';
 import React, { useState } from 'react';
 import {
   View,
@@ -90,97 +91,105 @@ export default function EditarClienteScreen() {
   if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color="#4ade80" />;
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    <ProtectedRoute
+      permitidos={[
+        'GESTOR',
+        'VENDEDOR',
+        'ADMINISTRADOR',
+      ]}
     >
-      <ScrollView style={styles.container} contentContainerStyle={styles.conteudo} keyboardShouldPersistTaps="handled">
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <ScrollView style={styles.container} contentContainerStyle={styles.conteudo} keyboardShouldPersistTaps="handled">
 
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.botaoVoltar}>
-            <Ionicons name="arrow-back" size={26} color="#fff" />
-          </TouchableOpacity>
-          <View style={styles.headerTituloContainer}>
-            <Text style={styles.headerLinha1}>EDITAR</Text>
-            <Text style={styles.headerLinha2}>CLIENTE</Text>
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => router.back()} style={styles.botaoVoltar}>
+              <Ionicons name="arrow-back" size={26} color="#fff" />
+            </TouchableOpacity>
+            <View style={styles.headerTituloContainer}>
+              <Text style={styles.headerLinha1}>EDITAR</Text>
+              <Text style={styles.headerLinha2}>CLIENTE</Text>
+            </View>
           </View>
-        </View>
 
-        {/* Campos */}
-        <Text style={styles.label}>Nome do Cliente</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            value={nome}
-            onChangeText={setNome}
-            placeholderTextColor="#aaa"
-          />
-          <Ionicons name="pencil" size={18} color="#aaa" style={styles.inputIcone} />
-        </View>
+          {/* Campos */}
+          <Text style={styles.label}>Nome do Cliente</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              value={nome}
+              onChangeText={setNome}
+              placeholderTextColor="#aaa"
+            />
+            <Ionicons name="pencil" size={18} color="#aaa" style={styles.inputIcone} />
+          </View>
 
-        <Text style={styles.label}>CNPJ</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            value={cnpj}
-            onChangeText={(v) => setCnpj(formatarCNPJ(v))}
-            keyboardType="numeric"
-            maxLength={18}
-            placeholderTextColor="#aaa"
-          />
-          <Ionicons name="pencil" size={18} color="#aaa" style={styles.inputIcone} />
-        </View>
+          <Text style={styles.label}>CNPJ</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              value={cnpj}
+              onChangeText={(v) => setCnpj(formatarCNPJ(v))}
+              keyboardType="numeric"
+              maxLength={18}
+              placeholderTextColor="#aaa"
+            />
+            <Ionicons name="pencil" size={18} color="#aaa" style={styles.inputIcone} />
+          </View>
 
-        <Text style={styles.label}>Email</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            placeholderTextColor="#aaa"
-          />
-          <Ionicons name="pencil" size={18} color="#aaa" style={styles.inputIcone} />
-        </View>
+          <Text style={styles.label}>Email</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              placeholderTextColor="#aaa"
+            />
+            <Ionicons name="pencil" size={18} color="#aaa" style={styles.inputIcone} />
+          </View>
 
-        <Text style={styles.label}>Telefone</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            value={telefone}
-            onChangeText={(v) => setTelefone(formatarTelefone(v))}
-            keyboardType="numeric"
-            maxLength={15}
-            placeholderTextColor="#aaa"
-          />
-          <Ionicons name="pencil" size={18} color="#aaa" style={styles.inputIcone} />
-        </View>
+          <Text style={styles.label}>Telefone</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              value={telefone}
+              onChangeText={(v) => setTelefone(formatarTelefone(v))}
+              keyboardType="numeric"
+              maxLength={15}
+              placeholderTextColor="#aaa"
+            />
+            <Ionicons name="pencil" size={18} color="#aaa" style={styles.inputIcone} />
+          </View>
 
-        {/* Botões */}
-        <View style={styles.botoes}>
-          <TouchableOpacity
-            style={[styles.botao, styles.botaoSalvar]}
-            onPress={salvar}
-            disabled={salvando}
-          >
-            {salvando
-              ? <ActivityIndicator color="#1a1a1a" />
-              : <Text style={styles.botaoTextoSalvar}>Salvar</Text>
-            }
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.botao, styles.botaoCancelar]}
-            onPress={() => router.back()}
-            disabled={salvando}
-          >
-            <Text style={styles.botaoTextoCancelar}>Cancelar</Text>
-          </TouchableOpacity>
-        </View>
+          {/* Botões */}
+          <View style={styles.botoes}>
+            <TouchableOpacity
+              style={[styles.botao, styles.botaoSalvar]}
+              onPress={salvar}
+              disabled={salvando}
+            >
+              {salvando
+                ? <ActivityIndicator color="#1a1a1a" />
+                : <Text style={styles.botaoTextoSalvar}>Salvar</Text>
+              }
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.botao, styles.botaoCancelar]}
+              onPress={() => router.back()}
+              disabled={salvando}
+            >
+              <Text style={styles.botaoTextoCancelar}>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
 
-      </ScrollView>
-    </KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </ProtectedRoute>
   );
 }
 
