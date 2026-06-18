@@ -1,4 +1,6 @@
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   View,
@@ -23,7 +25,9 @@ const ROXO_CLARO = '#5C3876';
 const VERDE = '#5EB85E';
 const BRANCO = '#FFFFFF';
 
-const menuItems = [
+
+
+/*const menuItems = [
   {
     label: 'Produtos',
     icon: 'cube-outline',
@@ -44,10 +48,110 @@ const menuItems = [
     icon: 'briefcase-outline',
     route: '/colaborador/colaboradores',
   },
-];
+];*/
 
 export default function Index() {
   const router = useRouter();
+
+  const [tipoFuncionario, setTipoFuncionario] = useState('');
+  const [menuItems, setMenuItems] = useState<any[]>([]);
+
+
+useEffect(() => {
+  async function carregar() {
+    const tipo = await AsyncStorage.getItem('tipoFuncionario');
+
+    setTipoFuncionario(tipo ?? '');
+
+    switch (tipo) {
+      case 'ADMINISTRADOR':
+        setMenuItems([
+          {
+            label: 'Produtos',
+            icon: 'cube-outline',
+            route: '/produto/produtos',
+          },
+          {
+            label: 'Clientes',
+            icon: 'people-outline',
+            route: '/clientes/clientes',
+          },
+          {
+            label: 'Vendas',
+            icon: 'cash-outline',
+            route: '/venda/vendas',
+          },
+          {
+            label: 'Colaboradores',
+            icon: 'briefcase-outline',
+            route: '/colaborador/colaboradores',
+          },
+          {
+            label: 'Relatórios',
+            icon: 'bar-chart-outline',
+            route: '/relatorio/relatorio-vendas',
+          },
+        ]);
+        break;
+
+      case 'GESTOR':
+        setMenuItems([
+          {
+            label: 'Produtos',
+            icon: 'cube-outline',
+            route: '/produto/produtos',
+          },
+          {
+            label: 'Clientes',
+            icon: 'people-outline',
+            route: '/clientes/clientes',
+          },
+          {
+            label: 'Colaboradores',
+            icon: 'briefcase-outline',
+            route: '/colaborador/colaboradores',
+          },
+          {
+            label: 'Relatórios',
+            icon: 'bar-chart-outline',
+            route: '/relatorio/relatorio-vendas',
+          },
+        ]);
+        break;
+
+      case 'VENDEDOR':
+        setMenuItems([
+          {
+            label: 'Vendas',
+            icon: 'cash-outline',
+            route: '/venda/vendas',
+          },
+          {
+            label: 'Ranking',
+            icon: 'trophy-outline',
+            route: '/clientes/ranking-cliente',
+          },
+        ]);
+        break;
+
+      case 'ESTOQUISTA':
+        setMenuItems([
+          {
+            label: 'Produtos',
+            icon: 'cube-outline',
+            route: '/produto/produtos',
+          },
+        ]);
+        break;
+
+      default:
+        setMenuItems([]);
+        break;
+    }
+  }
+
+  carregar();
+}, []);
 
   const [fontsLoaded] = useFonts({
     Lexend_400Regular,
@@ -181,7 +285,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  
+
   // Grid
   grid: {
     flex: 1,

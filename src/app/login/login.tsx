@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from "react";
 import {
     View,
@@ -58,8 +59,24 @@ export default function LoginScreen() {
                 return setMensagem({ tipo: 'erro', texto: 'Usuário ou senha incorretos.' });
             }
 
-            setMensagem({ tipo: 'sucesso', texto: `Bem-vindo, ${result.data[0].nome}!` });
-            setTimeout(() => router.replace("/(tabs)"), 900);
+            const funcionario = result.data[0];
+
+            await AsyncStorage.setItem(
+                'tipoFuncionario',
+                funcionario.tipo
+            );
+
+            await AsyncStorage.setItem(
+                'nomeFuncionario',
+                funcionario.nome
+            );
+
+            setMensagem({
+                tipo: 'sucesso',
+                texto: `Bem-vindo, ${funcionario.nome}!`
+            });
+
+            setTimeout(() => router.replace("/"), 900);
         } catch (e: any) {
             setMensagem({ tipo: 'erro', texto: 'Ocorreu um erro inesperado. Tente novamente.' });
         } finally {
@@ -86,7 +103,7 @@ export default function LoginScreen() {
                     {/* Logo */}
                     <View style={styles.logoContainer}>
                         <Image
-                            source={require("../../assets/images/logo-sem-fundo.png")}
+                            source={require("../../assets/images/logo.png")}
                             style={styles.logo}
                             resizeMode="contain"
                         />
@@ -133,17 +150,9 @@ export default function LoginScreen() {
 
                     {/* Mensagem */}
                     {mensagem && (
-                        <View
-                            style={[
-                                styles.mensagem,
-                                mensagem.tipo === "sucesso"
-                                    ? styles.mensagemSucesso
-                                    : styles.mensagemErro,
-                            ]}
-                        >
+                        <View style={[styles.mensagem, mensagem.tipo === 'sucesso' ? styles.mensagemSucesso : styles.mensagemErro]}>
                             <Text style={styles.mensagemTexto}>
-                                {mensagem.tipo === "sucesso" ? "✅ " : "❌ "}
-                                {mensagem.texto}
+                                {mensagem.tipo === 'sucesso' ? '✅ ' : '❌ '}{mensagem.texto}
                             </Text>
                         </View>
                     )}
@@ -160,6 +169,7 @@ export default function LoginScreen() {
                             <Text style={styles.botaoLoginTexto}>Login</Text>
                         )}
                     </TouchableOpacity>
+
                 </ScrollView>
             </KeyboardAvoidingView>
         </LinearGradient>
