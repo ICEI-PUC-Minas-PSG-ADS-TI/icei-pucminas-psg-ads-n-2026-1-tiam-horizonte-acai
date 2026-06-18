@@ -12,6 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useFonts, Lexend_400Regular, Lexend_700Bold, Lexend_800ExtraBold } from '@expo-google-fonts/lexend';
+import { LinearGradient } from 'expo-linear-gradient';
 // import { supabase } from '../../lib/supabase';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
@@ -149,15 +150,16 @@ export default function ClientesScreen() {
   if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color="#4ade80" />;
 
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={[ROXO, '#2E1840', '#1A0E26']}
+      style={styles.container}
+    >
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity>
           <Ionicons name="home" size={26} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitulo}>
-          CLI<Text style={styles.headerDestaque}>ENTES</Text>
-        </Text>
+        <Text style={styles.headerTitulo}>CLIENTES</Text>
         <TouchableOpacity>
           <Ionicons name="menu" size={28} color="#fff" />
         </TouchableOpacity>
@@ -197,7 +199,11 @@ export default function ClientesScreen() {
       >
         <Text style={styles.botaoNovoTexto}>Novo Cliente  +</Text>
       </TouchableOpacity>
-    </View>
+
+      <View style={styles.footer}>
+        <View style={styles.footerLine} />
+      </View>
+    </LinearGradient>
   );
 }
 
@@ -208,7 +214,9 @@ const VERDE = '#5EB85E';
 const VERMELHO = '#e53e3e';
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: ROXO },
+  container: { 
+    flex: 1
+  },
 
   header: {
     flexDirection: 'row',
@@ -218,7 +226,7 @@ const styles = StyleSheet.create({
     paddingTop: 56,
     paddingBottom: 16,
   },
-  headerTitulo: { fontSize: 24, fontFamily: 'Lexend_800ExtraBold', color: '#fff', letterSpacing: 2 },
+  headerTitulo: { fontSize: 32, fontFamily: 'Lexend_800ExtraBold', color: VERDE, letterSpacing: 2 },
   headerDestaque: { color: VERDE },
 
   buscaContainer: {
@@ -269,6 +277,21 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 6,
+    marginBottom: 10
   },
   botaoNovoTexto: { color: '#1a1a1a', fontFamily: 'Lexend_800ExtraBold', fontSize: 15 },
+
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 'auto',
+    paddingVertical: 24,
+  },
+
+  footerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+  },
+
 });

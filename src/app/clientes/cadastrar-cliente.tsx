@@ -10,16 +10,25 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
+  SafeAreaView,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useFonts, Lexend_400Regular, Lexend_700Bold, Lexend_800ExtraBold } from '@expo-google-fonts/lexend';
+import {
+  useFonts,
+  Lexend_400Regular,
+  Lexend_700Bold,
+  Lexend_800ExtraBold,
+} from '@expo-google-fonts/lexend';
 // import { supabase } from '../../lib/supabase';
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// ───────────────── Helpers ─────────────────
 
 function formatarCNPJ(valor: string) {
   const nums = valor.replace(/\D/g, '').slice(0, 14);
+
   return nums
     .replace(/^(\d{2})(\d)/, '$1.$2')
     .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
@@ -29,176 +38,299 @@ function formatarCNPJ(valor: string) {
 
 function formatarTelefone(valor: string) {
   const nums = valor.replace(/\D/g, '').slice(0, 11);
-  if (nums.length <= 10)
-    return nums.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-  return nums.replace(/^(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+
+  if (nums.length <= 10) {
+    return nums.replace(
+      /^(\d{2})(\d{4})(\d{0,4})/,
+      '($1) $2-$3'
+    );
+  }
+
+  return nums.replace(
+    /^(\d{2})(\d{5})(\d{0,4})/,
+    '($1) $2-$3'
+  );
 }
 
-// ─── Componente ───────────────────────────────────────────────────────────────
+// ───────────────── Componente ─────────────────
 
 export default function CadastrarClienteScreen() {
   const router = useRouter();
+
   const [nome, setNome] = useState('');
   const [cnpj, setCnpj] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
   const [salvando, setSalvando] = useState(false);
 
-  const [fontsLoaded] = useFonts({ Lexend_400Regular, Lexend_700Bold, Lexend_800ExtraBold });
+  const [fontsLoaded] = useFonts({
+    Lexend_400Regular,
+    Lexend_700Bold,
+    Lexend_800ExtraBold,
+  });
 
   async function cadastrar() {
     const cnpjLimpo = cnpj.replace(/\D/g, '');
     const telefoneLimpo = telefone.replace(/\D/g, '');
 
-    if (!nome.trim()) return Alert.alert('Atenção', 'O nome é obrigatório.');
-    if (cnpjLimpo.length !== 14) return Alert.alert('Atenção', 'CNPJ inválido (14 dígitos).');
+    if (!nome.trim()) {
+      return Alert.alert('Atenção', 'O nome é obrigatório.');
+    }
+
+    if (cnpjLimpo.length !== 14) {
+      return Alert.alert(
+        'Atenção',
+        'CNPJ inválido (14 dígitos).'
+      );
+    }
 
     setSalvando(true);
+
     try {
-      // TODO: descomentar quando Supabase estiver configurado
-      // const { error } = await supabase.from('Cliente').insert({
-      //   nome: nome.trim(),
-      //   cnpj: cnpjLimpo,
-      //   email: email.trim() || null,
-      //   telefone: telefoneLimpo || null,
-      // });
+      // const { error } = await supabase
+      //   .from('Cliente')
+      //   .insert({
+      //     nome: nome.trim(),
+      //     cnpj: cnpjLimpo,
+      //     email: email.trim() || null,
+      //     telefone: telefoneLimpo || null,
+      //   });
+
       // if (error) throw error;
 
       Alert.alert('Sucesso', 'Cliente cadastrado!', [
-        { text: 'OK', onPress: () => router.back() },
+        {
+          text: 'OK',
+          onPress: () => router.back(),
+        },
       ]);
     } catch (e: any) {
-      Alert.alert('Erro', e.message ?? 'Não foi possível cadastrar o cliente.');
+      Alert.alert(
+        'Erro',
+        e.message ??
+          'Não foi possível cadastrar o cliente.'
+      );
     } finally {
       setSalvando(false);
     }
   }
 
-  if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color="#4ade80" />;
+  if (!fontsLoaded) {
+    return (
+      <ActivityIndicator
+        style={{ flex: 1 }}
+        color={VERDE}
+      />
+    );
+  }
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    <LinearGradient
+      colors={[ROXO, '#2E1840', '#1A0E26']}
+      style={styles.gradient}
     >
-      <ScrollView style={styles.container} contentContainerStyle={styles.conteudo} keyboardShouldPersistTaps="handled">
+      <StatusBar barStyle="light-content" />
 
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.botaoVoltar}>
-            <Ionicons name="arrow-back" size={26} color="#fff" />
-          </TouchableOpacity>
-          <View style={styles.headerTituloContainer}>
-            <Text style={styles.headerLinha1}>NOVO</Text>
-            <Text style={styles.headerLinha2}>CLIENTE</Text>
+      <SafeAreaView style={styles.safe}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={
+            Platform.OS === 'ios'
+              ? 'padding'
+              : 'height'
+          }
+        >
+          <ScrollView
+            contentContainerStyle={styles.conteudo}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Header */}
+            <View style={styles.header}>
+              <TouchableOpacity
+                style={styles.iconBtn}
+                onPress={() => router.back()}
+              >
+                <View style={styles.avatarCircle}>
+                  <Ionicons
+                    name="arrow-back-outline"
+                    size={22}
+                    color="#fff"
+                  />
+                </View>
+              </TouchableOpacity>
+
+              <View style={styles.headerTituloContainer}>
+                <Text style={styles.headerLinha}>
+                  NOVO CLIENTE
+                </Text>
+              </View>
+              <View style={{ width: 36 }} />
+            </View>
+
+            <Text style={styles.subtitulo}>
+              Preencha os campos para efetuar o{'\n'}
+              cadastro do novo cliente
+            </Text>
+
+            {/* Card do formulário */}
+            <View style={styles.cardFormulario}>
+              
+              <View style={styles.campo}>
+                <Text style={styles.label}>Nome *</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Digite o nome..."
+                  placeholderTextColor="#999"
+                  value={nome}
+                  onChangeText={setNome}
+                />
+              </View>
+              
+              <View style={styles.campo}>
+              <Text style={styles.label}>CNPJ*</Text>
+              <TextInput
+              style={styles.input}
+              placeholder="Digite o CNPJ..."
+              placeholderTextColor="#999"
+              keyboardType="numeric"
+              value={cnpj}
+              onChangeText={(v) => setCnpj(formatarCNPJ(v))}
+              maxLength={18}
+            />
+            </View>
+
+            <View style={styles.campo}>
+            <Text style={styles.label}>Email*</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Digite o email..."
+              placeholderTextColor="#999"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              value={email}
+              onChangeText={setEmail}
+            />
+            </View>
+
+            <View style={styles.campo}>
+            <Text style={styles.label}>Telefone*</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Digite o telefone..."
+              placeholderTextColor="#999"
+              keyboardType="numeric"
+              value={telefone}
+              onChangeText={(v) => setTelefone(formatarTelefone(v))}
+              maxLength={15}
+            />
+            </View>
+
           </View>
-        </View>
 
-        <Text style={styles.subtitulo}>
-          Preencha os campos para efetuar o{'\n'}cadastro do novo Cliente
-        </Text>
+            {/* Botões */}
+            <View style={styles.botoes}>
+              <TouchableOpacity
+                style={[
+                  styles.botao,
+                  styles.botaoCadastrar,
+                ]}
+                onPress={cadastrar}
+                disabled={salvando}
+              >
+                {salvando ? (
+                  <ActivityIndicator
+                    color="#1a1a1a"
+                  />
+                ) : (
+                  <Text
+                    style={
+                      styles.botaoTextoCadastrar
+                    }
+                  >
+                    CADASTRAR
+                  </Text>
+                )}
+              </TouchableOpacity>
 
-        {/* Campos */}
-        <Text style={styles.label}>Nome*</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Digite o nome..."
-          placeholderTextColor="#aaa"
-          value={nome}
-          onChangeText={setNome}
-        />
-
-        <Text style={styles.label}>CNPJ*</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="00.000.000/0000-00"
-          placeholderTextColor="#aaa"
-          keyboardType="numeric"
-          value={cnpj}
-          onChangeText={(v) => setCnpj(formatarCNPJ(v))}
-          maxLength={18}
-        />
-
-        <Text style={styles.label}>Email</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Digite o email..."
-          placeholderTextColor="#aaa"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          value={email}
-          onChangeText={setEmail}
-        />
-
-        <Text style={styles.label}>Telefone</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="(00) 00000-0000"
-          placeholderTextColor="#aaa"
-          keyboardType="numeric"
-          value={telefone}
-          onChangeText={(v) => setTelefone(formatarTelefone(v))}
-          maxLength={15}
-        />
-
-        {/* Botões */}
-        <View style={styles.botoes}>
-          <TouchableOpacity
-            style={[styles.botao, styles.botaoCadastrar]}
-            onPress={cadastrar}
-            disabled={salvando}
-          >
-            {salvando
-              ? <ActivityIndicator color="#1a1a1a" />
-              : <Text style={styles.botaoTextoCadastrar}>CADASTRAR</Text>
-            }
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.botao, styles.botaoCancelar]}
-            onPress={() => router.back()}
-            disabled={salvando}
-          >
-            <Text style={styles.botaoTextoCancelar}>CANCELAR</Text>
-          </TouchableOpacity>
-        </View>
-
-      </ScrollView>
-    </KeyboardAvoidingView>
+              <TouchableOpacity
+                style={[
+                  styles.botao,
+                  styles.botaoCancelar,
+                ]}
+                onPress={() => router.back()}
+                disabled={salvando}
+              >
+                <Text
+                  style={
+                    styles.botaoTextoCancelar
+                  }
+                >
+                  CANCELAR
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
-// ─── Estilos ──────────────────────────────────────────────────────────────────
+// ───────────────── Estilos ─────────────────
 
 const ROXO = '#46295A';
 const VERDE = '#5EB85E';
-const VERMELHO = '#c0392b';
+const VERMELHO = '#C0392B';
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: ROXO },
-  conteudo: { paddingHorizontal: 24, paddingBottom: 48 },
+  gradient: {
+    flex: 1,
+  },
+
+  safe: {
+    flex: 1,
+    paddingHorizontal: 24,
+  },
+
+  conteudo: {
+    flexGrow: 1,
+    paddingBottom: 48,
+  },
 
   header: {
+    width: '100%',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 56,
-    paddingBottom: 8,
-    gap: 16,
+    paddingTop: 20,
+    paddingBottom: 12,
   },
-  botaoVoltar: { padding: 4 },
-  headerTituloContainer: { flex: 1, alignItems: 'center' },
-  headerLinha1: {
-    fontSize: 26,
-    fontFamily: 'Lexend_800ExtraBold',
-    color: '#fff',
-    letterSpacing: 3,
-    lineHeight: 30,
+
+  iconBtn: {
+    marginLeft : 10,
+    padding: 4,
   },
-  headerLinha2: {
-    fontSize: 26,
-    fontFamily: 'Lexend_800ExtraBold',
+
+  avatarCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1.5,
+    borderColor: VERDE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  headerTituloContainer: {
+    alignItems: 'center',
+  },
+
+  headerLinha: {
     color: VERDE,
-    letterSpacing: 3,
-    lineHeight: 30,
+    fontSize: 30,
+    fontFamily: 'Lexend_800ExtraBold',
+    letterSpacing: 2,
   },
 
   subtitulo: {
@@ -206,43 +338,76 @@ const styles = StyleSheet.create({
     fontFamily: 'Lexend_400Regular',
     fontSize: 14,
     textAlign: 'center',
-    marginBottom: 28,
     marginTop: 8,
+    marginBottom: 28,
     lineHeight: 20,
   },
 
-  label: {
-    color: '#fff',
-    fontFamily: 'Lexend_700Bold',
-    fontSize: 14,
-    marginBottom: 6,
-    marginTop: 16,
+  cardFormulario: {
+    width: '85%',
+    alignSelf: 'center',
   },
+
+  label: {
+  color: '#fff',
+  fontFamily: 'Lexend_700Bold',
+  fontSize: 14,
+  marginBottom: 6,
+  marginTop: 16,
+},
+
   input: {
-    flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: '#fff',
-    borderRadius: 10,
-    borderWidth: 3,
+    borderRadius: 14,
+    borderWidth: 2,
     borderColor: VERDE,
-    paddingHorizontal: 14,
-    paddingVertical: 13,
-    marginBottom: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    fontFamily: 'Lexend_400Regular',
+    color: ROXO,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
   },
 
   botoes: {
     flexDirection: 'row',
     gap: 12,
-    marginTop: 36,
+    marginTop: 30,
+    width: '85%',
+    alignSelf: 'center',
   },
+
   botao: {
     flex: 1,
-    paddingVertical: 14,
-    borderRadius: 10,
+    paddingVertical: 16,
+    borderRadius: 14,
     alignItems: 'center',
   },
-  botaoCadastrar: { backgroundColor: VERDE },
-  botaoCancelar: { backgroundColor: VERMELHO },
-  botaoTextoCadastrar: { color: '#1a1a1a', fontFamily: 'Lexend_800ExtraBold', fontSize: 14 },
-  botaoTextoCancelar: { color: '#fff', fontFamily: 'Lexend_800ExtraBold', fontSize: 14 },
+
+  botaoCadastrar: {
+    backgroundColor: VERDE,
+  },
+
+  botaoCancelar: {
+    backgroundColor: VERMELHO,
+  },
+
+  botaoTextoCadastrar: {
+    color: '#1a1a1a',
+    fontSize: 14,
+    fontFamily: 'Lexend_800ExtraBold',
+  },
+
+  botaoTextoCancelar: {
+    color: '#fff',
+    fontSize: 14,
+    fontFamily: 'Lexend_800ExtraBold',
+  },
+  campo: {
+    marginBottom: 10,
+  },
 });

@@ -63,18 +63,28 @@ export default function Vendas() {
       style={styles.gradient}
     >
       <StatusBar barStyle="light-content" />
-      <SafeAreaView style={styles.safe}>
 
+      <SafeAreaView style={styles.safe}>
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-            <Ionicons name="home" size={28} color={BRANCO} />
+          <TouchableOpacity
+            style={styles.iconBtn}
+            onPress={() => router.back()}
+          >
+            <View style={styles.avatarCircle}>
+              <Ionicons
+                name="arrow-back-outline"
+                size={22}
+                color={BRANCO}
+              />
+            </View>
           </TouchableOpacity>
 
           <View style={styles.titleWrapper}>
-            <Text style={styles.titleWhite}>VEN</Text>
-            <Text style={styles.titleGreen}>DAS</Text>
+            <Text style={styles.titleGreen}>VENDAS</Text>
           </View>
+
+          <View style={{ width: 36 }} />
         </View>
 
         {/* Cards */}
@@ -86,18 +96,27 @@ export default function Vendas() {
               activeOpacity={0.75}
               onPress={() => router.push(item.route as any)}
             >
-              <Text style={styles.cardLabel}>{item.label}</Text>
-              <View style={styles.iconWrapper}>
-                <Ionicons name={item.icon as any} size={36} color={ROXO} />
+              <View style={styles.cardGradient}>
+                <View style={styles.iconWrapper}>
+                  <Ionicons
+                    name={item.icon as any}
+                    size={40}
+                    color={VERDE}
+                  />
+                </View>
+
+                <Text style={styles.cardLabel}>
+                  {item.label}
+                </Text>
               </View>
             </TouchableOpacity>
           ))}
         </View>
 
+        {/* Linha decorativa inferior */}
         <View style={styles.footer}>
           <View style={styles.footerLine} />
         </View>
-
       </SafeAreaView>
     </LinearGradient>
   );
@@ -115,25 +134,32 @@ const styles = StyleSheet.create({
 
   // Header
   header: {
+    width: '100%',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: 20,
-    paddingBottom: 20,
+    paddingBottom: 12,
   },
 
-  backBtn: {
+  iconBtn: {
     padding: 4,
-    zIndex: 1,
-    marginLeft: 15
+  },
+
+  avatarCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1.5,
+    borderColor: VERDE,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 10,
   },
 
   titleWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    justifyContent: 'center',
   },
 
   titleWhite: {
@@ -154,52 +180,62 @@ const styles = StyleSheet.create({
   grid: {
     flex: 1,
     flexDirection: 'column',
-    gap: 14,
+    gap: 12,
     justifyContent: 'center',
   },
 
   card: {
-    width: '80%',
+    width: '75%',
+    height: 145,
     alignSelf: 'center',
-    borderRadius: 16,
+    borderRadius: 20,
     backgroundColor: BRANCO,
     borderWidth: 2,
     borderColor: VERDE,
-    paddingVertical: 18,
-    paddingHorizontal: 24,
-    alignItems: 'center',
     elevation: 4,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
     shadowOpacity: 0.15,
     shadowRadius: 6,
   },
 
-  cardLabel: {
-    color: ROXO,
-    fontSize: 14,
-    fontFamily: 'Lexend_700Bold',
-    textAlign: 'center',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    marginBottom: 12,
+  cardGradient: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
 
   iconWrapper: {
-    width: 60,
-    height: 60,
-    borderRadius: 16,
-    backgroundColor: 'rgba(70,41,90,0.08)',
+    width: 70,
+    height: 70,
+    borderRadius: 20,
+    backgroundColor: 'rgba(94,184,94,0.12)',
     alignItems: 'center',
     justifyContent: 'center',
   },
 
+  cardLabel: {
+    color: ROXO,
+    fontSize: 16,
+    fontFamily: 'Lexend_700Bold',
+    textAlign: 'center',
+    marginTop: 16,
+  },
+
   // Footer
   footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 'auto',
     paddingVertical: 24,
   },
 
   footerLine: {
+    flex: 1,
     height: 1,
     backgroundColor: 'rgba(255,255,255,0.1)',
   },
