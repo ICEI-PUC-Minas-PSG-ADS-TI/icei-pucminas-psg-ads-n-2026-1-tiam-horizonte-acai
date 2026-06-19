@@ -71,6 +71,11 @@ export default function LoginScreen() {
                 funcionario.nome
             );
 
+            await AsyncStorage.setItem(
+                'idFuncionario',
+                funcionario.id.toString()
+            );
+
             setMensagem({
                 tipo: 'sucesso',
                 texto: `Bem-vindo, ${funcionario.nome}!`

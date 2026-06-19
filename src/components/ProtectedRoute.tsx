@@ -31,7 +31,7 @@ export default function ProtectedRoute({
         ) {
           setAutorizado(true);
         } else {
-          router.replace('/(tabs)');
+          router.replace('/');
         }
       } finally {
         setCarregando(false);
