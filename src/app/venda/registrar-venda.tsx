@@ -1,3 +1,4 @@
+import ProtectedRoute from '@/components/ProtectedRoute';
 import React, { useState, useEffect } from 'react';
 import {
     View,
@@ -421,211 +422,218 @@ export default function RegistrarVenda() {
     }
     
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <ScrollView contentContainerStyle={styles.container}>
+        <ProtectedRoute
+              permitidos={[
+                'VENDEDOR',
+                'ADMINISTRADOR',
+              ]}
+            >
+            <SafeAreaView style={{ flex: 1 }}>
+                <ScrollView contentContainerStyle={styles.container}>
 
-                <Text style={styles.titulo}>
-                    Registrar Venda
-                </Text>
-
-                <Text style={styles.label}>
-                    Cliente
-                </Text>
-
-                <TextInput
-                    style={styles.input}
-                    placeholder="Pesquisar cliente..."
-                    value={buscaCliente}
-                    onFocus={() => setMostrarClientes(true)}
-                    onChangeText={setBuscaCliente}
-                />
-
-                {mostrarClientes && buscaCliente.length > 0 && (
-                    <View style={styles.listaPesquisa}>
-                        {clientesFiltrados.slice(0, 5).map(cliente => (
-                            <TouchableOpacity
-                                key={cliente.id}
-                                style={styles.itemPesquisa}
-                                onPress={() => {
-                                    setClienteSelecionado(cliente);
-                                    setBuscaCliente(cliente.nome);
-                                    setMostrarClientes(false);
-                                }}
-                            >
-                                <Text>{cliente.nome}</Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-                )}
-
-                <Text style={styles.label}>
-                    Produto
-                </Text>
-
-                <TextInput
-                    style={styles.input}
-                    placeholder="Pesquisar produto..."
-                    value={buscaProduto}
-                    onFocus={() => setMostrarProdutos(true)}
-                    onChangeText={setBuscaProduto}
-                />
-
-                {mostrarProdutos && buscaProduto.length > 0 && (
-                    <View style={styles.listaPesquisa}>
-                        {produtosFiltrados.slice(0, 5).map(produto => (
-                            <TouchableOpacity
-                                key={produto.id}
-                                style={styles.itemPesquisa}
-                                onPress={() => {
-                                    setProdutoSelecionado(produto);
-                                    setBuscaProduto(produto.nome);
-                                    setMostrarProdutos(false);
-                                }}
-                            >
-                                <Text style={{ fontWeight: 'bold' }}>
-                                    {produto.nome}
-                                </Text>
-
-                                <Text>
-                                    Estoque: {produto.quantidade}
-                                </Text>
-
-                                <Text>
-                                    {formatarMoeda(produto.preco)
-                                    }
-                                </Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-                )}
-
-                <Text style={styles.label}>
-                    Quantidade
-                </Text>
-
-                <TextInput
-                    style={styles.input}
-                    keyboardType="numeric"
-                    value={quantidade}
-                    onChangeText={(texto) => {
-                        const apenasNumeros = texto.replace(/[^0-9]/g, '');
-                        setQuantidade(apenasNumeros);
-                    }}
-                    placeholder="Quantidade"
-                />
-
-                <TouchableOpacity
-                    style={styles.botao}
-                    onPress={adicionarProduto}
-                >
-                    <Text style={styles.botaoTexto}>
-                        Adicionar Produto
+                    <Text style={styles.titulo}>
+                        Registrar Venda
                     </Text>
-                </TouchableOpacity>
 
-                <Text style={styles.label}>
-                    Itens da Venda
-                </Text>
+                    <Text style={styles.label}>
+                        Cliente
+                    </Text>
 
-                {itensVenda.map((item, index) => (
-                    <View key={index} style={styles.card}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Pesquisar cliente..."
+                        value={buscaCliente}
+                        onFocus={() => setMostrarClientes(true)}
+                        onChangeText={setBuscaCliente}
+                    />
 
-                        <Text style={styles.nomeProduto}>
-                            {item.nome}
+                    {mostrarClientes && buscaCliente.length > 0 && (
+                        <View style={styles.listaPesquisa}>
+                            {clientesFiltrados.slice(0, 5).map(cliente => (
+                                <TouchableOpacity
+                                    key={cliente.id}
+                                    style={styles.itemPesquisa}
+                                    onPress={() => {
+                                        setClienteSelecionado(cliente);
+                                        setBuscaCliente(cliente.nome);
+                                        setMostrarClientes(false);
+                                    }}
+                                >
+                                    <Text>{cliente.nome}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    )}
+
+                    <Text style={styles.label}>
+                        Produto
+                    </Text>
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Pesquisar produto..."
+                        value={buscaProduto}
+                        onFocus={() => setMostrarProdutos(true)}
+                        onChangeText={setBuscaProduto}
+                    />
+
+                    {mostrarProdutos && buscaProduto.length > 0 && (
+                        <View style={styles.listaPesquisa}>
+                            {produtosFiltrados.slice(0, 5).map(produto => (
+                                <TouchableOpacity
+                                    key={produto.id}
+                                    style={styles.itemPesquisa}
+                                    onPress={() => {
+                                        setProdutoSelecionado(produto);
+                                        setBuscaProduto(produto.nome);
+                                        setMostrarProdutos(false);
+                                    }}
+                                >
+                                    <Text style={{ fontWeight: 'bold' }}>
+                                        {produto.nome}
+                                    </Text>
+
+                                    <Text>
+                                        Estoque: {produto.quantidade}
+                                    </Text>
+
+                                    <Text>
+                                        {formatarMoeda(produto.preco)
+                                        }
+                                    </Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    )}
+
+                    <Text style={styles.label}>
+                        Quantidade
+                    </Text>
+
+                    <TextInput
+                        style={styles.input}
+                        keyboardType="numeric"
+                        value={quantidade}
+                        onChangeText={(texto) => {
+                            const apenasNumeros = texto.replace(/[^0-9]/g, '');
+                            setQuantidade(apenasNumeros);
+                        }}
+                        placeholder="Quantidade"
+                    />
+
+                    <TouchableOpacity
+                        style={styles.botao}
+                        onPress={adicionarProduto}
+                    >
+                        <Text style={styles.botaoTexto}>
+                            Adicionar Produto
                         </Text>
+                    </TouchableOpacity>
 
-                        <Text>
-                            {item.quantidade} x {formatarMoeda(item.preco)}
-                        </Text>
+                    <Text style={styles.label}>
+                        Itens da Venda
+                    </Text>
 
-                        <Text>
-                            Subtotal:{' '}
-                            {formatarMoeda(item.subtotal)}
-                        </Text>
+                    {itensVenda.map((item, index) => (
+                        <View key={index} style={styles.card}>
 
-                        <View style={styles.controlesQuantidade}>
-
-                            <TouchableOpacity
-                                style={styles.botaoMenos}
-                                onPress={() => diminuirQuantidade(item.id)}
-                            >
-                                <Text style={styles.textoBotao}>−</Text>
-                            </TouchableOpacity>
-
-                            <Text style={styles.quantidadeTexto}>
-                                {item.quantidade}
+                            <Text style={styles.nomeProduto}>
+                                {item.nome}
                             </Text>
 
-                            <TouchableOpacity
-                                style={[
-                                    styles.botaoMais,
-                                    item.quantidade >= item.estoque &&
-                                    styles.botaoDesabilitado
-                                ]}
-                                disabled={item.quantidade >= item.estoque}
-                                onPress={() => aumentarQuantidade(item.id)}
-                            >
-                                <Text style={styles.textoBotao}>+</Text>
-                            </TouchableOpacity>
+                            <Text>
+                                {item.quantidade} x {formatarMoeda(item.preco)}
+                            </Text>
 
-                            <TouchableOpacity
-                                style={styles.botaoExcluir}
-                                onPress={() =>
-                                    Alert.alert(
-                                        'Remover item',
-                                        `Deseja remover ${item.nome} da venda?`,
-                                        [
-                                            {
-                                                text: 'Cancelar',
-                                                style: 'cancel',
-                                            },
-                                            {
-                                                text: 'Remover',
-                                                style: 'destructive',
-                                                onPress: () => removerItem(item.id),
-                                            },
-                                        ]
-                                    )
-                                }
-                            >
-                                <Ionicons
-                                    name="trash-outline"
-                                    size={25}
-                                    color="#f44336"
-                                />
-                            </TouchableOpacity>
+                            <Text>
+                                Subtotal:{' '}
+                                {formatarMoeda(item.subtotal)}
+                            </Text>
+
+                            <View style={styles.controlesQuantidade}>
+
+                                <TouchableOpacity
+                                    style={styles.botaoMenos}
+                                    onPress={() => diminuirQuantidade(item.id)}
+                                >
+                                    <Text style={styles.textoBotao}>−</Text>
+                                </TouchableOpacity>
+
+                                <Text style={styles.quantidadeTexto}>
+                                    {item.quantidade}
+                                </Text>
+
+                                <TouchableOpacity
+                                    style={[
+                                        styles.botaoMais,
+                                        item.quantidade >= item.estoque &&
+                                        styles.botaoDesabilitado
+                                    ]}
+                                    disabled={item.quantidade >= item.estoque}
+                                    onPress={() => aumentarQuantidade(item.id)}
+                                >
+                                    <Text style={styles.textoBotao}>+</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    style={styles.botaoExcluir}
+                                    onPress={() =>
+                                        Alert.alert(
+                                            'Remover item',
+                                            `Deseja remover ${item.nome} da venda?`,
+                                            [
+                                                {
+                                                    text: 'Cancelar',
+                                                    style: 'cancel',
+                                                },
+                                                {
+                                                    text: 'Remover',
+                                                    style: 'destructive',
+                                                    onPress: () => removerItem(item.id),
+                                                },
+                                            ]
+                                        )
+                                    }
+                                >
+                                    <Ionicons
+                                        name="trash-outline"
+                                        size={25}
+                                        color="#f44336"
+                                    />
+                                </TouchableOpacity>
+
+                            </View>
 
                         </View>
+                    ))}
 
-                    </View>
-                ))}
+                    < Text style={styles.total} >
+                        Total:{' '}
+                        {formatarMoeda(total)}
+                    </Text>
 
-                < Text style={styles.total} >
-                    Total:{' '}
-                    {formatarMoeda(total)}
-                </Text>
-
-                <TouchableOpacity
-                    disabled={
-                        !clienteSelecionado ||
-                        itensVenda.length === 0
-                    }
-                    style={[
-                        styles.botaoFinalizar,
-                        (
+                    <TouchableOpacity
+                        disabled={
                             !clienteSelecionado ||
                             itensVenda.length === 0
-                        ) && styles.botaoDesabilitado
-                    ]}
-                    onPress={confirmarVenda}
-                >
-                    <Text style={styles.botaoTexto}>
-                        Finalizar Venda
-                    </Text>
-                </TouchableOpacity>
+                        }
+                        style={[
+                            styles.botaoFinalizar,
+                            (
+                                !clienteSelecionado ||
+                                itensVenda.length === 0
+                            ) && styles.botaoDesabilitado
+                        ]}
+                        onPress={confirmarVenda}
+                    >
+                        <Text style={styles.botaoTexto}>
+                            Finalizar Venda
+                        </Text>
+                    </TouchableOpacity>
 
-            </ScrollView>
-        </SafeAreaView >
+                </ScrollView>
+            </SafeAreaView >
+        </ProtectedRoute>
     );
 }
 const styles = StyleSheet.create({
