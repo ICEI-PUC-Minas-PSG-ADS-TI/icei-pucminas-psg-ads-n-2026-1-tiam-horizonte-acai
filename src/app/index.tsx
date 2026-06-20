@@ -11,10 +11,11 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const ROXO = '#46295A';
-const ROXO_CLARO = '#5C3876';
-const VERDE = '#5EB85E';
-const BRANCO = '#FFFFFF';
+
+export const ROXO = '#46295A';
+export const ROXO_CLARO = '#5C3876';
+export const VERDE = '#5EB85E';
+{/*const BRANCO = '#FFFFFF';
 
 const menuItems = [
   {
@@ -50,7 +51,7 @@ export default function Index() {
       <StatusBar barStyle="light-content" />
       <SafeAreaView style={styles.safe}>
 
-        {/* Header */}
+        {/* Header }
         <View style={styles.header}>
           <Image
             source={require('../assets/images/logo-sem-fundo.png')}
@@ -69,13 +70,13 @@ export default function Index() {
           </View>
         </View>
 
-        {/* Greeting */}
+        {/* Greeting }
         <View style={styles.greeting}>
           <Text style={styles.greetingLabel}>Bem-vindo de volta 👋</Text>
           <Text style={styles.greetingTitle}>Horizonte do Açaí</Text>
         </View>
 
-        {/* Menu Grid */}
+        {/* Menu Grid }
         <View style={styles.grid}>
           {menuItems.map((item) => (
             <TouchableOpacity
@@ -94,7 +95,7 @@ export default function Index() {
           ))}
         </View>
 
-        {/* Linha decorativa inferior */}
+        {/* Linha decorativa inferior }
         <View style={styles.footer}>
           <View style={styles.footerLine} />
           <Text style={styles.footerText}>Gestão simplificada</Text>
@@ -229,4 +230,14 @@ const styles = StyleSheet.create({
     letterSpacing: 1.2,
     textTransform: 'uppercase',
   },
-});
+});*/}
+
+import RankingVendedores from '../components/ranking-vendedores';
+
+export default function Index() {
+  return (
+    <View style={{ flex: 1 }}>
+      <RankingVendedores />
+    </View>
+  )
+}

@@ -4,45 +4,34 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   FlatList,
   ActivityIndicator,
 } from 'react-native'
-import { ROXO, ROXO_CLARO, VERDE } from '../app/index'
+{/*import { ROXO, ROXO_CLARO } from '../app/index'*/}
 
-const PERIODOS = ['Mensal', 'Trimestral', 'Anual']
+const ROXO = '#46295A';
+const ROXO_CLARO = '#5C3876';
 
-function getIntervalo(periodo) {
+function getInicioMesAtual() {
   const agora = new Date()
-  let inicio
-
-  if (periodo === 'Mensal') {
-    inicio = new Date(agora.getFullYear(), agora.getMonth() - 1, 1)
-  } else if (periodo === 'Trimestral') {
-    inicio = new Date(agora.getFullYear(), agora.getMonth() - 3, 1)
-  } else {
-    inicio = new Date(agora.getFullYear() - 1, agora.getMonth(), 1)
-  }
-
-  return inicio.toISOString()
+  return new Date(agora.getFullYear(), agora.getMonth(), 1).toISOString()
 }
 
-export default function RankingClientes() {
-  const [periodo, setPeriodo] = useState('Mensal')
+export default function RankingVendedores() {
   const [ranking, setRanking] = useState([])
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     buscarRanking()
-  }, [periodo])
+  }, [])
 
   async function buscarRanking() {
     setLoading(true)
-    const inicio = getIntervalo(periodo)
+    const inicio = getInicioMesAtual()
 
     const { data, error } = await supabase
       .from('Venda')
-      .select('id_cliente, valor_total, Cliente(nome)')
+      .select('id_vendedor, valor_total, Funcionario(nome)')
       .gte('data', inicio)
 
     if (error) {
@@ -53,11 +42,11 @@ export default function RankingClientes() {
 
     const agrupado = {}
     data.forEach((venda) => {
-      const id = venda.id_cliente
+      const id = venda.id_vendedor
       if (!agrupado[id]) {
         agrupado[id] = {
           id,
-          nome: venda.Cliente?.nome ?? 'Cliente desconhecido',
+          nome: venda.Funcionario?.nome ?? 'Funcionário desconhecido',
           total: 0,
         }
       }
@@ -77,32 +66,19 @@ export default function RankingClientes() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Ranking de Clientes</Text>
-
-      <View style={styles.seletor}>
-        {PERIODOS.map((p) => (
-          <TouchableOpacity
-            key={p}
-            style={[styles.botaoPeriodo, periodo === p && styles.botaoAtivo]}
-            onPress={() => setPeriodo(p)}
-          >
-            <Text style={[styles.textoPeriodo, periodo === p && styles.textoAtivo]}>
-              {p}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      <Text style={styles.titulo}>Ranking de Vendedores</Text>
+      <Text style={styles.subtitulo}>Mês atual</Text>
 
       {loading ? (
         <ActivityIndicator size="large" color="#ffffff" style={{ marginTop: 40 }} />
       ) : ranking.length === 0 ? (
-        <Text style={styles.vazio}>Nenhuma venda encontrada neste período.</Text>
+        <Text style={styles.vazio}>Nenhuma venda registrada neste mês.</Text>
       ) : (
         <>
           <View style={styles.podio}>
-            {top3.map((cliente, index) => (
+            {top3.map((funcionario, index) => (
               <View
-                key={cliente.id}
+                key={funcionario.id}
                 style={[
                   styles.cartaoPodio,
                   { borderColor: coresPodio[index] },
@@ -111,10 +87,10 @@ export default function RankingClientes() {
               >
                 <Text style={styles.medalha}>{medalhas[index]}</Text>
                 <Text style={styles.nomePodio} numberOfLines={1}>
-                  {cliente.nome}
+                  {funcionario.nome}
                 </Text>
                 <Text style={[styles.valorPodio, { color: coresPodio[index] }]}>
-                  R$ {cliente.total.toFixed(2)}
+                  R$ {funcionario.total.toFixed(2)}
                 </Text>
               </View>
             ))}
@@ -156,33 +132,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 4,
   },
-  seletor: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 8,
+  subtitulo: {
+    fontSize: 13,
+    color: '#dddddd',
+    textAlign: 'center',
     marginBottom: 24,
-  },
-  botaoPeriodo: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: '#ffffff',
-    backgroundColor: ROXO,
-  },
-  botaoAtivo: {
-    backgroundColor: '#ffffff',
-    borderColor: VERDE,
-  },
-  textoPeriodo: {
-    fontSize: 14,
-    color: '#ffffff',
-    fontWeight: '500',
-  },
-  textoAtivo: {
-    color: VERDE,
   },
   podio: {
     flexDirection: 'row',
