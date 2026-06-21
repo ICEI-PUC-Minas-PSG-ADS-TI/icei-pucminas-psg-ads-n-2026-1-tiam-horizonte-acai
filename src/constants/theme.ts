@@ -5,6 +5,13 @@
 
 import { Platform } from 'react-native';
 
+export const paleta = {
+  ROXO : '#46295A',
+  ROXO_CLARO : '#5C3876',
+  VERDE : '#5EB85E',
+  BRANCO : '#FFFFFF',
+}
+
 const tintColorLight = '#0a7ea4';
 const tintColorDark = '#fff';
 

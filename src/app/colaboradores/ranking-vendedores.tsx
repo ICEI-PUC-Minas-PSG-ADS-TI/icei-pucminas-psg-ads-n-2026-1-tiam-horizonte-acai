@@ -1,4 +1,4 @@
-import RankingVendedores from '../../components/ranking-vendedores'
+import RankingVendedores from '@/components/ranking-vendedores'
 import { View } from 'react-native'
 
 export default function Ranking() {

@@ -10,12 +10,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
-
-export const ROXO = '#46295A';
-export const ROXO_CLARO = '#5C3876';
-export const VERDE = '#5EB85E';
-const BRANCO = '#FFFFFF';
+import { paleta } from '@/constants/theme';
 
 const menuItems = [
   {
@@ -45,7 +40,7 @@ export default function Index() {
 
   return (
     <LinearGradient
-      colors={[ROXO, '#2E1840', '#1A0E26']}
+      colors={[paleta.ROXO, '#2E1840', '#1A0E26']}
       style={styles.gradient}
     >
       <StatusBar barStyle="light-content" />
@@ -61,11 +56,11 @@ export default function Index() {
           <View style={styles.headerActions}>
             <TouchableOpacity style={styles.iconBtn} onPress={() => router.push('../login')}>
               <View style={styles.avatarCircle}>
-                <Ionicons name="person-outline" size={20} color={BRANCO} />
+                <Ionicons name="person-outline" size={20} color={paleta.BRANCO} />
               </View>
             </TouchableOpacity>
             <TouchableOpacity style={styles.iconBtn}>
-              <Ionicons name="menu-outline" size={28} color={BRANCO} />
+              <Ionicons name="menu-outline" size={28} color={paleta.BRANCO} />
             </TouchableOpacity>
           </View>
         </View>
@@ -87,7 +82,7 @@ export default function Index() {
             >
               <View style={styles.cardGradient}>
                 <View style={styles.iconWrapper}>
-                  <Ionicons name={item.icon as any} size={26} color={VERDE} />
+                  <Ionicons name={item.icon as any} size={26} color={paleta.VERDE} />
                 </View>
                 <Text style={styles.cardLabel}>{item.label}</Text>
               </View>
@@ -143,7 +138,7 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     borderWidth: 1.5,
-    borderColor: VERDE,
+    borderColor: paleta.VERDE,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -161,7 +156,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   greetingTitle: {
-    color: BRANCO,
+    color: paleta.BRANCO,
     fontSize: 24,
     fontWeight: '700',
     letterSpacing: 0.3,
@@ -179,9 +174,9 @@ const styles = StyleSheet.create({
     height: 160,
     alignSelf: 'center',
     borderRadius: 20,
-    backgroundColor: BRANCO,
+    backgroundColor: paleta.BRANCO,
     borderWidth: 2,
-    borderColor: VERDE,
+    borderColor: paleta.VERDE,
 
     elevation: 4,
     shadowColor: '#000',
@@ -204,7 +199,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cardLabel: {
-    color: ROXO,
+    color: paleta.ROXO,
     fontSize: 16,
     fontWeight: '700',
     textAlign: 'center',

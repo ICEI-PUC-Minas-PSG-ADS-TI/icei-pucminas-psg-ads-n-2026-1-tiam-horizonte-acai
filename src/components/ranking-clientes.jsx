@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { useEffect, useState } from 'react'
 import {
   View,
@@ -8,7 +8,8 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native'
-import { ROXO, ROXO_CLARO, VERDE } from '../app/index'
+import { paleta } from '@/constants/theme'
+import { formatarMoeda } from '@/helpers/format'
 
 const PERIODOS = ['Mensal', 'Trimestral', 'Anual']
 
@@ -94,7 +95,7 @@ export default function RankingClientes() {
       </View>
 
       {loading ? (
-        <ActivityIndicator size="large" color="#ffffff" style={{ marginTop: 40 }} />
+        <ActivityIndicator size="large" color={paleta.BRANCO} style={{ marginTop: 40 }} />
       ) : ranking.length === 0 ? (
         <Text style={styles.vazio}>Nenhuma venda encontrada neste período.</Text>
       ) : (
@@ -114,7 +115,7 @@ export default function RankingClientes() {
                   {cliente.nome}
                 </Text>
                 <Text style={[styles.valorPodio, { color: coresPodio[index] }]}>
-                  R$ {cliente.total.toFixed(2)}
+                  {formatarMoeda(cliente.total)}
                 </Text>
               </View>
             ))}
@@ -132,7 +133,7 @@ export default function RankingClientes() {
                     {item.nome}
                   </Text>
                   <Text style={styles.valorLista}>
-                    R$ {item.total.toFixed(2)}
+                    {formatarMoeda(item.total)}
                   </Text>
                 </View>
               )}
@@ -147,14 +148,14 @@ export default function RankingClientes() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: ROXO,
+    backgroundColor: paleta.ROXO,
     paddingTop: 60,
     paddingHorizontal: 16,
   },
   titulo: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: paleta.BRANCO,
     textAlign: 'center',
     marginBottom: 20,
   },
@@ -169,12 +170,12 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: '#ffffff',
-    backgroundColor: ROXO,
+    borderColor: paleta.BRANCO,
+    backgroundColor: paleta.ROXO,
   },
   botaoAtivo: {
-    backgroundColor: '#ffffff',
-    borderColor: VERDE,
+    backgroundColor: paleta.BRANCO,
+    borderColor: paleta.VERDE,
   },
   textoPeriodo: {
     fontSize: 14,
@@ -182,7 +183,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   textoAtivo: {
-    color: VERDE,
+    color: paleta.VERDE,
   },
   podio: {
     flexDirection: 'row',
@@ -193,7 +194,7 @@ const styles = StyleSheet.create({
   },
   cartaoPodio: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: paleta.BRANCO,
     borderRadius: 12,
     borderWidth: 2,
     padding: 12,
@@ -225,7 +226,7 @@ const styles = StyleSheet.create({
   itemLista: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: paleta.BRANCO,
     borderRadius: 10,
     padding: 14,
     marginBottom: 8,
@@ -245,11 +246,11 @@ const styles = StyleSheet.create({
   valorLista: {
     fontSize: 14,
     fontWeight: '600',
-    color: ROXO_CLARO,
+    color: paleta.ROXO_CLARO,
   },
   vazio: {
     textAlign: 'center',
-    color: '#ffffff',
+    color: paleta.BRANCO,
     marginTop: 40,
     fontSize: 15,
   },
