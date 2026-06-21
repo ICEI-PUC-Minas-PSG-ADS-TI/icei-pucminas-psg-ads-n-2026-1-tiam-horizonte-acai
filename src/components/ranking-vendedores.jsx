@@ -7,14 +7,21 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native'
-{/*import { ROXO, ROXO_CLARO } from '../app/index'*/}
-
-const ROXO = '#46295A';
-const ROXO_CLARO = '#5C3876';
+import { ROXO, ROXO_CLARO } from '../app/index'
 
 function getInicioMesAtual() {
   const agora = new Date()
   return new Date(agora.getFullYear(), agora.getMonth(), 1).toISOString()
+}
+
+const MESES = [
+  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
+]
+
+function getMesAnoAtual() {
+  const agora = new Date()
+  return `${MESES[agora.getMonth()]} / ${agora.getFullYear()}`
 }
 
 export default function RankingVendedores() {
@@ -67,7 +74,7 @@ export default function RankingVendedores() {
   return (
     <View style={styles.container}>
       <Text style={styles.titulo}>Ranking de Vendedores</Text>
-      <Text style={styles.subtitulo}>Mês atual</Text>
+      <Text style={styles.subtitulo}>{getMesAnoAtual()}</Text>
 
       {loading ? (
         <ActivityIndicator size="large" color="#ffffff" style={{ marginTop: 40 }} />
