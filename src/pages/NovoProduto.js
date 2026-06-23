@@ -8,7 +8,6 @@ import {
   ScrollView, 
   Image, 
   Modal, 
-  Alert,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView
@@ -24,6 +23,7 @@ const NovoProduto = () => {
   const [preco, setPreco] = useState('');
   const [quantidade, setQuantidade] = useState('');
   const [categoria, setCategoria] = useState('');
+  const [tipo, setTipo] = useState('Venda'); // 'Venda' ou 'Interno'
   
   const [modalConfirmarAberto, setModalConfirmarAberto] = useState(false);
   const [modalErroAberto, setModalErroAberto] = useState(false);
@@ -31,8 +31,7 @@ const NovoProduto = () => {
   const navigation = useNavigation();
 
   const handleSalvarClick = () => {
-    // Validação mobile
-    if (!nome || !descricao || !preco || !quantidade || !categoria) {
+    if (!nome || !descricao || !preco || !quantidade || !categoria || !tipo) {
       setModalErroAberto(true);
       return;
     }
@@ -40,7 +39,11 @@ const NovoProduto = () => {
   };
 
   const confirmarCadastro = async () => {
+    // 1. Fecha o modal logo no primeiro clique para destravar a interface visual
+    setModalConfirmarAberto(false);
+
     try {
+      // 2. Envia os dados para o Supabase e ESPERA a resposta dele
       const { error } = await supabase
         .from('produtos')
         .insert([{ 
@@ -48,15 +51,28 @@ const NovoProduto = () => {
           descricao, 
           preco: parseFloat(preco.replace(',', '.')), 
           quantidade: parseInt(quantidade), 
-          categoria 
+          categoria,
+          tipo 
         }]);
 
       if (error) throw error;
 
-      setModalConfirmarAberto(false);
-      navigation.navigate('Home');
+      // 3. Se gravou com sucesso, exibe o aviso na tela
+      alert("Produto cadastrado com sucesso!");
+      
+      // Limpa todos os estados do formulário
+      setNome('');
+      setDescricao('');
+      setPreco('');
+      setQuantidade('');
+      setCategoria('');
+      
+      // 4. Retorna em segurança para a tela anterior
+      navigation.goBack();
+
     } catch (error) {
-      Alert.alert("Erro", "Erro ao cadastrar: " + error.message);
+      // SE O BANCO RECUSAR POR FALTA DA COLUNA 'TIPO', ESTE AVISO VAI APARECER NA TELA
+      alert("Erro retornado pelo banco: " + error.message);
     }
   };
 
@@ -66,11 +82,31 @@ const NovoProduto = () => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        <ScrollView contentContainerStyle={styles.scrollContent}>
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           <Image source={{ uri: logoAcai }} style={styles.logoTop} />
           <Text style={styles.titulo}>CADASTRAR <Text style={{color: '#7ed957'}}>PRODUTO</Text></Text>
           
           <View style={styles.form}>
+            {/* SELEÇÃO DE TIPO */}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Tipo de Produto</Text>
+              <View style={styles.selectorContainer}>
+                <TouchableOpacity 
+                  style={[styles.selectorBtn, tipo === 'Venda' && styles.selectorBtnAtivo]}
+                  onPress={() => setTipo('Venda')}
+                >
+                  <Text style={[styles.selectorText, tipo === 'Venda' && styles.selectorTextAtivo]}>Venda</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity 
+                  style={[styles.selectorBtn, tipo === 'Interno' && styles.selectorBtnAtivo]}
+                  onPress={() => setTipo('Interno')}
+                >
+                  <Text style={[styles.selectorText, tipo === 'Interno' && styles.selectorTextAtivo]}>Uso Interno</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Nome do Produto</Text>
               <TextInput 
@@ -78,6 +114,7 @@ const NovoProduto = () => {
                 value={nome} 
                 onChangeText={setNome} 
                 placeholder="Ex: Açaí 500ml"
+                placeholderTextColor="#666"
               />
             </View>
 
@@ -89,17 +126,19 @@ const NovoProduto = () => {
                 onChangeText={setDescricao} 
                 multiline 
                 placeholder="Detalhes do produto..."
+                placeholderTextColor="#666"
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Preço</Text>
+              <Text style={styles.label}>{tipo === 'Interno' ? 'Preço de Custo' : 'Preço de Venda'}</Text>
               <TextInput 
                 style={styles.input} 
                 keyboardType="numeric" 
                 value={preco} 
                 onChangeText={setPreco} 
                 placeholder="0.00"
+                placeholderTextColor="#666"
               />
             </View>
 
@@ -111,6 +150,7 @@ const NovoProduto = () => {
                 value={quantidade} 
                 onChangeText={setQuantidade} 
                 placeholder="Ex: 50"
+                placeholderTextColor="#666"
               />
             </View>
 
@@ -120,10 +160,12 @@ const NovoProduto = () => {
                 style={styles.input} 
                 value={categoria} 
                 onChangeText={setCategoria} 
-                placeholder="Ex: Cremes"
+                placeholder={tipo === 'Interno' ? 'Ex: Insumos / Embalagens' : 'Ex: Cremes'}
+                placeholderTextColor="#666"
               />
             </View>
 
+            {/* BOTÕES DE AÇÃO */}
             <View style={styles.buttonRow}>
               <TouchableOpacity style={styles.btnSalvar} onPress={handleSalvarClick}>
                 <Text style={styles.btnText}>Salvar</Text>
@@ -160,7 +202,10 @@ const NovoProduto = () => {
               <Text style={styles.modalTitle}>Confirmar</Text>
               <Image source={{ uri: logoAcai }} style={{width: 30, height: 30}} />
             </View>
-            <Text style={styles.modalBody}>Deseja realmente cadastrar o produto {"\n"}<Text style={{fontWeight: 'bold'}}>{nome}</Text>?</Text>
+            <Text style={styles.modalBody}>
+              Deseja realmente cadastrar o produto {"\n"}
+              <Text style={{fontWeight: 'bold'}}>{nome}</Text> como item de <Text style={{fontWeight: 'bold', color: '#4a3061'}}>{tipo === 'Venda' ? 'Venda' : 'Uso Interno'}</Text>?
+            </Text>
             <View style={styles.modalButtons}>
               <TouchableOpacity style={styles.btnModalConfirm} onPress={confirmarCadastro}>
                 <Text style={styles.btnText}>Salvar</Text>
@@ -178,17 +223,24 @@ const NovoProduto = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#4a3061' },
-  scrollContent: { alignItems: 'center', padding: 20 },
-  logoTop: { width: 80, height: 80, marginBottom: 10 },
-  titulo: { color: 'white', fontSize: 26, fontWeight: 'bold', marginBottom: 30 },
-  form: { width: '100%', maxWidth: 350, gap: 15 },
-  inputGroup: { gap: 5 },
-  label: { color: 'white', fontWeight: 'bold', fontSize: 15 },
-  input: { width: '100%', padding: 12, borderRadius: 8, backgroundColor: '#d1d1d1', fontSize: 16, color: '#333' },
-  textarea: { minHeight: 80, textAlignVertical: 'top' },
-  buttonRow: { flexDirection: 'row', gap: 15, marginTop: 10 },
-  btnSalvar: { flex: 1, padding: 15, backgroundColor: 'green', borderRadius: 8, alignItems: 'center' },
-  btnCancelar: { flex: 1, padding: 15, backgroundColor: 'red', borderRadius: 8, alignItems: 'center' },
+  scrollContent: { alignItems: 'center', padding: 15, paddingBottom: 30 }, 
+  logoTop: { width: 65, height: 65, marginBottom: 5 }, 
+  titulo: { color: 'white', fontSize: 22, fontWeight: 'bold', marginBottom: 15 }, 
+  form: { width: '100%', maxWidth: 350, gap: 10 }, 
+  inputGroup: { gap: 3 },
+  label: { color: 'white', fontWeight: 'bold', fontSize: 14 },
+  input: { width: '100%', padding: 10, borderRadius: 8, backgroundColor: '#d1d1d1', fontSize: 15, color: '#333' }, 
+  textarea: { minHeight: 60, textAlignVertical: 'top' }, 
+  
+  selectorContainer: { flexDirection: 'row', backgroundColor: '#e0e0e0', borderRadius: 8, padding: 3, marginTop: 2 },
+  selectorBtn: { flex: 1, paddingVertical: 8, alignItems: 'center', borderRadius: 6 },
+  selectorBtnAtivo: { backgroundColor: '#7ed957' },
+  selectorText: { color: '#666', fontWeight: 'bold', fontSize: 13 },
+  selectorTextAtivo: { color: '#4a3061' },
+
+  buttonRow: { flexDirection: 'row', gap: 15, marginTop: 15, marginBottom: 30 },
+  btnSalvar: { flex: 1, padding: 14, backgroundColor: 'green', borderRadius: 8, alignItems: 'center' },
+  btnCancelar: { flex: 1, padding: 14, backgroundColor: 'red', borderRadius: 8, alignItems: 'center' },
   btnText: { color: 'white', fontWeight: 'bold' },
   
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'center', alignItems: 'center' },

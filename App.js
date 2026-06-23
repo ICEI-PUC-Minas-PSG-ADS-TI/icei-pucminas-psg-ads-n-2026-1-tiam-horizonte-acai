@@ -4,6 +4,7 @@ import React from 'react';
 import { Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import TelaRelatorios from './src/pages/TelaRelatorios';
 
 // Importação das telas convertidas
 import TelaProdutos from './src/pages/TelaProdutos';
@@ -30,6 +31,7 @@ export default function App() {
         <Stack.Screen name="EditarProduto" component={EditarProduto} />
         <Stack.Screen name="DetalhesProduto" component={DetalhesProduto} />
         <Stack.Screen name="Configuracoes" component={Configuracoes} />
+        <Stack.Screen name="TelaRelatorios" component={TelaRelatorios} options={{ headerShown: false }} />
         
       </Stack.Navigator>
     </NavigationContainer>
