@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -10,13 +10,21 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
+  SafeAreaView,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useFonts, Lexend_400Regular, Lexend_700Bold, Lexend_800ExtraBold } from '@expo-google-fonts/lexend';
-// import { supabase } from '../../lib/supabase';
+import {
+  useFonts,
+  Lexend_400Regular,
+  Lexend_700Bold,
+  Lexend_800ExtraBold,
+} from '@expo-google-fonts/lexend';
+import { supabase } from '../../lib/supabase';
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// ───────────────── Helpers ─────────────────
 
 function formatarCNPJ(valor: string) {
   const nums = valor.replace(/\D/g, '').slice(0, 14);
@@ -34,10 +42,12 @@ function formatarTelefone(valor: string) {
   return nums.replace(/^(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
 }
 
-// ─── Componente ───────────────────────────────────────────────────────────────
+// ───────────────── Componente ─────────────────
 
 export default function EditarClienteScreen() {
   const router = useRouter();
+
+  // Parâmetros recebidos da tela de listagem
   const params = useLocalSearchParams<{
     id: string;
     nome: string;
@@ -50,171 +60,232 @@ export default function EditarClienteScreen() {
   const [cnpj, setCnpj] = useState(formatarCNPJ(params.cnpj ?? ''));
   const [email, setEmail] = useState(params.email ?? '');
   const [telefone, setTelefone] = useState(
-    params.telefone ? formatarTelefone(params.telefone) : '',
+    params.telefone ? formatarTelefone(params.telefone) : ''
   );
   const [salvando, setSalvando] = useState(false);
+  const [mensagem, setMensagem] = useState<{ tipo: 'sucesso' | 'erro'; texto: string } | null>(null);
+  const timerMensagem = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [fontsLoaded] = useFonts({ Lexend_400Regular, Lexend_700Bold, Lexend_800ExtraBold });
+  function exibirMensagem(tipo: 'sucesso' | 'erro', texto: string) {
+    if (timerMensagem.current) clearTimeout(timerMensagem.current);
+    setMensagem({ tipo, texto });
+    timerMensagem.current = setTimeout(() => setMensagem(null), 3000);
+  }
+
+  const [fontsLoaded] = useFonts({
+    Lexend_400Regular,
+    Lexend_700Bold,
+    Lexend_800ExtraBold,
+  });
 
   async function salvar() {
     const cnpjLimpo = cnpj.replace(/\D/g, '');
     const telefoneLimpo = telefone.replace(/\D/g, '');
 
-    if (!nome.trim()) return Alert.alert('Atenção', 'O nome é obrigatório.');
-    if (cnpjLimpo.length !== 14) return Alert.alert('Atenção', 'CNPJ inválido (14 dígitos).');
+    if (!nome.trim()) {
+      return exibirMensagem('erro', 'O nome é obrigatório.');
+    }
+    if (cnpjLimpo.length !== 14) {
+      return exibirMensagem('erro', 'CNPJ inválido (14 dígitos).');
+    }
 
     setSalvando(true);
     try {
-      // TODO: descomentar quando Supabase estiver configurado
-      // const { error } = await supabase
-      //   .from('Cliente')
-      //   .update({
-      //     nome: nome.trim(),
-      //     cnpj: cnpjLimpo,
-      //     email: email.trim() || null,
-      //     telefone: telefoneLimpo || null,
-      //   })
-      //   .eq('id', params.id);
-      // if (error) throw error;
+      const { error } = await supabase
+        .from('Cliente')
+        .update({
+          nome: nome.trim(),
+          cnpj: cnpjLimpo,
+          email: email.trim() || null,
+          telefone: telefoneLimpo || null,
+        })
+        .eq('id', Number(params.id));
 
-      Alert.alert('Sucesso', 'Cliente atualizado!', [
-        { text: 'OK', onPress: () => router.back() },
-      ]);
+      if (error) throw error;
+
+      exibirMensagem('sucesso', 'Cliente atualizado com sucesso!');
+      setTimeout(() => router.back(), 1500);
     } catch (e: any) {
-      Alert.alert('Erro', e.message ?? 'Não foi possível atualizar o cliente.');
+      exibirMensagem('erro', e.message ?? 'Não foi possível atualizar o cliente.');
     } finally {
       setSalvando(false);
     }
   }
 
-  if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color="#4ade80" />;
+  if (!fontsLoaded) {
+    return <ActivityIndicator style={{ flex: 1 }} color={VERDE} />;
+  }
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <ScrollView style={styles.container} contentContainerStyle={styles.conteudo} keyboardShouldPersistTaps="handled">
-
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.botaoVoltar}>
-            <Ionicons name="arrow-back" size={26} color="#fff" />
-          </TouchableOpacity>
-          <View style={styles.headerTituloContainer}>
-            <Text style={styles.headerLinha1}>EDITAR</Text>
-            <Text style={styles.headerLinha2}>CLIENTE</Text>
-          </View>
-        </View>
-
-        {/* Campos */}
-        <Text style={styles.label}>Nome do Cliente</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            value={nome}
-            onChangeText={setNome}
-            placeholderTextColor="#aaa"
-          />
-          <Ionicons name="pencil" size={18} color="#aaa" style={styles.inputIcone} />
-        </View>
-
-        <Text style={styles.label}>CNPJ</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            value={cnpj}
-            onChangeText={(v) => setCnpj(formatarCNPJ(v))}
-            keyboardType="numeric"
-            maxLength={18}
-            placeholderTextColor="#aaa"
-          />
-          <Ionicons name="pencil" size={18} color="#aaa" style={styles.inputIcone} />
-        </View>
-
-        <Text style={styles.label}>Email</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            placeholderTextColor="#aaa"
-          />
-          <Ionicons name="pencil" size={18} color="#aaa" style={styles.inputIcone} />
-        </View>
-
-        <Text style={styles.label}>Telefone</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            value={telefone}
-            onChangeText={(v) => setTelefone(formatarTelefone(v))}
-            keyboardType="numeric"
-            maxLength={15}
-            placeholderTextColor="#aaa"
-          />
-          <Ionicons name="pencil" size={18} color="#aaa" style={styles.inputIcone} />
-        </View>
-
-        {/* Botões */}
-        <View style={styles.botoes}>
-          <TouchableOpacity
-            style={[styles.botao, styles.botaoSalvar]}
-            onPress={salvar}
-            disabled={salvando}
+    <LinearGradient colors={[ROXO, '#2E1840', '#1A0E26']} style={styles.gradient}>
+      <StatusBar barStyle="light-content" />
+      <SafeAreaView style={styles.safe}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <ScrollView
+            contentContainerStyle={styles.conteudo}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
           >
-            {salvando
-              ? <ActivityIndicator color="#1a1a1a" />
-              : <Text style={styles.botaoTextoSalvar}>Salvar</Text>
-            }
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.botao, styles.botaoCancelar]}
-            onPress={() => router.back()}
-            disabled={salvando}
-          >
-            <Text style={styles.botaoTextoCancelar}>Cancelar</Text>
-          </TouchableOpacity>
-        </View>
+            {/* Header */}
+            <View style={styles.header}>
+              <TouchableOpacity style={styles.iconBtn} onPress={() => router.back()}>
+                <View style={styles.avatarCircle}>
+                  <Ionicons name="arrow-back-outline" size={22} color="#fff" />
+                </View>
+              </TouchableOpacity>
+              <View style={styles.headerTituloContainer}>
+                <Text style={styles.headerLinha}>EDITAR CLIENTE</Text>
+              </View>
+              <View style={{ width: 36 }} />
+            </View>
 
-      </ScrollView>
-    </KeyboardAvoidingView>
+            <Text style={styles.subtitulo}>
+              Altere os campos que deseja{'\n'}atualizar para este cliente
+            </Text>
+
+            {/* Formulário */}
+            <View style={styles.cardFormulario}>
+              <View style={styles.campo}>
+                <Text style={styles.label}>Nome *</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Digite o nome..."
+                  placeholderTextColor="#999"
+                  value={nome}
+                  onChangeText={setNome}
+                />
+              </View>
+
+              <View style={styles.campo}>
+                <Text style={styles.label}>CNPJ *</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="00.000.000/0000-00"
+                  placeholderTextColor="#999"
+                  keyboardType="numeric"
+                  value={cnpj}
+                  onChangeText={(v) => setCnpj(formatarCNPJ(v))}
+                  maxLength={18}
+                />
+              </View>
+
+              <View style={styles.campo}>
+                <Text style={styles.label}>Email</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Digite o email..."
+                  placeholderTextColor="#999"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  value={email}
+                  onChangeText={setEmail}
+                />
+              </View>
+
+              <View style={styles.campo}>
+                <Text style={styles.label}>Telefone</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="(00) 00000-0000"
+                  placeholderTextColor="#999"
+                  keyboardType="numeric"
+                  value={telefone}
+                  onChangeText={(v) => setTelefone(formatarTelefone(v))}
+                  maxLength={15}
+                />
+              </View>
+            </View>
+
+            {/* Mensagem */}
+            {mensagem && (
+              <View style={[styles.mensagem, mensagem.tipo === 'sucesso' ? styles.mensagemSucesso : styles.mensagemErro]}>
+                <Text style={styles.mensagemTexto}>
+                  {mensagem.tipo === 'sucesso' ? '✅ ' : '❌ '}{mensagem.texto}
+                </Text>
+              </View>
+            )}
+
+            {/* Botões */}
+            <View style={styles.botoes}>
+              <TouchableOpacity
+                style={[styles.botao, styles.botaoSalvar]}
+                onPress={salvar}
+                disabled={salvando}
+              >
+                {salvando ? (
+                  <ActivityIndicator color="#1a1a1a" />
+                ) : (
+                  <Text style={styles.botaoTextoSalvar}>SALVAR</Text>
+                )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.botao, styles.botaoCancelar]}
+                onPress={() => router.back()}
+                disabled={salvando}
+              >
+                <Text style={styles.botaoTextoCancelar}>CANCELAR</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
-// ─── Estilos ──────────────────────────────────────────────────────────────────
+// ───────────────── Estilos ─────────────────
 
 const ROXO = '#46295A';
 const VERDE = '#5EB85E';
-const VERMELHO = '#c0392b';
+const VERMELHO = '#C0392B';
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: ROXO },
-  conteudo: { paddingHorizontal: 24, paddingBottom: 48 },
+  gradient: { flex: 1 },
+  safe: { flex: 1, paddingHorizontal: 24 },
+  conteudo: { flexGrow: 1, paddingBottom: 48 },
 
   header: {
+    width: '100%',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 56,
-    paddingBottom: 24,
-    gap: 16,
+    paddingTop: 20,
+    paddingBottom: 12,
   },
-  botaoVoltar: { padding: 4 },
-  headerTituloContainer: { flex: 1, flexDirection: 'row', gap: 10 },
-  headerLinha1: {
-    fontSize: 26,
-    fontFamily: 'Lexend_800ExtraBold',
-    color: '#fff',
-    letterSpacing: 3,
+  iconBtn: { marginLeft: 10, padding: 4 },
+  avatarCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1.5,
+    borderColor: VERDE,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  headerLinha2: {
-    fontSize: 26,
-    fontFamily: 'Lexend_800ExtraBold',
+  headerTituloContainer: { alignItems: 'center' },
+  headerLinha: {
     color: VERDE,
-    letterSpacing: 3,
+    fontSize: 26,
+    fontFamily: 'Lexend_800ExtraBold',
+    letterSpacing: 2,
   },
+
+  subtitulo: {
+    color: '#ddd',
+    fontFamily: 'Lexend_400Regular',
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 8,
+    marginBottom: 28,
+    lineHeight: 20,
+  },
+
+  cardFormulario: { width: '85%', alignSelf: 'center' },
+  campo: { marginBottom: 10 },
 
   label: {
     color: '#fff',
@@ -223,39 +294,57 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     marginTop: 16,
   },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    borderWidth: 3,
-    borderColor: VERDE,
-    paddingHorizontal: 14,
-    marginBottom: 14,
-  },
   input: {
-    flex: 1,
-    paddingVertical: 13,
-    color: '#222',
+    backgroundColor: '#fff',
+    borderRadius: 14,
+    borderWidth: 2,
+    borderColor: VERDE,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
     fontFamily: 'Lexend_400Regular',
-    fontSize: 15,
+    color: ROXO,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
   },
-
-  inputIcone: { marginLeft: 8 },
 
   botoes: {
     flexDirection: 'row',
     gap: 12,
-    marginTop: 36,
+    marginTop: 30,
+    width: '85%',
+    alignSelf: 'center',
   },
   botao: {
     flex: 1,
-    paddingVertical: 14,
-    borderRadius: 10,
+    paddingVertical: 16,
+    borderRadius: 14,
     alignItems: 'center',
   },
   botaoSalvar: { backgroundColor: VERDE },
   botaoCancelar: { backgroundColor: VERMELHO },
-  botaoTextoSalvar: { color: '#1a1a1a', fontFamily: 'Lexend_800ExtraBold', fontSize: 14 },
-  botaoTextoCancelar: { color: '#fff', fontFamily: 'Lexend_800ExtraBold', fontSize: 14 },
+  botaoTextoSalvar: {
+    color: '#1a1a1a',
+    fontSize: 14,
+    fontFamily: 'Lexend_800ExtraBold',
+  },
+  botaoTextoCancelar: {
+    color: '#fff',
+    fontSize: 14,
+    fontFamily: 'Lexend_800ExtraBold',
+  },
+
+  mensagem: {
+    width: '85%',
+    alignSelf: 'center',
+    padding: 12,
+    borderRadius: 10,
+    marginTop: 24,
+    alignItems: 'center',
+  },
+  mensagemSucesso: { backgroundColor: '#1a472a' },
+  mensagemErro: { backgroundColor: '#7f1d1d' },
+  mensagemTexto: { color: '#fff', fontFamily: 'Lexend_700Bold', fontSize: 14 },
 });

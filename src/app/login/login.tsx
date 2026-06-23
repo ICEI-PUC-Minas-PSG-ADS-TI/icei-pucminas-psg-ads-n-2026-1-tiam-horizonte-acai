@@ -59,7 +59,7 @@ export default function LoginScreen() {
             }
 
             setMensagem({ tipo: 'sucesso', texto: `Bem-vindo, ${result.data[0].nome}!` });
-            setTimeout(() => router.replace("/(tabs)"), 900);
+            setTimeout(() => router.replace("/"), 900);
         } catch (e: any) {
             setMensagem({ tipo: 'erro', texto: 'Ocorreu um erro inesperado. Tente novamente.' });
         } finally {
