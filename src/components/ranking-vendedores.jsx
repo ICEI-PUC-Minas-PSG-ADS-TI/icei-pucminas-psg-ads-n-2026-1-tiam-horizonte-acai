@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { useEffect, useState } from 'react'
 import {
   View,
@@ -7,7 +7,9 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native'
-import { ROXO, ROXO_CLARO } from '../app/index'
+import { paleta } from '@/constants/theme'
+import BarraMeta from '@/components/barra-meta'
+import { formatarMoeda } from '@/helpers/format'
 
 function getInicioMesAtual() {
   const agora = new Date()
@@ -26,6 +28,7 @@ function getMesAnoAtual() {
 
 export default function RankingVendedores() {
   const [ranking, setRanking] = useState([])
+  const [totalGeral, setTotalGeral] = useState(0)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -48,7 +51,9 @@ export default function RankingVendedores() {
     }
 
     const agrupado = {}
+    let total = 0
     data.forEach((venda) => {
+      total += Number(venda.valor_total)
       const id = venda.id_vendedor
       if (!agrupado[id]) {
         agrupado[id] = {
@@ -62,6 +67,7 @@ export default function RankingVendedores() {
 
     const ordenado = Object.values(agrupado).sort((a, b) => b.total - a.total)
     setRanking(ordenado)
+    setTotalGeral(total)
     setLoading(false)
   }
 
@@ -76,8 +82,10 @@ export default function RankingVendedores() {
       <Text style={styles.titulo}>Ranking de Vendedores</Text>
       <Text style={styles.subtitulo}>{getMesAnoAtual()}</Text>
 
+      <BarraMeta totalVendas={totalGeral} />
+
       {loading ? (
-        <ActivityIndicator size="large" color="#ffffff" style={{ marginTop: 40 }} />
+        <ActivityIndicator size="large" color={paleta.BRANCO} style={{ marginTop: 40 }} />
       ) : ranking.length === 0 ? (
         <Text style={styles.vazio}>Nenhuma venda registrada neste mês.</Text>
       ) : (
@@ -97,7 +105,7 @@ export default function RankingVendedores() {
                   {funcionario.nome}
                 </Text>
                 <Text style={[styles.valorPodio, { color: coresPodio[index] }]}>
-                  R$ {funcionario.total.toFixed(2)}
+                  {formatarMoeda(funcionario.total)}
                 </Text>
               </View>
             ))}
@@ -115,7 +123,7 @@ export default function RankingVendedores() {
                     {item.nome}
                   </Text>
                   <Text style={styles.valorLista}>
-                    R$ {item.total.toFixed(2)}
+                    {formatarMoeda(item.total)}
                   </Text>
                 </View>
               )}
@@ -130,14 +138,14 @@ export default function RankingVendedores() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: ROXO,
+    backgroundColor: paleta.ROXO,
     paddingTop: 60,
     paddingHorizontal: 16,
   },
   titulo: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: paleta.BRANCO,
     textAlign: 'center',
     marginBottom: 4,
   },
@@ -156,7 +164,7 @@ const styles = StyleSheet.create({
   },
   cartaoPodio: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: paleta.BRANCO,
     borderRadius: 12,
     borderWidth: 2,
     padding: 12,
@@ -188,7 +196,7 @@ const styles = StyleSheet.create({
   itemLista: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: paleta.BRANCO,
     borderRadius: 10,
     padding: 14,
     marginBottom: 8,
@@ -208,11 +216,11 @@ const styles = StyleSheet.create({
   valorLista: {
     fontSize: 14,
     fontWeight: '600',
-    color: ROXO_CLARO,
+    color: paleta.ROXO_CLARO,
   },
   vazio: {
     textAlign: 'center',
-    color: '#ffffff',
+    color: paleta.BRANCO,
     marginTop: 40,
     fontSize: 15,
   },
