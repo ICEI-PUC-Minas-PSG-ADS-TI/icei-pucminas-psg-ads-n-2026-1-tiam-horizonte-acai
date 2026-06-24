@@ -17,6 +17,7 @@ import {
 } from '@expo-google-fonts/lexend';
 import { Ionicons } from '@expo/vector-icons';
 import { paleta } from '@/constants/theme';
+import { pageGradientProps } from '@/constants/theme';
 
 const menuItems = [
   {
@@ -55,10 +56,7 @@ export default function Vendas() {
   }
 
   return (
-    <LinearGradient
-      colors={[paleta.ROXO, '#2E1840', '#1A0E26']}
-      style={styles.gradient}
-    >
+    <LinearGradient {...pageGradientProps()}>
       <StatusBar barStyle="light-content" />
 
       <SafeAreaView style={styles.safe}>
@@ -120,10 +118,6 @@ export default function Vendas() {
 }
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
-
   safe: {
     flex: 1,
     paddingHorizontal: 24,

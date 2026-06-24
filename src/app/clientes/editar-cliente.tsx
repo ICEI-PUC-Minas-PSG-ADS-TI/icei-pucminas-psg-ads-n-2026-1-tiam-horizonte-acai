@@ -25,6 +25,7 @@ import {
 } from '@expo-google-fonts/lexend';
 import { supabase } from '@/lib/supabase';
 import { paleta } from '@/constants/theme';
+import { pageGradientProps } from '@/constants/theme';
 
 // ───────────────── Helpers ─────────────────
 
@@ -126,7 +127,7 @@ export default function EditarClienteScreen() {
       'ADMINISTRADOR',
     ]}
   >
-    <LinearGradient colors={[paleta.ROXO, '#2E1840', '#1A0E26']} style={styles.gradient}>
+    <LinearGradient {...pageGradientProps()}>
       <StatusBar barStyle="light-content" />
       <SafeAreaView style={styles.safe}>
         <KeyboardAvoidingView
@@ -257,7 +258,6 @@ export default function EditarClienteScreen() {
 // ───────────────── Estilos ─────────────────
 
 const styles = StyleSheet.create({
-  gradient: { flex: 1 },
   safe: { flex: 1, paddingHorizontal: 24 },
   conteudo: { flexGrow: 1, paddingBottom: 48 },
 

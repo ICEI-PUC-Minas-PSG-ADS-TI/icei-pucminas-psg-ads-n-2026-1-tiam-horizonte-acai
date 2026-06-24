@@ -21,6 +21,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { sincronizarVendas } from '@/utils/sincronizar-vendas';
 import { paleta } from '@/constants/theme'
+import { pageGradientProps } from '@/constants/theme'
 
 /*const menuItems = [
   {
@@ -160,10 +161,7 @@ useEffect(() => {
   }
 
   return (
-    <LinearGradient
-      colors={[paleta.ROXO, '#2E1840', '#1A0E26']}
-      style={styles.gradient}
-    >
+    <LinearGradient {...pageGradientProps()}>
       <StatusBar barStyle="light-content" />
       <SafeAreaView style={styles.safe}>
 
@@ -236,10 +234,6 @@ useEffect(() => {
 }
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
-
   safe: {
     flex: 1,
     paddingHorizontal: 24,

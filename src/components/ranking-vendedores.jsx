@@ -10,6 +10,8 @@ import {
 import { paleta } from '@/constants/theme'
 import BarraMeta from '@/components/barra-meta'
 import { formatarMoeda } from '@/helpers/format'
+import { LinearGradient } from 'expo-linear-gradient'
+import { pageGradientProps } from '@/constants/theme'
 
 function getInicioMesAtual() {
   const agora = new Date()
@@ -78,6 +80,7 @@ export default function RankingVendedores() {
   const coresPodio = ['#FFD700', '#C0C0C0', '#CD7F32']
 
   return (
+    <LinearGradient {...pageGradientProps()}>
     <View style={styles.container}>
       <Text style={styles.titulo}>Ranking de Vendedores</Text>
       <Text style={styles.subtitulo}>{getMesAnoAtual()}</Text>
@@ -132,13 +135,13 @@ export default function RankingVendedores() {
         </>
       )}
     </View>
+    </LinearGradient>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: paleta.ROXO,
     paddingTop: 60,
     paddingHorizontal: 16,
   },

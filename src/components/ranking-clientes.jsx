@@ -10,6 +10,8 @@ import {
 } from 'react-native'
 import { paleta } from '@/constants/theme'
 import { formatarMoeda } from '@/helpers/format'
+import { LinearGradient } from 'expo-linear-gradient'
+import { pageGradientProps } from '@/constants/theme'
 
 const PERIODOS = ['Mensal', 'Trimestral', 'Anual']
 
@@ -77,6 +79,7 @@ export default function RankingClientes() {
   const coresPodio = ['#FFD700', '#C0C0C0', '#CD7F32']
 
   return (
+    <LinearGradient {...pageGradientProps()}>
     <View style={styles.container}>
       <Text style={styles.titulo}>Ranking de Clientes</Text>
 
@@ -142,13 +145,13 @@ export default function RankingClientes() {
         </>
       )}
     </View>
+    </LinearGradient>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: paleta.ROXO,
     paddingTop: 60,
     paddingHorizontal: 16,
   },

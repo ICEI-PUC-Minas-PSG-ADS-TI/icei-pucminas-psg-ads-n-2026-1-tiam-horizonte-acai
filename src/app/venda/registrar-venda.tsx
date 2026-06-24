@@ -19,6 +19,10 @@ import { Ionicons } from '@expo/vector-icons';
 import {
     salvarVendaOffline
 } from '@/utils/venda-service';
+import { LinearGradient } from 'expo-linear-gradient';
+import { paleta } from '@/constants/theme';
+import { pageGradientProps } from '@/constants/theme';
+import { formatarMoeda } from '@/helpers/format';
 
 export default function RegistrarVenda() {
 
@@ -47,16 +51,6 @@ export default function RegistrarVenda() {
         carregarClientes();
         carregarProdutos();
     }, []);
-
-    function formatarMoeda(valor: number) {
-        return valor.toLocaleString(
-            'pt-BR',
-            {
-                style: 'currency',
-                currency: 'BRL',
-            }
-        );
-    }
 
     async function carregarClientes() {
         const { data } = await supabase
@@ -428,6 +422,7 @@ export default function RegistrarVenda() {
                 'ADMINISTRADOR',
               ]}
             >
+            <LinearGradient {...pageGradientProps()}>
             <SafeAreaView style={{ flex: 1 }}>
                 <ScrollView contentContainerStyle={styles.container}>
 
@@ -633,6 +628,7 @@ export default function RegistrarVenda() {
 
                 </ScrollView>
             </SafeAreaView >
+            </LinearGradient>
         </ProtectedRoute>
     );
 }
@@ -646,6 +642,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
         textAlign: 'center',
+        color: paleta.BRANCO,
     },
 
     label: {
@@ -653,13 +650,16 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 20,
         marginBottom: 10,
+        color: paleta.BRANCO,
     },
 
     input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
+        borderWidth: 1.5,
+        borderColor: paleta.VERDE,
+        backgroundColor: paleta.BRANCO,
         borderRadius: 8,
         padding: 10,
+        color: '#000',
     },
 
     card: {
@@ -674,10 +674,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         marginVertical: 20,
+        color: paleta.BRANCO,
     },
 
     botao: {
-        backgroundColor: '#4CAF50',
+        backgroundColor: paleta.VERDE,
         padding: 12,
         borderRadius: 8,
         marginTop: 10,

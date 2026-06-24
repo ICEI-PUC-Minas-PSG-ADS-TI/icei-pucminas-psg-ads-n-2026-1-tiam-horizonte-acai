@@ -19,6 +19,7 @@ import { useFonts, Lexend_400Regular, Lexend_700Bold, Lexend_800ExtraBold } from
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '@/lib/supabase';
 import { paleta } from '@/constants/theme';
+import { pageGradientProps } from '@/constants/theme';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -148,7 +149,7 @@ export default function PerfilScreen() {
   const tipoCor = funcionario ? (TIPO_COR[funcionario.tipo] ?? paleta.VERDE) : paleta.VERDE;
 
   return (
-    <LinearGradient colors={[paleta.ROXO, '#2E1840', '#1A0E26']} style={styles.gradient}>
+    <LinearGradient {...pageGradientProps()}>
       <StatusBar barStyle="light-content" />
       <SafeAreaView style={styles.safe}>
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -335,7 +336,6 @@ export default function PerfilScreen() {
 // ─── Estilos ──────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  gradient: { flex: 1 },
   safe: { flex: 1 },
   conteudo: { flexGrow: 1, paddingHorizontal: 24, paddingBottom: 48 },
 

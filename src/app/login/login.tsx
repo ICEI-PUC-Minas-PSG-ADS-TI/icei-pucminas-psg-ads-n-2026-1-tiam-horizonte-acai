@@ -24,6 +24,7 @@ import { supabase } from '@/lib/supabase';
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { paleta } from "@/constants/theme";
+import { pageGradientProps } from "@/constants/theme";
 
 export default function LoginScreen() {
     const router = useRouter();
@@ -89,8 +90,7 @@ export default function LoginScreen() {
 
     return (
         <LinearGradient
-            colors={[paleta.ROXO, "#2E1840", "#1A0E26"]}
-            style={{ flex: 1 }}
+            {...pageGradientProps()}
         >
             <KeyboardAvoidingView
                 style={{ flex: 1 }}

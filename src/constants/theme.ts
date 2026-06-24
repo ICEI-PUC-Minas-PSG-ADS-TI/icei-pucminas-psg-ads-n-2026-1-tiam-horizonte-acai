@@ -5,6 +5,7 @@
 
 import { Platform } from 'react-native';
 
+
 export const paleta = {
   ROXO : '#46295A',
   ROXO_CLARO : '#5C3876',
@@ -12,6 +13,7 @@ export const paleta = {
   VERMELHO: '#C0392B',
   BRANCO : '#FFFFFF',
 }
+
 
 const tintColorLight = '#0a7ea4';
 const tintColorDark = '#fff';
@@ -34,6 +36,13 @@ export const Colors = {
     tabIconSelected: tintColorDark,
   },
 };
+
+export function pageGradientProps(styleOverride?: object) {
+  return {
+    colors: [paleta.ROXO, '#2E1840', '#1A0E26'] as [string, string, string],
+    style: { flex: 1, ...styleOverride },
+  };
+}
 
 export const Fonts = Platform.select({
   ios: {

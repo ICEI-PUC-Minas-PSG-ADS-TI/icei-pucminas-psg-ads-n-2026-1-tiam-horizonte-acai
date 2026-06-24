@@ -18,6 +18,7 @@ import { useFonts, Lexend_400Regular, Lexend_700Bold, Lexend_800ExtraBold } from
 import { LinearGradient } from 'expo-linear-gradient';
 import { supabase } from '@/lib/supabase';
 import { paleta } from '@/constants/theme';
+import { pageGradientProps } from '@/constants/theme';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -234,7 +235,7 @@ export default function ClientesScreen() {
         'ADMINISTRADOR',
       ]}
     >
-      <LinearGradient colors={[paleta.ROXO, '#2E1840', '#1A0E26']} style={styles.container}>
+      <LinearGradient {...pageGradientProps()} style={styles.container}>
 
         {/* Header */}
         <View style={styles.header}>
