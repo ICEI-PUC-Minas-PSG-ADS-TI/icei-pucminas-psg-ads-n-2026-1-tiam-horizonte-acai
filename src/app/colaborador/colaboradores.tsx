@@ -19,7 +19,7 @@ import { paleta } from '@/constants/theme';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-type TipoFuncionario = 'GESTOR' | 'VENDEDOR' | 'ESTOQUISTA';
+type TipoFuncionario = 'GESTOR' | 'VENDEDOR' | 'ESTOQUISTA' | 'ADMINISTRADOR';
 
 interface Funcionario {
   id: number;
@@ -35,12 +35,14 @@ const TIPO_COR: Record<TipoFuncionario, string> = {
   GESTOR: '#7c3aed',
   VENDEDOR: '#5EB85E',
   ESTOQUISTA: '#d97706',
+  ADMINISTRADOR: '#d31314',
 };
 
 const TIPO_LABEL: Record<TipoFuncionario, string> = {
   GESTOR: 'Gestor',
   VENDEDOR: 'Vendedor',
   ESTOQUISTA: 'Estoquista',
+  ADMINISTRADOR: 'ADM',
 };
 
 // ─── Componente Principal ─────────────────────────────────────────────────────

@@ -118,7 +118,7 @@ export default function LoginScreen() {
                         <Text style={styles.label}>Usuário</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="Digite seu nome de usuário..."
+                            placeholder="Usuário..."
                             placeholderTextColor="#aaa"
                             autoCapitalize="none"
                             keyboardType="email-address"
@@ -130,7 +130,7 @@ export default function LoginScreen() {
                         <View style={styles.senhaContainer}>
                             <TextInput
                                 style={styles.senhaInput}
-                                placeholder="Digite sua senha..."
+                                placeholder="Senha..."
                                 placeholderTextColor="#aaa"
                                 secureTextEntry={!senhaVisivel}
                                 value={senha}
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: "#333",
     },
-    senhaOlho: { padding: 4 },
+    senhaOlho: { padding: 15 },
 
     // Botão
     botaoLogin: {

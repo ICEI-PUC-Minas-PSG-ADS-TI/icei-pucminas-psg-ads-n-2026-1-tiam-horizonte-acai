@@ -11,6 +11,7 @@ import {
   StatusBar,
   SafeAreaView,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import {
   useFonts,
@@ -188,19 +189,14 @@ useEffect(() => {
                 />
               </View>
             </TouchableOpacity>
-
-            <TouchableOpacity style={styles.iconBtn}>
-              <Ionicons
-                name="menu-outline"
-                size={34}
-                color={paleta.BRANCO}
-              />
-            </TouchableOpacity>
           </View>
         </View>
 
         {/* Menu Grid */}
-        <View style={styles.grid}>
+        <ScrollView
+          contentContainerStyle={styles.grid}
+          showsVerticalScrollIndicator={false}
+        >
           {menuItems.map((item) => (
             <TouchableOpacity
               key={item.label}
@@ -223,16 +219,11 @@ useEffect(() => {
               </View>
             </TouchableOpacity>
           ))}
-        </View>
+        </ScrollView>
 
-        {/* Linha decorativa inferior */}
-        <View style={styles.footer}>
-          <View style={styles.footerLine} />
-        </View>
-
-      </SafeAreaView>
-    </LinearGradient>
-  );
+              </SafeAreaView>
+            </LinearGradient>
+          );
 }
 
 const styles = StyleSheet.create({
@@ -270,6 +261,7 @@ const styles = StyleSheet.create({
 
   iconBtn: {
     padding: 4,
+    marginRight: 15
   },
 
   avatarCircle: {
@@ -284,10 +276,9 @@ const styles = StyleSheet.create({
 
   // Grid
   grid: {
-    flex: 1,
-    flexDirection: 'column',
+    paddingVertical: 20,
+    alignItems: 'center',
     gap: 12,
-    justifyContent: 'center',
   },
 
   card: {
