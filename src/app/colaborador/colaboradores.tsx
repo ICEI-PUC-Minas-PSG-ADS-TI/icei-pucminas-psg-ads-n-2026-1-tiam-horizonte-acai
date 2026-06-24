@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -8,121 +8,148 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
+  Modal,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { useFonts, Lexend_400Regular, Lexend_700Bold, Lexend_800ExtraBold } from '@expo-google-fonts/lexend';
-// import { supabase } from '../../lib/supabase';
+import { LinearGradient } from 'expo-linear-gradient';
+import { supabase } from '../../lib/supabase';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-interface Colaborador {
+type TipoFuncionario = 'GESTOR' | 'VENDEDOR' | 'ESTOQUISTA';
+
+interface Funcionario {
   id: number;
   nome: string;
-  cpf: string;
-  cargo: string;
-  email: string | null;
-  telefone: string | null;
-  criado_em: string;
+  usuario: string;
+  tipo: TipoFuncionario;
+  ativo: boolean;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function formatarCPF(valor: string) {
-  const nums = valor.replace(/\D/g, '').slice(0, 11);
-  return nums
-    .replace(/^(\d{3})(\d)/, '$1.$2')
-    .replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
-    .replace(/\.(\d{3})(\d)/, '.$1-$2');
-}
+const TIPO_COR: Record<TipoFuncionario, string> = {
+  GESTOR: '#7c3aed',
+  VENDEDOR: '#5EB85E',
+  ESTOQUISTA: '#d97706',
+};
 
-function formatarTelefone(valor: string) {
-  const nums = valor.replace(/\D/g, '').slice(0, 11);
-  if (nums.length <= 10)
-    return nums.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-  return nums.replace(/^(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
-}
+const TIPO_LABEL: Record<TipoFuncionario, string> = {
+  GESTOR: 'Gestor',
+  VENDEDOR: 'Vendedor',
+  ESTOQUISTA: 'Estoquista',
+};
 
 // ─── Componente Principal ─────────────────────────────────────────────────────
 
 export default function ColaboradoresScreen() {
   const router = useRouter();
-  const [colaboradores, setColaboradores] = useState<Colaborador[]>([]);
-  const [filtrados, setFiltrados] = useState<Colaborador[]>([]);
+  const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
+  const [filtrados, setFiltrados] = useState<Funcionario[]>([]);
   const [busca, setBusca] = useState('');
   const [carregando, setCarregando] = useState(true);
+  const [funcParaExcluir, setFuncParaExcluir] = useState<Funcionario | null>(null);
+  const [excluindo, setExcluindo] = useState(false);
 
   const [fontsLoaded] = useFonts({ Lexend_400Regular, Lexend_700Bold, Lexend_800ExtraBold });
 
-  async function buscarColaboradores() {
-    setCarregando(true);
-    // MOCK — substituir pela chamada real ao Supabase quando configurado
-    const mock: Colaborador[] = [
-      { id: 1, nome: 'Ana Paula Silva', cpf: '12345678901', cargo: 'Vendedora', email: 'ana@horizonte.com', telefone: '31999990001', criado_em: new Date().toISOString() },
-      { id: 2, nome: 'Carlos Mendes', cpf: '98765432100', cargo: 'Gerente', email: null, telefone: '31999990002', criado_em: new Date().toISOString() },
-      { id: 3, nome: 'Fernanda Costa', cpf: '11122233344', cargo: 'Caixa', email: 'fernanda@horizonte.com', telefone: null, criado_em: new Date().toISOString() },
-    ];
-    setColaboradores(mock);
-    setFiltrados(mock);
-    setCarregando(false);
-  }
-
-  useEffect(() => { buscarColaboradores(); }, []);
+  useFocusEffect(
+    useCallback(() => {
+      buscarFuncionarios();
+    }, [])
+  );
 
   useEffect(() => {
     const termo = busca.toLowerCase();
     setFiltrados(
-      colaboradores.filter(
-        (c) => c.nome.toLowerCase().includes(termo) || c.cargo.toLowerCase().includes(termo),
+      funcionarios.filter(
+        (f) =>
+          f.nome.toLowerCase().includes(termo) ||
+          f.usuario.toLowerCase().includes(termo) ||
+          f.tipo.toLowerCase().includes(termo),
       ),
     );
-  }, [busca, colaboradores]);
+  }, [busca, funcionarios]);
 
-  function confirmarExclusao(colaborador: Colaborador) {
-    Alert.alert(
-      'Excluir colaborador',
-      `Deseja excluir "${colaborador.nome}"? Esta ação não pode ser desfeita.`,
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Excluir',
-          style: 'destructive',
-          onPress: () => {
-            // TODO: supabase.from('Colaborador').delete().eq('id', colaborador.id)
-            setColaboradores((prev) => prev.filter((c) => c.id !== colaborador.id));
-          },
-        },
-      ],
-    );
+  async function buscarFuncionarios() {
+    setCarregando(true);
+    try {
+      const { data, error } = await supabase
+        .from('Funcionario')
+        .select('id, nome, usuario, tipo, ativo')
+        .order('nome', { ascending: true });
+
+      if (error) throw error;
+
+      setFuncionarios(data ?? []);
+      setFiltrados(data ?? []);
+    } catch (e: any) {
+      Alert.alert('Erro', e.message ?? 'Não foi possível carregar os colaboradores.');
+    } finally {
+      setCarregando(false);
+    }
   }
 
-  function CardColaborador({ item }: { item: Colaborador }) {
+  async function excluirFuncionario() {
+    if (!funcParaExcluir) return;
+    setExcluindo(true);
+    try {
+      const { error } = await supabase
+        .from('Funcionario')
+        .delete()
+        .eq('id', funcParaExcluir.id);
+
+      if (error) throw error;
+
+      setFuncionarios((prev) => prev.filter((f) => f.id !== funcParaExcluir.id));
+      setFuncParaExcluir(null);
+    } catch (e: any) {
+      Alert.alert('Erro', e.message ?? 'Não foi possível excluir o colaborador.');
+    } finally {
+      setExcluindo(false);
+    }
+  }
+
+  if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color={VERDE} />;
+
+  function CardFuncionario({ item }: { item: Funcionario }) {
+    const cor = TIPO_COR[item.tipo] ?? VERDE;
     return (
       <View style={styles.card}>
         <View style={styles.cardConteudo}>
-          {/* Avatar inicial */}
-          <View style={styles.avatar}>
-            <Text style={styles.avatarLetra}>{item.nome.charAt(0)}</Text>
+          <View style={[styles.avatar, { backgroundColor: cor }]}>
+            <Text style={styles.avatarLetra}>{item.nome.charAt(0).toUpperCase()}</Text>
           </View>
 
           <View style={{ flex: 1 }}>
-            <Text style={styles.cardNome}>{item.nome}</Text>
-            <Text style={styles.cardCargo}>{item.cargo}</Text>
-            <Text style={styles.cardInfo}>CPF: {formatarCPF(item.cpf)}</Text>
+            <View style={styles.cardTopo}>
+              <Text style={styles.cardNome} numberOfLines={1}>{item.nome}</Text>
+              <View style={[styles.badge, { backgroundColor: cor + '22', borderColor: cor }]}>
+                <Text style={[styles.badgeTexto, { color: cor }]}>{TIPO_LABEL[item.tipo]}</Text>
+              </View>
+            </View>
+
+            <Text style={styles.cardUsuario}>@{item.usuario}</Text>
+
+            <View style={styles.cardStatusRow}>
+              <View style={[styles.statusDot, { backgroundColor: item.ativo ? VERDE : VERMELHO }]} />
+              <Text style={styles.cardStatus}>{item.ativo ? 'Ativo' : 'Inativo'}</Text>
+            </View>
 
             <View style={styles.cardBotoes}>
               <TouchableOpacity
                 style={[styles.botaoCard, styles.botaoEditar]}
                 onPress={() =>
                   router.push({
-                    pathname: '/colaboradores/editar-colaborador' as any,
+                    pathname: '/colaborador/editar-colaborador' as any,
                     params: {
                       id: item.id,
                       nome: item.nome,
-                      cpf: item.cpf,
-                      cargo: item.cargo,
-                      email: item.email ?? '',
-                      telefone: item.telefone ?? '',
+                      usuario: item.usuario,
+                      tipo: item.tipo,
+                      ativo: item.ativo ? 'true' : 'false',
                     },
                   })
                 }
@@ -131,20 +158,8 @@ export default function ColaboradoresScreen() {
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[styles.botaoCard, styles.botaoVerMais]}
-                onPress={() =>
-                  Alert.alert(
-                    item.nome,
-                    `Cargo: ${item.cargo}\nCPF: ${formatarCPF(item.cpf)}\nEmail: ${item.email ?? '—'}\nTelefone: ${item.telefone ? formatarTelefone(item.telefone) : '—'}\nCadastrado em: ${new Date(item.criado_em).toLocaleDateString('pt-BR')}`,
-                  )
-                }
-              >
-                <Text style={[styles.botaoCardTexto, { color: '#1a1a1a' }]}>Ver Mais</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
                 style={[styles.botaoCard, styles.botaoExcluir]}
-                onPress={() => confirmarExclusao(item)}
+                onPress={() => setFuncParaExcluir(item)}
               >
                 <Text style={styles.botaoCardTexto}>Excluir</Text>
               </TouchableOpacity>
@@ -155,19 +170,15 @@ export default function ColaboradoresScreen() {
     );
   }
 
-  if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color={VERDE} />;
-
   return (
-    <View style={styles.container}>
+    <LinearGradient colors={[ROXO, '#2E1840', '#1A0E26']} style={styles.container}>
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.push('/')}>
+        <TouchableOpacity onPress={() => router.push('/' as any)}>
           <Ionicons name="home" size={26} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitulo}>
-          COLA<Text style={styles.headerDestaque}>BORADORES</Text>
-        </Text>
+        <Text style={styles.headerTitulo}>COLABORADORES</Text>
         <TouchableOpacity>
           <Ionicons name="menu" size={28} color="#fff" />
         </TouchableOpacity>
@@ -177,7 +188,7 @@ export default function ColaboradoresScreen() {
       <View style={styles.buscaContainer}>
         <TextInput
           style={styles.buscaInput}
-          placeholder="Buscar por nome ou cargo"
+          placeholder="Buscar por nome, usuário ou tipo"
           placeholderTextColor="#999"
           value={busca}
           onChangeText={setBusca}
@@ -192,7 +203,7 @@ export default function ColaboradoresScreen() {
         <FlatList
           data={filtrados}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <CardColaborador item={item} />}
+          renderItem={({ item }) => <CardFuncionario item={item} />}
           contentContainerStyle={styles.lista}
           ListEmptyComponent={
             <Text style={styles.vazio}>Nenhum colaborador encontrado.</Text>
@@ -200,15 +211,57 @@ export default function ColaboradoresScreen() {
         />
       )}
 
-      {/* Botão Novo Colaborador */}
+      {/* Botão Novo */}
       <TouchableOpacity
         style={styles.botaoNovo}
-        onPress={() => router.push('/colaboradores/cadastrar-colaborador' as any)}
+        onPress={() => router.push('colaborador/cadastrar-colaborador' as any)}
       >
         <Text style={styles.botaoNovoTexto}>Novo Colaborador  +</Text>
       </TouchableOpacity>
 
-    </View>
+      {/* Modal exclusão */}
+      <Modal
+        visible={!!funcParaExcluir}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setFuncParaExcluir(null)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalBox}>
+            <View style={styles.modalIcone}>
+              <Ionicons name="trash" size={32} color="#fff" />
+            </View>
+            <Text style={styles.modalTitulo}>Excluir colaborador</Text>
+            <Text style={styles.modalTexto}>
+              Tem certeza que deseja apagar{'\n'}
+              <Text style={styles.modalNome}>"{funcParaExcluir?.nome}"</Text>?
+              {'\n'}Esta ação não pode ser desfeita.
+            </Text>
+            <View style={styles.modalBotoes}>
+              <TouchableOpacity
+                style={[styles.modalBotao, styles.modalBotaoCancelar]}
+                onPress={() => setFuncParaExcluir(null)}
+                disabled={excluindo}
+              >
+                <Text style={styles.modalBotaoTextoCancelar}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalBotao, styles.modalBotaoExcluir]}
+                onPress={excluirFuncionario}
+                disabled={excluindo}
+              >
+                {excluindo ? (
+                  <ActivityIndicator color="#fff" size="small" />
+                ) : (
+                  <Text style={styles.modalBotaoTextoExcluir}>Sim, excluir</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+    </LinearGradient>
   );
 }
 
@@ -219,9 +272,8 @@ const VERDE = '#5EB85E';
 const VERMELHO = '#e53e3e';
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: ROXO },
+  container: { flex: 1 },
 
-  // Header
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -231,14 +283,12 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   headerTitulo: {
-    fontSize: 22,
+    fontSize: 20,
     fontFamily: 'Lexend_800ExtraBold',
-    color: '#fff',
+    color: VERDE,
     letterSpacing: 2,
   },
-  headerDestaque: { color: VERDE },
 
-  // Busca
   buscaContainer: {
     marginHorizontal: 16,
     marginBottom: 12,
@@ -248,32 +298,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 12,
   },
-  buscaInput: {
-    flex: 1,
-    height: 44,
-    color: '#333',
-    fontSize: 15,
-    fontFamily: 'Lexend_400Regular',
-  },
+  buscaInput: { flex: 1, height: 44, color: '#333', fontSize: 15, fontFamily: 'Lexend_400Regular' },
   buscaIcone: { marginLeft: 4 },
 
-  // Lista
   lista: { paddingHorizontal: 16, paddingBottom: 100 },
-  vazio: {
-    color: '#ccc',
-    textAlign: 'center',
-    marginTop: 40,
-    fontFamily: 'Lexend_400Regular',
-  },
+  vazio: { color: '#ccc', textAlign: 'center', marginTop: 40, fontFamily: 'Lexend_400Regular' },
 
-  // Card
   card: {
     backgroundColor: '#fff',
-    borderRadius: 10,
+    borderRadius: 12,
     marginBottom: 14,
-    overflow: 'hidden',
     borderWidth: 3,
     borderColor: VERDE,
+    overflow: 'hidden',
   },
   cardConteudo: {
     flexDirection: 'row',
@@ -282,45 +319,69 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   avatar: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-    backgroundColor: ROXO,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 2,
   },
   avatarLetra: {
     color: '#fff',
-    fontSize: 20,
-    fontFamily: 'Lexend_700Bold',
+    fontSize: 22,
+    fontFamily: 'Lexend_800ExtraBold',
+  },
+  cardTopo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 2,
+    gap: 8,
   },
   cardNome: {
+    flex: 1,
     fontSize: 16,
     fontFamily: 'Lexend_700Bold',
     color: '#222',
-    marginBottom: 2,
   },
-  cardCargo: {
-    fontSize: 13,
+  badge: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 20,
+    borderWidth: 1,
+  },
+  badgeTexto: {
+    fontSize: 11,
     fontFamily: 'Lexend_700Bold',
-    color: VERDE,
-    marginBottom: 2,
   },
-  cardInfo: {
+  cardUsuario: {
     fontSize: 13,
     fontFamily: 'Lexend_400Regular',
-    color: '#555',
+    color: '#777',
+    marginBottom: 4,
+  },
+  cardStatusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
     marginBottom: 10,
   },
+  statusDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  cardStatus: {
+    fontSize: 12,
+    fontFamily: 'Lexend_400Regular',
+    color: '#555',
+  },
   cardBotoes: { flexDirection: 'row', gap: 8 },
-  botaoCard: { paddingVertical: 5, paddingHorizontal: 12, borderRadius: 6 },
+  botaoCard: { paddingVertical: 5, paddingHorizontal: 14, borderRadius: 6 },
   botaoCardTexto: { color: '#fff', fontFamily: 'Lexend_700Bold', fontSize: 12 },
   botaoEditar: { backgroundColor: ROXO },
-  botaoVerMais: { backgroundColor: VERDE },
   botaoExcluir: { backgroundColor: VERMELHO },
 
-  // Botão flutuante
   botaoNovo: {
     position: 'absolute',
     bottom: 28,
@@ -334,9 +395,79 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 6,
   },
-  botaoNovoTexto: {
-    color: '#1a1a1a',
+  botaoNovoTexto: { color: '#1a1a1a', fontFamily: 'Lexend_800ExtraBold', fontSize: 15 },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32,
+  },
+  modalBox: {
+    width: '100%',
+    backgroundColor: '#1a0e26',
+    borderRadius: 18,
+    borderWidth: 2,
+    borderColor: VERMELHO,
+    padding: 28,
+    alignItems: 'center',
+  },
+  modalIcone: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: VERMELHO,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
+  modalTitulo: {
     fontFamily: 'Lexend_800ExtraBold',
-    fontSize: 15,
+    fontSize: 20,
+    color: '#fff',
+    marginBottom: 12,
+    letterSpacing: 1,
+  },
+  modalTexto: {
+    fontFamily: 'Lexend_400Regular',
+    fontSize: 14,
+    color: '#ccc',
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 24,
+  },
+  modalNome: {
+    fontFamily: 'Lexend_700Bold',
+    color: '#fff',
+  },
+  modalBotoes: {
+    flexDirection: 'row',
+    gap: 12,
+    width: '100%',
+  },
+  modalBotao: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  modalBotaoCancelar: {
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: '#555',
+  },
+  modalBotaoExcluir: {
+    backgroundColor: VERMELHO,
+  },
+  modalBotaoTextoCancelar: {
+    fontFamily: 'Lexend_700Bold',
+    fontSize: 14,
+    color: '#aaa',
+  },
+  modalBotaoTextoExcluir: {
+    fontFamily: 'Lexend_700Bold',
+    fontSize: 14,
+    color: '#fff',
   },
 });

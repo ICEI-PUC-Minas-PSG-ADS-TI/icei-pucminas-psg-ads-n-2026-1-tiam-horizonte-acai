@@ -182,7 +182,7 @@ useEffect(() => {
           <View style={styles.headerActions}>
             <TouchableOpacity
               style={styles.iconBtn}
-              onPress={() => router.push('../login')}
+              onPress={() => router.push('../perfil/perfil')}
             >
               <View style={styles.avatarCircle}>
                 <Ionicons

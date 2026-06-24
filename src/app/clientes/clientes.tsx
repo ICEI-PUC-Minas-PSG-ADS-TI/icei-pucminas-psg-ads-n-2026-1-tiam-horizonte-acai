@@ -341,7 +341,135 @@ export default function ClientesScreen() {
                 style={styles.perfilCorpo}
                 showsVerticalScrollIndicator={false}
               >
-                {/* mantém todo o conteúdo do modal que você já tem */}
+                <Text style={styles.perfilSecao}>
+                  DADOS CADASTRAIS
+                </Text>
+
+                <View style={styles.perfilLinha}>
+                  <Ionicons
+                    name="card-outline"
+                    size={16}
+                    color={VERDE}
+                    style={styles.perfilLinhaIcone}
+                  />
+                  <Text style={styles.perfilLinhaLabel}>
+                    CNPJ
+                  </Text>
+                  <Text style={styles.perfilLinhaValor}>
+                    {formatarCNPJ(resumo?.cliente.cnpj ?? '')}
+                  </Text>
+                </View>
+
+                <View style={styles.perfilDivisor} />
+
+                <View style={styles.perfilLinha}>
+                  <Ionicons
+                    name="mail-outline"
+                    size={16}
+                    color={VERDE}
+                    style={styles.perfilLinhaIcone}
+                  />
+                  <Text style={styles.perfilLinhaLabel}>
+                    Email
+                  </Text>
+                  <Text style={styles.perfilLinhaValor}>
+                    {resumo?.cliente.email ?? '—'}
+                  </Text>
+                </View>
+
+                <View style={styles.perfilDivisor} />
+
+                <View style={styles.perfilLinha}>
+                  <Ionicons
+                    name="call-outline"
+                    size={16}
+                    color={VERDE}
+                    style={styles.perfilLinhaIcone}
+                  />
+                  <Text style={styles.perfilLinhaLabel}>
+                    Telefone
+                  </Text>
+                  <Text style={styles.perfilLinhaValor}>
+                    {resumo?.cliente.telefone
+                      ? formatarTelefone(resumo.cliente.telefone)
+                      : '—'}
+                  </Text>
+                </View>
+
+                <View style={styles.perfilDivisor} />
+
+                <View style={styles.perfilLinha}>
+                  <Ionicons
+                    name="calendar-outline"
+                    size={16}
+                    color={VERDE}
+                    style={styles.perfilLinhaIcone}
+                  />
+                  <Text style={styles.perfilLinhaLabel}>
+                    Cliente desde
+                  </Text>
+                  <Text style={styles.perfilLinhaValor}>
+                    {resumo?.cliente.criado_em
+                      ? new Date(
+                          resumo.cliente.criado_em
+                        ).toLocaleDateString('pt-BR')
+                      : '—'}
+                  </Text>
+                </View>
+
+                <Text
+                  style={[
+                    styles.perfilSecao,
+                    { marginTop: 24 },
+                  ]}
+                >
+                  RESUMO DE COMPRAS
+                </Text>
+
+                {carregandoResumo ? (
+                  <ActivityIndicator
+                    color={VERDE}
+                    style={{ marginVertical: 16 }}
+                  />
+                ) : (
+                  <View style={styles.perfilStats}>
+                    <View style={styles.perfilStatCard}>
+                      <Ionicons
+                        name="bag-handle-outline"
+                        size={22}
+                        color={VERDE}
+                      />
+                      <Text style={styles.perfilStatValor}>
+                        {resumo?.cliente.compras ?? 0}
+                      </Text>
+                      <Text style={styles.perfilStatLabel}>
+                        compras
+                      </Text>
+                    </View>
+
+                    <View style={styles.perfilStatDivisor} />
+
+                    <View style={styles.perfilStatCard}>
+                      <Ionicons
+                        name="cash-outline"
+                        size={22}
+                        color={VERDE}
+                      />
+                      <Text style={styles.perfilStatValor}>
+                        {(resumo?.totalGasto ?? 0).toLocaleString(
+                          'pt-BR',
+                          {
+                            style: 'currency',
+                            currency: 'BRL',
+                          }
+                        )}
+                      </Text>
+                      <Text style={styles.perfilStatLabel}>
+                        total gasto
+                      </Text>
+                    </View>
+                  </View>
+                )}
               </ScrollView>
 
               <TouchableOpacity

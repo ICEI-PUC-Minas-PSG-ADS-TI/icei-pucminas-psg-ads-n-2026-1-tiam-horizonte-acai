@@ -1,0 +1,408 @@
+import React, { useState, useRef } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  StatusBar,
+  SafeAreaView,
+} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { useFonts, Lexend_400Regular, Lexend_700Bold, Lexend_800ExtraBold } from '@expo-google-fonts/lexend';
+import { supabase } from '../../lib/supabase';
+
+// ─── Tipos ────────────────────────────────────────────────────────────────────
+
+type TipoFuncionario = 'GESTOR' | 'VENDEDOR' | 'ESTOQUISTA';
+
+const TIPOS: TipoFuncionario[] = ['GESTOR', 'VENDEDOR', 'ESTOQUISTA'];
+
+const TIPO_COR: Record<TipoFuncionario, string> = {
+  GESTOR: '#7c3aed',
+  VENDEDOR: '#5EB85E',
+  ESTOQUISTA: '#d97706',
+};
+
+const TIPO_LABEL: Record<TipoFuncionario, string> = {
+  GESTOR: 'Gestor',
+  VENDEDOR: 'Vendedor',
+  ESTOQUISTA: 'Estoquista',
+};
+
+// ─── Componente ───────────────────────────────────────────────────────────────
+
+export default function EditarColaboradorScreen() {
+  const router = useRouter();
+  const params = useLocalSearchParams<{
+    id: string;
+    nome: string;
+    usuario: string;
+    tipo: string;
+    ativo: string;
+  }>();
+
+  const [nome, setNome] = useState(params.nome ?? '');
+  const [usuario, setUsuario] = useState(params.usuario ?? '');
+  const [novaSenha, setNovaSenha] = useState('');
+  const [senhaVisivel, setSenhaVisivel] = useState(false);
+  const [tipo, setTipo] = useState<TipoFuncionario>((params.tipo as TipoFuncionario) ?? 'VENDEDOR');
+  const [ativo, setAtivo] = useState(params.ativo === 'true');
+  const [salvando, setSalvando] = useState(false);
+  const [mensagem, setMensagem] = useState<{ tipo: 'sucesso' | 'erro'; texto: string } | null>(null);
+  const timerMensagem = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [fontsLoaded] = useFonts({ Lexend_400Regular, Lexend_700Bold, Lexend_800ExtraBold });
+
+  function exibirMensagem(tipo: 'sucesso' | 'erro', texto: string) {
+    if (timerMensagem.current) clearTimeout(timerMensagem.current);
+    setMensagem({ tipo, texto });
+    timerMensagem.current = setTimeout(() => setMensagem(null), 3000);
+  }
+
+  async function salvar() {
+    if (!nome.trim()) return exibirMensagem('erro', 'O nome é obrigatório.');
+    if (!usuario.trim()) return exibirMensagem('erro', 'O usuário é obrigatório.');
+    if (novaSenha && novaSenha.length < 6)
+      return exibirMensagem('erro', 'A nova senha deve ter no mínimo 6 caracteres.');
+
+    setSalvando(true);
+    try {
+      const payload: Record<string, any> = {
+        nome: nome.trim(),
+        usuario: usuario.trim().toLowerCase(),
+        tipo,
+        ativo,
+      };
+
+      // Só atualiza a senha se o campo foi preenchido
+      if (novaSenha) payload.senha = novaSenha;
+
+      const { error } = await supabase
+        .from('Funcionario')
+        .update(payload)
+        .eq('id', Number(params.id));
+
+      if (error) throw error;
+
+      exibirMensagem('sucesso', 'Colaborador atualizado com sucesso!');
+      setTimeout(() => router.back(), 1500);
+    } catch (e: any) {
+      exibirMensagem('erro', e.message ?? 'Não foi possível atualizar o colaborador.');
+    } finally {
+      setSalvando(false);
+    }
+  }
+
+  if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color={VERDE} />;
+
+  return (
+    <LinearGradient colors={[ROXO, '#2E1840', '#1A0E26']} style={styles.gradient}>
+      <StatusBar barStyle="light-content" />
+      <SafeAreaView style={styles.safe}>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <ScrollView
+            contentContainerStyle={styles.conteudo}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Header */}
+            <View style={styles.header}>
+              <TouchableOpacity style={styles.iconBtn} onPress={() => router.back()}>
+                <View style={styles.avatarCircle}>
+                  <Ionicons name="arrow-back-outline" size={22} color="#fff" />
+                </View>
+              </TouchableOpacity>
+              <Text style={styles.headerLinha}>EDITAR COLABORADOR</Text>
+              <View style={{ width: 36 }} />
+            </View>
+
+            <Text style={styles.subtitulo}>
+              Altere os campos que deseja{'\n'}atualizar para este colaborador
+            </Text>
+
+            <View style={styles.form}>
+
+              {/* Nome */}
+              <View style={styles.campo}>
+                <Text style={styles.label}>Nome *</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Nome completo..."
+                  placeholderTextColor="#999"
+                  value={nome}
+                  onChangeText={setNome}
+                />
+              </View>
+
+              {/* Usuário */}
+              <View style={styles.campo}>
+                <Text style={styles.label}>Usuário *</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Nome de usuário para login..."
+                  placeholderTextColor="#999"
+                  autoCapitalize="none"
+                  value={usuario}
+                  onChangeText={setUsuario}
+                />
+              </View>
+
+              {/* Nova senha (opcional) */}
+              <View style={styles.campo}>
+                <Text style={styles.label}>Nova senha</Text>
+                <Text style={styles.labelHint}>Deixe em branco para manter a senha atual</Text>
+                <View style={styles.senhaContainer}>
+                  <TextInput
+                    style={styles.senhaInput}
+                    placeholder="Nova senha (mínimo 6 caracteres)..."
+                    placeholderTextColor="#999"
+                    secureTextEntry={!senhaVisivel}
+                    value={novaSenha}
+                    onChangeText={setNovaSenha}
+                  />
+                  <TouchableOpacity onPress={() => setSenhaVisivel(!senhaVisivel)} style={styles.senhaOlho}>
+                    <Ionicons name={senhaVisivel ? 'eye-off' : 'eye'} size={20} color="#999" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {/* Tipo */}
+              <View style={styles.campo}>
+                <Text style={styles.label}>Tipo *</Text>
+                <View style={styles.tipoContainer}>
+                  {TIPOS.map((t) => {
+                    const selecionado = tipo === t;
+                    const cor = TIPO_COR[t];
+                    return (
+                      <TouchableOpacity
+                        key={t}
+                        style={[
+                          styles.tipoBotao,
+                          selecionado && { backgroundColor: cor, borderColor: cor },
+                        ]}
+                        onPress={() => setTipo(t)}
+                      >
+                        <Text style={[styles.tipoTexto, selecionado && { color: '#fff' }]}>
+                          {TIPO_LABEL[t]}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </View>
+
+              {/* Status ativo/inativo */}
+              <View style={styles.campo}>
+                <Text style={styles.label}>Status</Text>
+                <View style={styles.tipoContainer}>
+                  <TouchableOpacity
+                    style={[
+                      styles.tipoBotao,
+                      ativo && { backgroundColor: VERDE, borderColor: VERDE },
+                    ]}
+                    onPress={() => setAtivo(true)}
+                  >
+                    <Text style={[styles.tipoTexto, ativo && { color: '#fff' }]}>Ativo</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[
+                      styles.tipoBotao,
+                      !ativo && { backgroundColor: VERMELHO, borderColor: VERMELHO },
+                    ]}
+                    onPress={() => setAtivo(false)}
+                  >
+                    <Text style={[styles.tipoTexto, !ativo && { color: '#fff' }]}>Inativo</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+            </View>
+
+            {/* Mensagem */}
+            {mensagem && (
+              <View style={[styles.mensagem, mensagem.tipo === 'sucesso' ? styles.mensagemSucesso : styles.mensagemErro]}>
+                <Text style={styles.mensagemTexto}>
+                  {mensagem.tipo === 'sucesso' ? '✅ ' : '❌ '}{mensagem.texto}
+                </Text>
+              </View>
+            )}
+
+            {/* Botões */}
+            <View style={styles.botoes}>
+              <TouchableOpacity
+                style={[styles.botao, styles.botaoSalvar]}
+                onPress={salvar}
+                disabled={salvando}
+              >
+                {salvando ? (
+                  <ActivityIndicator color="#1a1a1a" />
+                ) : (
+                  <Text style={styles.botaoTextoSalvar}>SALVAR</Text>
+                )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.botao, styles.botaoCancelar]}
+                onPress={() => router.back()}
+                disabled={salvando}
+              >
+                <Text style={styles.botaoTextoCancelar}>CANCELAR</Text>
+              </TouchableOpacity>
+            </View>
+
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </LinearGradient>
+  );
+}
+
+// ─── Estilos ──────────────────────────────────────────────────────────────────
+
+const ROXO = '#46295A';
+const VERDE = '#5EB85E';
+const VERMELHO = '#C0392B';
+
+const styles = StyleSheet.create({
+  gradient: { flex: 1 },
+  safe: { flex: 1, paddingHorizontal: 24 },
+  conteudo: { flexGrow: 1, paddingBottom: 48 },
+
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 20,
+    paddingBottom: 12,
+  },
+  iconBtn: { marginLeft: 10, padding: 4 },
+  avatarCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1.5,
+    borderColor: VERDE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerLinha: {
+    color: VERDE,
+    fontSize: 18,
+    fontFamily: 'Lexend_800ExtraBold',
+    letterSpacing: 2,
+    textAlign: 'center',
+    flex: 1,
+  },
+
+  subtitulo: {
+    color: '#ddd',
+    fontFamily: 'Lexend_400Regular',
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 8,
+    marginBottom: 28,
+    lineHeight: 20,
+  },
+
+  form: { width: '85%', alignSelf: 'center' },
+  campo: { marginBottom: 10 },
+
+  label: {
+    color: '#fff',
+    fontFamily: 'Lexend_700Bold',
+    fontSize: 14,
+    marginBottom: 4,
+    marginTop: 16,
+  },
+  labelHint: {
+    color: '#aaa',
+    fontFamily: 'Lexend_400Regular',
+    fontSize: 11,
+    marginBottom: 6,
+  },
+  input: {
+    backgroundColor: '#fff',
+    borderRadius: 14,
+    borderWidth: 2,
+    borderColor: VERDE,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    fontFamily: 'Lexend_400Regular',
+    color: ROXO,
+    elevation: 3,
+  },
+
+  senhaContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 14,
+    borderWidth: 2,
+    borderColor: VERDE,
+    paddingHorizontal: 16,
+    elevation: 3,
+  },
+  senhaInput: {
+    flex: 1,
+    paddingVertical: 14,
+    fontFamily: 'Lexend_400Regular',
+    color: ROXO,
+  },
+  senhaOlho: { padding: 4 },
+
+  tipoContainer: {
+    flexDirection: 'row',
+    gap: 8,
+    flexWrap: 'wrap',
+  },
+  tipoBotao: {
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+  },
+  tipoTexto: {
+    fontFamily: 'Lexend_700Bold',
+    fontSize: 13,
+    color: '#ccc',
+  },
+
+  mensagem: {
+    width: '85%',
+    alignSelf: 'center',
+    padding: 12,
+    borderRadius: 10,
+    marginTop: 24,
+    alignItems: 'center',
+  },
+  mensagemSucesso: { backgroundColor: '#1a472a' },
+  mensagemErro: { backgroundColor: '#7f1d1d' },
+  mensagemTexto: { color: '#fff', fontFamily: 'Lexend_700Bold', fontSize: 14 },
+
+  botoes: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 30,
+    width: '85%',
+    alignSelf: 'center',
+  },
+  botao: {
+    flex: 1,
+    paddingVertical: 16,
+    borderRadius: 14,
+    alignItems: 'center',
+  },
+  botaoSalvar: { backgroundColor: VERDE },
+  botaoCancelar: { backgroundColor: VERMELHO },
+  botaoTextoSalvar: { color: '#1a1a1a', fontSize: 14, fontFamily: 'Lexend_800ExtraBold' },
+  botaoTextoCancelar: { color: '#fff', fontSize: 14, fontFamily: 'Lexend_800ExtraBold' },
+});
