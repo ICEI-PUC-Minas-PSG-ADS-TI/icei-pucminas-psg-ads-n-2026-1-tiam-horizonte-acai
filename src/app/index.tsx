@@ -84,11 +84,6 @@ useEffect(() => {
             icon: 'briefcase-outline',
             route: '/colaborador/colaboradores',
           },
-          {
-            label: 'Relatórios',
-            icon: 'bar-chart-outline',
-            route: '/relatorio/relatorio-vendas',
-          },
         ]);
         break;
 
@@ -108,11 +103,6 @@ useEffect(() => {
             label: 'Colaboradores',
             icon: 'briefcase-outline',
             route: '/colaborador/colaboradores',
-          },
-          {
-            label: 'Relatórios',
-            icon: 'bar-chart-outline',
-            route: '/relatorio/relatorio-vendas',
           },
         ]);
         break;
