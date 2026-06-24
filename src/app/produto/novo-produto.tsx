@@ -1,3 +1,4 @@
+import ProtectedRoute from '@/components/ProtectedRoute';
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
@@ -43,86 +44,93 @@ export default function NovoProduto() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          <Image source={{ uri: logoAcai }} style={styles.logoTop} />
-          <Text style={styles.titulo}>CADASTRAR <Text style={{ color: '#7ed957' }}>PRODUTO</Text></Text>
-          <View style={styles.form}>
-            {[
-              { label: 'Nome do Produto', value: nome, setter: setNome, placeholder: 'Ex: Açaí 500ml' },
-              { label: 'Preço', value: preco, setter: setPreco, placeholder: '0.00', numeric: true },
-              { label: 'Quantidade', value: quantidade, setter: setQuantidade, placeholder: 'Ex: 50', numeric: true },
-              { label: 'Categoria', value: categoria, setter: setCategoria, placeholder: 'Ex: Cremes' },
-            ].map(({ label, value, setter, placeholder, numeric }) => (
-              <View key={label} style={styles.inputGroup}>
-                <Text style={styles.label}>{label}</Text>
+    <ProtectedRoute
+      permitidos={[
+        'ADMINISTRADOR',
+        'ESTOQUISTA',
+      ]}
+    >
+      <SafeAreaView style={styles.container}>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
+          <ScrollView contentContainerStyle={styles.scrollContent}>
+            <Image source={{ uri: logoAcai }} style={styles.logoTop} />
+            <Text style={styles.titulo}>CADASTRAR <Text style={{ color: '#7ed957' }}>PRODUTO</Text></Text>
+            <View style={styles.form}>
+              {[
+                { label: 'Nome do Produto', value: nome, setter: setNome, placeholder: 'Ex: Açaí 500ml' },
+                { label: 'Preço', value: preco, setter: setPreco, placeholder: '0.00', numeric: true },
+                { label: 'Quantidade', value: quantidade, setter: setQuantidade, placeholder: 'Ex: 50', numeric: true },
+                { label: 'Categoria', value: categoria, setter: setCategoria, placeholder: 'Ex: Cremes' },
+              ].map(({ label, value, setter, placeholder, numeric }) => (
+                <View key={label} style={styles.inputGroup}>
+                  <Text style={styles.label}>{label}</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={value}
+                    onChangeText={setter}
+                    placeholder={placeholder}
+                    keyboardType={numeric ? 'numeric' : 'default'}
+                  />
+                </View>
+              ))}
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Descrição</Text>
                 <TextInput
-                  style={styles.input}
-                  value={value}
-                  onChangeText={setter}
-                  placeholder={placeholder}
-                  keyboardType={numeric ? 'numeric' : 'default'}
+                  style={[styles.input, styles.textarea]}
+                  value={descricao}
+                  onChangeText={setDescricao}
+                  multiline
+                  placeholder="Detalhes do produto..."
                 />
               </View>
-            ))}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Descrição</Text>
-              <TextInput
-                style={[styles.input, styles.textarea]}
-                value={descricao}
-                onChangeText={setDescricao}
-                multiline
-                placeholder="Detalhes do produto..."
-              />
+              <View style={styles.buttonRow}>
+                <TouchableOpacity style={styles.btnSalvar} onPress={handleSalvarClick}>
+                  <Text style={styles.btnText}>Salvar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btnCancelar} onPress={() => router.back()}>
+                  <Text style={styles.btnText}>Cancelar</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={styles.buttonRow}>
-              <TouchableOpacity style={styles.btnSalvar} onPress={handleSalvarClick}>
-                <Text style={styles.btnText}>Salvar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btnCancelar} onPress={() => router.back()}>
-                <Text style={styles.btnText}>Cancelar</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+          </ScrollView>
+        </KeyboardAvoidingView>
 
-      <Modal visible={modalErroAberto} transparent animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Atenção</Text>
-              <Image source={{ uri: logoAcai }} style={{ width: 30, height: 30 }} />
+        <Modal visible={modalErroAberto} transparent animationType="fade">
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>Atenção</Text>
+                <Image source={{ uri: logoAcai }} style={{ width: 30, height: 30 }} />
+              </View>
+              <Text style={styles.modalBody}>Por favor, preencha todos os campos antes de salvar!</Text>
+              <TouchableOpacity style={styles.btnModalOk} onPress={() => setModalErroAberto(false)}>
+                <Text style={styles.btnText}>OK</Text>
+              </TouchableOpacity>
             </View>
-            <Text style={styles.modalBody}>Por favor, preencha todos os campos antes de salvar!</Text>
-            <TouchableOpacity style={styles.btnModalOk} onPress={() => setModalErroAberto(false)}>
-              <Text style={styles.btnText}>OK</Text>
-            </TouchableOpacity>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      <Modal visible={modalConfirmarAberto} transparent animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Confirmar</Text>
-              <Image source={{ uri: logoAcai }} style={{ width: 30, height: 30 }} />
-            </View>
-            <Text style={styles.modalBody}>Deseja realmente cadastrar o produto {"\n"}<Text style={{ fontWeight: 'bold' }}>{nome}</Text>?</Text>
-            <View style={styles.modalButtons}>
-              <TouchableOpacity style={styles.btnModalConfirm} onPress={confirmarCadastro}>
-                <Text style={styles.btnText}>Salvar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btnModalCancel} onPress={() => setModalConfirmarAberto(false)}>
-                <Text style={styles.btnText}>Cancelar</Text>
-              </TouchableOpacity>
+        <Modal visible={modalConfirmarAberto} transparent animationType="fade">
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>Confirmar</Text>
+                <Image source={{ uri: logoAcai }} style={{ width: 30, height: 30 }} />
+              </View>
+              <Text style={styles.modalBody}>Deseja realmente cadastrar o produto {"\n"}<Text style={{ fontWeight: 'bold' }}>{nome}</Text>?</Text>
+              <View style={styles.modalButtons}>
+                <TouchableOpacity style={styles.btnModalConfirm} onPress={confirmarCadastro}>
+                  <Text style={styles.btnText}>Salvar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btnModalCancel} onPress={() => setModalConfirmarAberto(false)}>
+                  <Text style={styles.btnText}>Cancelar</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
-    </SafeAreaView>
+        </Modal>
+      </SafeAreaView>
+    </ProtectedRoute>
   );
 }
 

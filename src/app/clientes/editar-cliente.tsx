@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import ProtectedRoute from '@/components/ProtectedRoute';
 import {
   View,
   Text,
@@ -117,6 +118,13 @@ export default function EditarClienteScreen() {
   }
 
   return (
+  <ProtectedRoute
+    permitidos={[
+      'GESTOR',
+      'VENDEDOR',
+      'ADMINISTRADOR',
+    ]}
+  >
     <LinearGradient colors={[ROXO, '#2E1840', '#1A0E26']} style={styles.gradient}>
       <StatusBar barStyle="light-content" />
       <SafeAreaView style={styles.safe}>
@@ -136,9 +144,11 @@ export default function EditarClienteScreen() {
                   <Ionicons name="arrow-back-outline" size={22} color="#fff" />
                 </View>
               </TouchableOpacity>
+
               <View style={styles.headerTituloContainer}>
                 <Text style={styles.headerLinha}>EDITAR CLIENTE</Text>
               </View>
+
               <View style={{ width: 36 }} />
             </View>
 
@@ -146,7 +156,6 @@ export default function EditarClienteScreen() {
               Altere os campos que deseja{'\n'}atualizar para este cliente
             </Text>
 
-            {/* Formulário */}
             <View style={styles.cardFormulario}>
               <View style={styles.campo}>
                 <Text style={styles.label}>Nome *</Text>
@@ -199,16 +208,22 @@ export default function EditarClienteScreen() {
               </View>
             </View>
 
-            {/* Mensagem */}
             {mensagem && (
-              <View style={[styles.mensagem, mensagem.tipo === 'sucesso' ? styles.mensagemSucesso : styles.mensagemErro]}>
+              <View
+                style={[
+                  styles.mensagem,
+                  mensagem.tipo === 'sucesso'
+                    ? styles.mensagemSucesso
+                    : styles.mensagemErro,
+                ]}
+              >
                 <Text style={styles.mensagemTexto}>
-                  {mensagem.tipo === 'sucesso' ? '✅ ' : '❌ '}{mensagem.texto}
+                  {mensagem.tipo === 'sucesso' ? '✅ ' : '❌ '}
+                  {mensagem.texto}
                 </Text>
               </View>
             )}
 
-            {/* Botões */}
             <View style={styles.botoes}>
               <TouchableOpacity
                 style={[styles.botao, styles.botaoSalvar]}
@@ -234,7 +249,8 @@ export default function EditarClienteScreen() {
         </KeyboardAvoidingView>
       </SafeAreaView>
     </LinearGradient>
-  );
+  </ProtectedRoute>
+);
 }
 
 // ───────────────── Estilos ─────────────────

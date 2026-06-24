@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import ProtectedRoute from '@/components/ProtectedRoute';
 import {
   View,
   Text,
@@ -105,6 +106,13 @@ export default function CadastrarClienteScreen() {
   }
 
   return (
+  <ProtectedRoute
+    permitidos={[
+      'GESTOR',
+      'VENDEDOR',
+      'ADMINISTRADOR',
+    ]}
+  >
     <LinearGradient colors={[ROXO, '#2E1840', '#1A0E26']} style={styles.gradient}>
       <StatusBar barStyle="light-content" />
       <SafeAreaView style={styles.safe}>
@@ -124,9 +132,11 @@ export default function CadastrarClienteScreen() {
                   <Ionicons name="arrow-back-outline" size={22} color="#fff" />
                 </View>
               </TouchableOpacity>
+
               <View style={styles.headerTituloContainer}>
                 <Text style={styles.headerLinha}>NOVO CLIENTE</Text>
               </View>
+
               <View style={{ width: 36 }} />
             </View>
 
@@ -134,7 +144,6 @@ export default function CadastrarClienteScreen() {
               Preencha os campos para efetuar o{'\n'}cadastro do novo cliente
             </Text>
 
-            {/* Formulário */}
             <View style={styles.cardFormulario}>
               <View style={styles.campo}>
                 <Text style={styles.label}>Nome *</Text>
@@ -187,16 +196,22 @@ export default function CadastrarClienteScreen() {
               </View>
             </View>
 
-            {/* Mensagem */}
             {mensagem && (
-              <View style={[styles.mensagem, mensagem.tipo === 'sucesso' ? styles.mensagemSucesso : styles.mensagemErro]}>
+              <View
+                style={[
+                  styles.mensagem,
+                  mensagem.tipo === 'sucesso'
+                    ? styles.mensagemSucesso
+                    : styles.mensagemErro,
+                ]}
+              >
                 <Text style={styles.mensagemTexto}>
-                  {mensagem.tipo === 'sucesso' ? '✅ ' : '❌ '}{mensagem.texto}
+                  {mensagem.tipo === 'sucesso' ? '✅ ' : '❌ '}
+                  {mensagem.texto}
                 </Text>
               </View>
             )}
 
-            {/* Botões */}
             <View style={styles.botoes}>
               <TouchableOpacity
                 style={[styles.botao, styles.botaoCadastrar]}
@@ -222,7 +237,8 @@ export default function CadastrarClienteScreen() {
         </KeyboardAvoidingView>
       </SafeAreaView>
     </LinearGradient>
-  );
+  </ProtectedRoute>
+);
 }
 
 // ───────────────── Estilos ─────────────────

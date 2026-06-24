@@ -1,3 +1,4 @@
+import ProtectedRoute from '@/components/ProtectedRoute';
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -41,32 +42,39 @@ export default function DetalhesProduto() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.titulo}>{produto?.nome}</Text>
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Descrição:</Text>
-          <Text style={styles.value}>{produto?.descricao || 'Sem descrição'}</Text>
+    <ProtectedRoute
+      permitidos={[
+        'ADMINISTRADOR',
+        'ESTOQUISTA',
+      ]}
+    >
+      <SafeAreaView style={styles.container}>
+        <View style={styles.card}>
+          <Text style={styles.titulo}>{produto?.nome}</Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Descrição:</Text>
+            <Text style={styles.value}>{produto?.descricao || 'Sem descrição'}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Preço:</Text>
+            <Text style={[styles.value, { color: '#28a745', fontWeight: 'bold' }]}>
+              R$ {produto?.preco?.toFixed(2)}
+            </Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Quantidade:</Text>
+            <Text style={styles.value}>{produto?.quantidade} UND</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Categoria:</Text>
+            <Text style={styles.value}>{produto?.categoria || 'Não definida'}</Text>
+          </View>
+          <TouchableOpacity style={styles.btnVoltar} onPress={() => router.back()}>
+            <Text style={styles.btnText}>Voltar</Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Preço:</Text>
-          <Text style={[styles.value, { color: '#28a745', fontWeight: 'bold' }]}>
-            R$ {produto?.preco?.toFixed(2)}
-          </Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Quantidade:</Text>
-          <Text style={styles.value}>{produto?.quantidade} UND</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Categoria:</Text>
-          <Text style={styles.value}>{produto?.categoria || 'Não definida'}</Text>
-        </View>
-        <TouchableOpacity style={styles.btnVoltar} onPress={() => router.back()}>
-          <Text style={styles.btnText}>Voltar</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ProtectedRoute>
   );
 }
 

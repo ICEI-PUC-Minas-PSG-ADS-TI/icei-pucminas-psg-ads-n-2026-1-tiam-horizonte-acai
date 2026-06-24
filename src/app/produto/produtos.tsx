@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ProtectedRoute from '@/components/ProtectedRoute';
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, ScrollView,
@@ -40,90 +42,98 @@ export default function TelaProdutos() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <Image source={{ uri: logoAcai }} style={styles.marcaDagua} />
+    <ProtectedRoute
+      permitidos={[
+        'ESTOQUISTA',
+        'ADMINISTRADOR',
+      ]}
+    >
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="light-content" />
+        <Image source={{ uri: logoAcai }} style={styles.marcaDagua} />
 
-      <View style={styles.box}>
-        <View style={styles.logoContainer}>
-          <Image source={{ uri: logoAcai }} style={styles.logoTopo} />
-        </View>
+        <View style={styles.box}>
+          <View style={styles.logoContainer}>
+            <Image source={{ uri: logoAcai }} style={styles.logoTopo} />
+          </View>
 
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.push('/')}>
-            <Text style={styles.icon}>🏠</Text>
-          </TouchableOpacity>
-          <Text style={styles.logoText}>PROD<Text style={{ color: '#7ed957' }}>UTOS</Text></Text>
-          <TouchableOpacity onPress={() => router.push('/novo-produto' as any)}>
-            <Text style={styles.icon}>＋</Text>
-          </TouchableOpacity>
-        </View>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => router.push('/')}>
+              <Text style={styles.icon}>🏠</Text>
+            </TouchableOpacity>
+            <Text style={styles.logoText}>PROD<Text style={{ color: '#7ed957' }}>UTOS</Text></Text>
+            <TouchableOpacity onPress={() => router.push('/novo-produto' as any)}>
+              <Text style={styles.icon}>＋</Text>
+            </TouchableOpacity>
+          </View>
 
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Buscar Produto</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Digite o nome..."
-            placeholderTextColor="#666"
-            value={busca}
-            onChangeText={setBusca}
-          />
-        </View>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Buscar Produto</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Digite o nome..."
+              placeholderTextColor="#666"
+              value={busca}
+              onChangeText={setBusca}
+            />
+          </View>
 
-        <ScrollView style={styles.lista} showsVerticalScrollIndicator={false}>
-          {produtosFiltrados.map(p => (
-            <View key={p.id} style={styles.card}>
-              <Text style={styles.cardTitle}>{p.nome}</Text>
-              <View style={styles.estoqueRow}>
-                <Text style={styles.estoqueText}>Estoque: {p.quantidade} UND</Text>
-                <View style={styles.statusGroup}>
-                  <View style={[styles.bolinha, { backgroundColor: Number(p.quantidade) <= 10 ? 'red' : '#7ed957' }]} />
-                  <Text style={styles.statusText}>{Number(p.quantidade) <= 10 ? 'Baixo' : 'OK'}</Text>
+          <ScrollView style={styles.lista} showsVerticalScrollIndicator={false}>
+            {produtosFiltrados.map(p => (
+              <View key={p.id} style={styles.card}>
+                <Text style={styles.cardTitle}>{p.nome}</Text>
+                <View style={styles.estoqueRow}>
+                  <Text style={styles.estoqueText}>Estoque: {p.quantidade} UND</Text>
+                  <View style={styles.statusGroup}>
+                    <View style={[styles.bolinha, { backgroundColor: Number(p.quantidade) <= 10 ? 'red' : '#7ed957' }]} />
+                    <Text style={styles.statusText}>{Number(p.quantidade) <= 10 ? 'Baixo' : 'OK'}</Text>
+                  </View>
+                </View>
+                <View style={styles.actions}>
+                  <TouchableOpacity style={styles.btnAction} onPress={() => router.push(`/editar-produto?id=${p.id}` as any)}>
+                    <Text style={styles.btnActionText}>Editar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.btnAction} onPress={() => router.push(`/detalhes-produto?id=${p.id}` as any)}>
+                    <Text style={styles.btnActionText}>Ver Mais</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={[styles.btnAction, { backgroundColor: 'red' }]} onPress={() => { setProdutoParaExcluir(p); setModalExcluirAberto(true); }}>
+                    <Text style={styles.btnActionText}>Excluir</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
-              <View style={styles.actions}>
-                <TouchableOpacity style={styles.btnAction} onPress={() => router.push(`/editar-produto?id=${p.id}` as any)}>
-                  <Text style={styles.btnActionText}>Editar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btnAction} onPress={() => router.push(`/detalhes-produto?id=${p.id}` as any)}>
-                  <Text style={styles.btnActionText}>Ver Mais</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.btnAction, { backgroundColor: 'red' }]} onPress={() => { setProdutoParaExcluir(p); setModalExcluirAberto(true); }}>
+            ))}
+          </ScrollView>
+
+          <TouchableOpacity style={styles.btnNovo} onPress={() => router.push('/novo-produto' as any)}>
+            <Text style={styles.btnNovoText}>Novo Produto +</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Modal visible={modalExcluirAberto} transparent animationType="fade">
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>Excluir Produto</Text>
+                <Image source={{ uri: logoAcai }} style={{ width: 30, height: 30 }} />
+              </View>
+              <Text style={styles.modalBody}>
+                Deseja realmente excluir o produto{"\n"}
+                <Text style={{ fontWeight: 'bold' }}>{produtoParaExcluir?.nome}</Text>?
+              </Text>
+              <View style={styles.modalButtons}>
+                <TouchableOpacity style={styles.btnModalConfirm} onPress={handleExcluir}>
                   <Text style={styles.btnActionText}>Excluir</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btnModalCancel} onPress={() => setModalExcluirAberto(false)}>
+                  <Text style={styles.btnActionText}>Cancelar</Text>
                 </TouchableOpacity>
               </View>
             </View>
-          ))}
-        </ScrollView>
-
-        <TouchableOpacity style={styles.btnNovo} onPress={() => router.push('/novo-produto' as any)}>
-          <Text style={styles.btnNovoText}>Novo Produto +</Text>
-        </TouchableOpacity>
-      </View>
-
-      <Modal visible={modalExcluirAberto} transparent animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Excluir Produto</Text>
-              <Image source={{ uri: logoAcai }} style={{ width: 30, height: 30 }} />
-            </View>
-            <Text style={styles.modalBody}>
-              Deseja realmente excluir o produto{"\n"}
-              <Text style={{ fontWeight: 'bold' }}>{produtoParaExcluir?.nome}</Text>?
-            </Text>
-            <View style={styles.modalButtons}>
-              <TouchableOpacity style={styles.btnModalConfirm} onPress={handleExcluir}>
-                <Text style={styles.btnActionText}>Excluir</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btnModalCancel} onPress={() => setModalExcluirAberto(false)}>
-                <Text style={styles.btnActionText}>Cancelar</Text>
-              </TouchableOpacity>
-            </View>
           </View>
-        </View>
-      </Modal>
-    </SafeAreaView>
+        </Modal>
+      </SafeAreaView>
+    </ProtectedRoute>
+
   );
 }
 
