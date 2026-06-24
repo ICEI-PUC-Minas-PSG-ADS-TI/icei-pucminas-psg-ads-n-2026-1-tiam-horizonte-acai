@@ -1,173 +1,236 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import ProtectedRoute from '@/components/ProtectedRoute';
 import React, { useState, useEffect } from 'react';
-import {
-  View, Text, TextInput, TouchableOpacity, ScrollView,
-  Image, StyleSheet, Modal, Alert, SafeAreaView, StatusBar
-} from 'react-native';
 import { useRouter } from 'expo-router';
-import { supabase } from '@/lib/supabase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LinearGradient } from 'expo-linear-gradient';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  StatusBar,
+  SafeAreaView,
+  ActivityIndicator,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
+import {
+  useFonts,
+  Lexend_400Regular,
+  Lexend_700Bold,
+  Lexend_800ExtraBold,
+} from "@expo-google-fonts/lexend";
+import { Ionicons } from '@expo/vector-icons';
+import { sincronizarVendas } from '@/utils/sincronizar-vendas';
+import { paleta } from '@/constants/theme';
 
-const logoAcai = "https://cdn-icons-png.flaticon.com/512/5917/5917321.png";
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const CARD_WIDTH = Math.min(SCREEN_WIDTH * 0.75, 340);
 
-export default function TelaProdutos() {
+export default function Index() {
   const router = useRouter();
-  const [produtos, setProdutos] = useState<any[]>([]);
-  const [busca, setBusca] = useState('');
-  const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
-  const [produtoParaExcluir, setProdutoParaExcluir] = useState<any>(null);
 
-  useEffect(() => { fetchProdutos(); }, []);
+  const [tipoFuncionario, setTipoFuncionario] = useState('');
+  const [menuItems, setMenuItems] = useState<any[]>([]);
 
-  async function fetchProdutos() {
-    const { data, error } = await supabase.from('produtos').select('*').order('nome', { ascending: true });
-    if (data) setProdutos(data);
-    if (error) console.log("Erro ao buscar:", error.message);
+  useEffect(() => {
+    sincronizarVendas();
+    async function carregar() {
+      const tipo = await AsyncStorage.getItem('tipoFuncionario');
+      setTipoFuncionario(tipo ?? '');
+
+      switch (tipo) {
+        case 'ADMINISTRADOR':
+          setMenuItems([
+            { label: 'Produtos',      icon: 'cube-outline',       route: '/produto/produtos' },
+            { label: 'Clientes',      icon: 'people-outline',     route: '/clientes/clientes' },
+            { label: 'Vendas',        icon: 'cash-outline',       route: '/venda/vendas' },
+            { label: 'Colaboradores', icon: 'briefcase-outline',  route: '/colaborador/colaboradores' },
+            { label: 'Relatórios',    icon: 'bar-chart-outline',  route: '/relatorio/relatorio-vendas' },
+          ]);
+          break;
+        case 'GESTOR':
+          setMenuItems([
+            { label: 'Produtos',      icon: 'cube-outline',       route: '/produto/produtos' },
+            { label: 'Clientes',      icon: 'people-outline',     route: '/clientes/clientes' },
+            { label: 'Colaboradores', icon: 'briefcase-outline',  route: '/colaborador/colaboradores' },
+            { label: 'Relatórios',    icon: 'bar-chart-outline',  route: '/relatorio/relatorio-vendas' },
+          ]);
+          break;
+        case 'VENDEDOR':
+          setMenuItems([
+            { label: 'Vendas',   icon: 'cash-outline',    route: '/venda/vendas' },
+            { label: 'Ranking',  icon: 'trophy-outline',  route: '/clientes/ranking-cliente' },
+          ]);
+          break;
+        case 'ESTOQUISTA':
+          setMenuItems([
+            { label: 'Produtos', icon: 'cube-outline', route: '/produto/produtos' },
+          ]);
+          break;
+        default:
+          setMenuItems([]);
+      }
+    }
+    carregar();
+  }, []);
+
+  const [fontsLoaded] = useFonts({
+    Lexend_400Regular,
+    Lexend_700Bold,
+    Lexend_800ExtraBold,
+  });
+
+  if (!fontsLoaded) {
+    return <ActivityIndicator style={{ flex: 1 }} color={paleta.VERDE} />;
   }
 
-  const handleExcluir = async () => {
-    if (!produtoParaExcluir) return;
-    const { error } = await supabase.from('produtos').delete().eq('id', produtoParaExcluir.id);
-    if (!error) {
-      setModalExcluirAberto(false);
-      setProdutoParaExcluir(null);
-      fetchProdutos();
-    } else {
-      Alert.alert("Erro", "Erro ao excluir: " + error.message);
-    }
-  };
-
-  const produtosFiltrados = produtos.filter(p =>
-    p.nome?.toLowerCase().includes(busca.toLowerCase())
-  );
-
   return (
-    <ProtectedRoute
-      permitidos={[
-        'ESTOQUISTA',
-        'ADMINISTRADOR',
-      ]}
+    <LinearGradient
+      colors={[paleta.ROXO, '#2E1840', '#1A0E26']}
+      style={styles.gradient}
     >
-      <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="light-content" />
-        <Image source={{ uri: logoAcai }} style={styles.marcaDagua} />
+      <StatusBar barStyle="light-content" />
+      <SafeAreaView style={styles.safe}>
 
-        <View style={styles.box}>
-          <View style={styles.logoContainer}>
-            <Image source={{ uri: logoAcai }} style={styles.logoTopo} />
-          </View>
-
-          <View style={styles.header}>
-            <TouchableOpacity onPress={() => router.push('/')}>
-              <Text style={styles.icon}>🏠</Text>
-            </TouchableOpacity>
-            <Text style={styles.logoText}>PROD<Text style={{ color: '#7ed957' }}>UTOS</Text></Text>
-            <TouchableOpacity onPress={() => router.push('/novo-produto' as any)}>
-              <Text style={styles.icon}>＋</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Buscar Produto</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Digite o nome..."
-              placeholderTextColor="#666"
-              value={busca}
-              onChangeText={setBusca}
-            />
-          </View>
-
-          <ScrollView style={styles.lista} showsVerticalScrollIndicator={false}>
-            {produtosFiltrados.map(p => (
-              <View key={p.id} style={styles.card}>
-                <Text style={styles.cardTitle}>{p.nome}</Text>
-                <View style={styles.estoqueRow}>
-                  <Text style={styles.estoqueText}>Estoque: {p.quantidade} UND</Text>
-                  <View style={styles.statusGroup}>
-                    <View style={[styles.bolinha, { backgroundColor: Number(p.quantidade) <= 10 ? 'red' : '#7ed957' }]} />
-                    <Text style={styles.statusText}>{Number(p.quantidade) <= 10 ? 'Baixo' : 'OK'}</Text>
-                  </View>
-                </View>
-                <View style={styles.actions}>
-                  <TouchableOpacity style={styles.btnAction} onPress={() => router.push(`/editar-produto?id=${p.id}` as any)}>
-                    <Text style={styles.btnActionText}>Editar</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.btnAction} onPress={() => router.push(`/detalhes-produto?id=${p.id}` as any)}>
-                    <Text style={styles.btnActionText}>Ver Mais</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={[styles.btnAction, { backgroundColor: 'red' }]} onPress={() => { setProdutoParaExcluir(p); setModalExcluirAberto(true); }}>
-                    <Text style={styles.btnActionText}>Excluir</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            ))}
-          </ScrollView>
-
-          <TouchableOpacity style={styles.btnNovo} onPress={() => router.push('/novo-produto' as any)}>
-            <Text style={styles.btnNovoText}>Novo Produto +</Text>
+        {/* Header */}
+        <View style={styles.header}>
+          <Image
+            source={require('../../assets/images/logo-sem-fundo.png')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+          <TouchableOpacity
+            style={styles.iconBtn}
+            onPress={() => router.push('../perfil/perfil')}
+          >
+            <View style={styles.avatarCircle}>
+              <Ionicons name="person-outline" size={22} color={paleta.BRANCO} />
+            </View>
           </TouchableOpacity>
         </View>
 
-        <Modal visible={modalExcluirAberto} transparent animationType="fade">
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>Excluir Produto</Text>
-                <Image source={{ uri: logoAcai }} style={{ width: 30, height: 30 }} />
+        {/* Menu — scrollável quando há muitos itens */}
+        <ScrollView
+          contentContainerStyle={styles.grid}
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+        >
+          {menuItems.map((item) => (
+            <TouchableOpacity
+              key={item.label}
+              style={styles.card}
+              activeOpacity={0.75}
+              onPress={() => router.push(item.route as any)}
+            >
+              <View style={styles.cardInner}>
+                <View style={styles.iconWrapper}>
+                  <Ionicons name={item.icon as any} size={36} color={paleta.VERDE} />
+                </View>
+                <Text style={styles.cardLabel}>{item.label}</Text>
               </View>
-              <Text style={styles.modalBody}>
-                Deseja realmente excluir o produto{"\n"}
-                <Text style={{ fontWeight: 'bold' }}>{produtoParaExcluir?.nome}</Text>?
-              </Text>
-              <View style={styles.modalButtons}>
-                <TouchableOpacity style={styles.btnModalConfirm} onPress={handleExcluir}>
-                  <Text style={styles.btnActionText}>Excluir</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btnModalCancel} onPress={() => setModalExcluirAberto(false)}>
-                  <Text style={styles.btnActionText}>Cancelar</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </Modal>
-      </SafeAreaView>
-    </ProtectedRoute>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
 
+        {/* Footer decorativo */}
+        <View style={styles.footer}>
+          <View style={styles.footerLine} />
+        </View>
+
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#4a3061' },
-  marcaDagua: { position: 'absolute', top: '25%', left: '10%', width: 300, height: 300, opacity: 0.1, transform: [{ rotate: '45deg' }] },
-  box: { flex: 1, padding: 20 },
-  logoContainer: { alignItems: 'center', marginBottom: 10 },
-  logoTopo: { width: 60, height: 60 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 40 },
-  logoText: { color: 'white', fontWeight: 'bold', fontSize: 22 },
-  icon: { color: 'white', fontSize: 24 },
-  inputGroup: { marginBottom: 20 },
-  label: { color: 'white', fontWeight: 'bold', fontSize: 16, marginBottom: 5 },
-  input: { padding: 12, borderRadius: 8, backgroundColor: '#d1d1d1', fontSize: 16, color: '#333' },
-  lista: { flex: 1 },
-  card: { backgroundColor: 'white', padding: 15, borderRadius: 10, marginBottom: 15, borderLeftWidth: 5, borderLeftColor: '#7ed957', elevation: 3 },
-  cardTitle: { color: '#4a3061', fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
-  estoqueRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
-  estoqueText: { color: '#4a3061', fontWeight: 'bold' },
-  statusGroup: { flexDirection: 'row', alignItems: 'center' },
-  bolinha: { width: 10, height: 10, borderRadius: 5, marginRight: 5 },
-  statusText: { fontSize: 12, fontWeight: 'bold', color: '#4a3061' },
-  actions: { flexDirection: 'row', gap: 8 },
-  btnAction: { flex: 1, paddingVertical: 8, backgroundColor: '#4a3061', borderRadius: 4, alignItems: 'center' },
-  btnActionText: { color: 'white', fontSize: 11, fontWeight: 'bold' },
-  btnNovo: { backgroundColor: '#28a745', padding: 15, borderRadius: 8, alignItems: 'center', marginTop: 10 },
-  btnNovoText: { color: 'white', fontWeight: 'bold', fontSize: 18 },
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'center', alignItems: 'center' },
-  modalContent: { backgroundColor: '#d1d1d1', padding: 20, borderRadius: 10, width: '80%' },
-  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
-  modalTitle: { fontSize: 18, fontWeight: 'bold', color: '#333' },
-  modalBody: { color: '#333', textAlign: 'center', marginVertical: 15 },
-  modalButtons: { flexDirection: 'row', justifyContent: 'space-around' },
-  btnModalConfirm: { backgroundColor: 'red', padding: 10, borderRadius: 5, width: '40%', alignItems: 'center' },
-  btnModalCancel: { backgroundColor: 'gray', padding: 10, borderRadius: 5, width: '40%', alignItems: 'center' }
+  gradient: { flex: 1 },
+
+  safe: {
+    flex: 1,
+    paddingHorizontal: 24,
+  },
+
+  // ── Header ──────────────────────────────────────────────
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 12,
+    paddingBottom: 8,
+  },
+
+  logo: {
+    width: 160,
+    height: 72,
+  },
+
+  iconBtn: {
+    padding: 4,
+  },
+
+  avatarCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1.5,
+    borderColor: paleta.VERDE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  // ── Grid / ScrollView ────────────────────────────────────
+  grid: {
+    alignItems: 'center',
+    paddingVertical: 16,
+    gap: 12,
+  },
+
+  card: {
+    width: CARD_WIDTH,
+    height: 120,
+    borderRadius: 20,
+    backgroundColor: paleta.BRANCO,
+    borderWidth: 2,
+    borderColor: paleta.VERDE,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+  },
+
+  cardInner: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
+
+  iconWrapper: {
+    width: 58,
+    height: 58,
+    borderRadius: 16,
+    backgroundColor: 'rgba(94,184,94,0.12)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  cardLabel: {
+    color: paleta.ROXO,
+    fontSize: 15,
+    fontFamily: 'Lexend_700Bold',
+    textAlign: 'center',
+    marginTop: 10,
+  },
+
+  // ── Footer ───────────────────────────────────────────────
+  footer: {
+    paddingVertical: 20,
+  },
+
+  footerLine: {
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+  },
 });
