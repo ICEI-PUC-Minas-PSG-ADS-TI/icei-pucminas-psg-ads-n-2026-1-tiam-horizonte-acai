@@ -16,7 +16,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useFonts, Lexend_400Regular, Lexend_700Bold, Lexend_800ExtraBold } from '@expo-google-fonts/lexend';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '@/lib/supabase';
+import { paleta } from '@/constants/theme';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -86,10 +87,10 @@ export default function CadastrarColaboradorScreen() {
     }
   }
 
-  if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color={VERDE} />;
+  if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color={paleta.VERDE} />;
 
   return (
-    <LinearGradient colors={[ROXO, '#2E1840', '#1A0E26']} style={styles.gradient}>
+    <LinearGradient colors={[paleta.ROXO, '#2E1840', '#1A0E26']} style={styles.gradient}>
       <StatusBar barStyle="light-content" />
       <SafeAreaView style={styles.safe}>
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -226,10 +227,6 @@ export default function CadastrarColaboradorScreen() {
 
 // ─── Estilos ──────────────────────────────────────────────────────────────────
 
-const ROXO = '#46295A';
-const VERDE = '#5EB85E';
-const VERMELHO = '#C0392B';
-
 const styles = StyleSheet.create({
   gradient: { flex: 1 },
   safe: { flex: 1, paddingHorizontal: 24 },
@@ -248,12 +245,12 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     borderWidth: 1.5,
-    borderColor: VERDE,
+    borderColor: paleta.VERDE,
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerLinha: {
-    color: VERDE,
+    color: paleta.VERDE,
     fontSize: 20,
     fontFamily: 'Lexend_800ExtraBold',
     letterSpacing: 2,
@@ -285,11 +282,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 14,
     borderWidth: 2,
-    borderColor: VERDE,
+    borderColor: paleta.VERDE,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontFamily: 'Lexend_400Regular',
-    color: ROXO,
+    color: paleta.ROXO,
     elevation: 3,
   },
 
@@ -299,7 +296,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 14,
     borderWidth: 2,
-    borderColor: VERDE,
+    borderColor: paleta.VERDE,
     paddingHorizontal: 16,
     elevation: 3,
   },
@@ -307,7 +304,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 14,
     fontFamily: 'Lexend_400Regular',
-    color: ROXO,
+    color: paleta.ROXO,
   },
   senhaOlho: { padding: 4 },
 
@@ -355,8 +352,8 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: 'center',
   },
-  botaoCadastrar: { backgroundColor: VERDE },
-  botaoCancelar: { backgroundColor: VERMELHO },
+  botaoCadastrar: { backgroundColor: paleta.VERDE },
+  botaoCancelar: { backgroundColor: paleta.VERMELHO },
   botaoTextoCadastrar: { color: '#1a1a1a', fontSize: 14, fontFamily: 'Lexend_800ExtraBold' },
   botaoTextoCancelar: { color: '#fff', fontSize: 14, fontFamily: 'Lexend_800ExtraBold' },
 });

@@ -16,7 +16,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useFonts, Lexend_400Regular, Lexend_700Bold, Lexend_800ExtraBold } from '@expo-google-fonts/lexend';
 import { LinearGradient } from 'expo-linear-gradient';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '@/lib/supabase';
+import { paleta } from '@/constants/theme';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -233,7 +234,7 @@ export default function ClientesScreen() {
         'ADMINISTRADOR',
       ]}
     >
-      <LinearGradient colors={[ROXO, '#2E1840', '#1A0E26']} style={styles.container}>
+      <LinearGradient colors={[paleta.ROXO, '#2E1840', '#1A0E26']} style={styles.container}>
 
         {/* Header */}
         <View style={styles.header}>
@@ -349,7 +350,7 @@ export default function ClientesScreen() {
                   <Ionicons
                     name="card-outline"
                     size={16}
-                    color={VERDE}
+                    color={paleta.VERDE}
                     style={styles.perfilLinhaIcone}
                   />
                   <Text style={styles.perfilLinhaLabel}>
@@ -366,7 +367,7 @@ export default function ClientesScreen() {
                   <Ionicons
                     name="mail-outline"
                     size={16}
-                    color={VERDE}
+                    color={paleta.VERDE}
                     style={styles.perfilLinhaIcone}
                   />
                   <Text style={styles.perfilLinhaLabel}>
@@ -383,7 +384,7 @@ export default function ClientesScreen() {
                   <Ionicons
                     name="call-outline"
                     size={16}
-                    color={VERDE}
+                    color={paleta.VERDE}
                     style={styles.perfilLinhaIcone}
                   />
                   <Text style={styles.perfilLinhaLabel}>
@@ -402,7 +403,7 @@ export default function ClientesScreen() {
                   <Ionicons
                     name="calendar-outline"
                     size={16}
-                    color={VERDE}
+                    color={paleta.VERDE}
                     style={styles.perfilLinhaIcone}
                   />
                   <Text style={styles.perfilLinhaLabel}>
@@ -428,7 +429,7 @@ export default function ClientesScreen() {
 
                 {carregandoResumo ? (
                   <ActivityIndicator
-                    color={VERDE}
+                    color={paleta.VERDE}
                     style={{ marginVertical: 16 }}
                   />
                 ) : (
@@ -437,7 +438,7 @@ export default function ClientesScreen() {
                       <Ionicons
                         name="bag-handle-outline"
                         size={22}
-                        color={VERDE}
+                        color={paleta.VERDE}
                       />
                       <Text style={styles.perfilStatValor}>
                         {resumo?.cliente.compras ?? 0}
@@ -453,7 +454,7 @@ export default function ClientesScreen() {
                       <Ionicons
                         name="cash-outline"
                         size={22}
-                        color={VERDE}
+                        color={paleta.VERDE}
                       />
                       <Text style={styles.perfilStatValor}>
                         {(resumo?.totalGasto ?? 0).toLocaleString(
@@ -559,10 +560,6 @@ export default function ClientesScreen() {
 
 // ─── Estilos ──────────────────────────────────────────────────────────────────
 
-const ROXO = '#46295A';
-const VERDE = '#5EB85E';
-const VERMELHO = '#e53e3e';
-
 const styles = StyleSheet.create({
   container: { flex: 1 },
 
@@ -574,7 +571,7 @@ const styles = StyleSheet.create({
     paddingTop: 56,
     paddingBottom: 16,
   },
-  headerTitulo: { fontSize: 32, fontFamily: 'Lexend_800ExtraBold', color: VERDE, letterSpacing: 2 },
+  headerTitulo: { fontSize: 32, fontFamily: 'Lexend_800ExtraBold', color: paleta.VERDE, letterSpacing: 2 },
 
   buscaContainer: {
     marginHorizontal: 16,
@@ -597,7 +594,7 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     overflow: 'hidden',
     borderWidth: 3,
-    borderColor: VERDE,
+    borderColor: paleta.VERDE,
   },
   cardConteudo: { flex: 1, padding: 14 },
   cardNome: { fontSize: 17, fontFamily: 'Lexend_700Bold', color: '#222', marginBottom: 2 },
@@ -606,15 +603,15 @@ const styles = StyleSheet.create({
   cardBotoes: { flexDirection: 'row', gap: 8 },
   botaoCard: { paddingVertical: 5, paddingHorizontal: 12, borderRadius: 6 },
   botaoCardTexto: { color: '#fff', fontFamily: 'Lexend_700Bold', fontSize: 12 },
-  botaoEditar: { backgroundColor: ROXO },
-  botaoVerMais: { backgroundColor: VERDE },
-  botaoExcluir: { backgroundColor: VERMELHO },
+  botaoEditar: { backgroundColor: paleta.ROXO },
+  botaoVerMais: { backgroundColor: paleta.VERDE },
+  botaoExcluir: { backgroundColor: paleta.VERMELHO },
 
   botaoNovo: {
     position: 'absolute',
     bottom: 28,
     alignSelf: 'center',
-    backgroundColor: VERDE,
+    backgroundColor: paleta.VERDE,
     paddingVertical: 12,
     paddingHorizontal: 28,
     borderRadius: 30,
@@ -644,12 +641,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a0e26',
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: VERDE,
+    borderColor: paleta.VERDE,
     overflow: 'hidden',
     maxHeight: '80%',
   },
   perfilHeader: {
-    backgroundColor: ROXO,
+    backgroundColor: paleta.ROXO,
     flexDirection: 'row',
     alignItems: 'center',
     padding: 20,
@@ -659,7 +656,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: VERDE,
+    backgroundColor: paleta.VERDE,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -679,7 +676,7 @@ const styles = StyleSheet.create({
   perfilSecao: {
     fontFamily: 'Lexend_700Bold',
     fontSize: 11,
-    color: VERDE,
+    color: paleta.VERDE,
     letterSpacing: 2,
     marginBottom: 14,
   },
@@ -743,12 +740,12 @@ const styles = StyleSheet.create({
   perfilBotaoFechar: {
     margin: 20,
     marginTop: 8,
-    backgroundColor: ROXO,
+    backgroundColor: paleta.ROXO,
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',
     borderWidth: 1.5,
-    borderColor: VERDE,
+    borderColor: paleta.VERDE,
   },
   perfilBotaoFecharTexto: {
     fontFamily: 'Lexend_700Bold',
@@ -769,7 +766,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a0e26',
     borderRadius: 18,
     borderWidth: 2,
-    borderColor: VERMELHO,
+    borderColor: paleta.VERMELHO,
     padding: 28,
     alignItems: 'center',
   },
@@ -777,7 +774,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: VERMELHO,
+    backgroundColor: paleta.VERMELHO,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
@@ -818,7 +815,7 @@ const styles = StyleSheet.create({
     borderColor: '#555',
   },
   modalBotaoExcluir: {
-    backgroundColor: VERMELHO,
+    backgroundColor: paleta.VERMELHO,
   },
   modalBotaoTextoCancelar: {
     fontFamily: 'Lexend_700Bold',

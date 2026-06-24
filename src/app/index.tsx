@@ -19,14 +19,8 @@ import {
   Lexend_800ExtraBold,
 } from "@expo-google-fonts/lexend";
 import { Ionicons } from '@expo/vector-icons';
-import { sincronizarVendas } from '../utils/sincronizar-vendas';
-
-const ROXO = '#46295A';
-const ROXO_CLARO = '#5C3876';
-const VERDE = '#5EB85E';
-const BRANCO = '#FFFFFF';
-
-
+import { sincronizarVendas } from '@/utils/sincronizar-vendas';
+import { paleta } from '@/constants/theme'
 
 /*const menuItems = [
   {
@@ -162,12 +156,12 @@ useEffect(() => {
   });
 
   if (!fontsLoaded) {
-    return <ActivityIndicator style={{ flex: 1 }} color={VERDE} />;
+    return <ActivityIndicator style={{ flex: 1 }} color={paleta.VERDE} />;
   }
 
   return (
     <LinearGradient
-      colors={[ROXO, '#2E1840', '#1A0E26']}
+      colors={[paleta.ROXO, '#2E1840', '#1A0E26']}
       style={styles.gradient}
     >
       <StatusBar barStyle="light-content" />
@@ -190,7 +184,7 @@ useEffect(() => {
                 <Ionicons
                   name="person-outline"
                   size={22}
-                  color={BRANCO}
+                  color={paleta.BRANCO}
                 />
               </View>
             </TouchableOpacity>
@@ -199,7 +193,7 @@ useEffect(() => {
               <Ionicons
                 name="menu-outline"
                 size={34}
-                color={BRANCO}
+                color={paleta.BRANCO}
               />
             </TouchableOpacity>
           </View>
@@ -219,7 +213,7 @@ useEffect(() => {
                   <Ionicons
                     name={item.icon as any}
                     size={40}
-                    color={VERDE}
+                    color={paleta.VERDE}
                   />
                 </View>
 
@@ -283,7 +277,7 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     borderWidth: 1.5,
-    borderColor: VERDE,
+    borderColor: paleta.VERDE,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -301,9 +295,9 @@ const styles = StyleSheet.create({
     height: 145,
     alignSelf: 'center',
     borderRadius: 20,
-    backgroundColor: BRANCO,
+    backgroundColor: paleta.BRANCO,
     borderWidth: 2,
-    borderColor: VERDE,
+    borderColor: paleta.VERDE,
     margin: 'auto',
     elevation: 4,
     shadowColor: '#000',
@@ -332,7 +326,7 @@ const styles = StyleSheet.create({
   },
 
   cardLabel: {
-    color: ROXO,
+    color: paleta.ROXO,
     fontSize: 16,
     fontFamily: 'Lexend_700Bold',
     textAlign: 'center',

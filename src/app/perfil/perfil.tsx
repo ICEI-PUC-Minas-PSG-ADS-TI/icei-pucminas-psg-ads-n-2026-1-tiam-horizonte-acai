@@ -17,7 +17,8 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useFonts, Lexend_400Regular, Lexend_700Bold, Lexend_800ExtraBold } from '@expo-google-fonts/lexend';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '@/lib/supabase';
+import { paleta } from '@/constants/theme';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -142,12 +143,12 @@ export default function PerfilScreen() {
     router.replace('/login/login' as any);
   }
 
-  if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color={VERDE} />;
+  if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color={paleta.VERDE} />;
 
-  const tipoCor = funcionario ? (TIPO_COR[funcionario.tipo] ?? VERDE) : VERDE;
+  const tipoCor = funcionario ? (TIPO_COR[funcionario.tipo] ?? paleta.VERDE) : paleta.VERDE;
 
   return (
-    <LinearGradient colors={[ROXO, '#2E1840', '#1A0E26']} style={styles.gradient}>
+    <LinearGradient colors={[paleta.ROXO, '#2E1840', '#1A0E26']} style={styles.gradient}>
       <StatusBar barStyle="light-content" />
       <SafeAreaView style={styles.safe}>
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -167,13 +168,13 @@ export default function PerfilScreen() {
               <Text style={styles.headerTitulo}>MEU PERFIL</Text>
               <TouchableOpacity style={styles.iconBtn} onPress={sair}>
                 <View style={styles.avatarCircle}>
-                  <Ionicons name="log-out-outline" size={22} color={VERMELHO} />
+                  <Ionicons name="log-out-outline" size={22} color={paleta.VERMELHO} />
                 </View>
               </TouchableOpacity>
             </View>
 
             {carregando ? (
-              <ActivityIndicator color={VERDE} style={{ marginTop: 60 }} size="large" />
+              <ActivityIndicator color={paleta.VERDE} style={{ marginTop: 60 }} size="large" />
             ) : funcionario ? (
               <>
                 {/* Card de perfil */}
@@ -200,7 +201,7 @@ export default function PerfilScreen() {
                   {/* Dados */}
                   <View style={styles.dadosContainer}>
                     <View style={styles.dadoLinha}>
-                      <Ionicons name="person-outline" size={16} color={VERDE} />
+                      <Ionicons name="person-outline" size={16} color={paleta.VERDE} />
                       <Text style={styles.dadoLabel}>Usuário</Text>
                       <Text style={styles.dadoValor}>@{funcionario.usuario}</Text>
                     </View>
@@ -208,7 +209,7 @@ export default function PerfilScreen() {
                     <View style={styles.dadoSeparador} />
 
                     <View style={styles.dadoLinha}>
-                      <Ionicons name="shield-checkmark-outline" size={16} color={VERDE} />
+                      <Ionicons name="shield-checkmark-outline" size={16} color={paleta.VERDE} />
                       <Text style={styles.dadoLabel}>Função</Text>
                       <Text style={styles.dadoValor}>{TIPO_LABEL[funcionario.tipo]}</Text>
                     </View>
@@ -219,10 +220,10 @@ export default function PerfilScreen() {
                       <Ionicons
                         name={funcionario.ativo ? 'checkmark-circle-outline' : 'close-circle-outline'}
                         size={16}
-                        color={funcionario.ativo ? VERDE : VERMELHO}
+                        color={funcionario.ativo ? paleta.VERDE : paleta.VERMELHO}
                       />
                       <Text style={styles.dadoLabel}>Status</Text>
-                      <Text style={[styles.dadoValor, { color: funcionario.ativo ? VERDE : VERMELHO }]}>
+                      <Text style={[styles.dadoValor, { color: funcionario.ativo ? paleta.VERDE : paleta.VERMELHO }]}>
                         {funcionario.ativo ? 'Ativo' : 'Inativo'}
                       </Text>
                     </View>
@@ -231,7 +232,7 @@ export default function PerfilScreen() {
 
                 {/* Seção alterar senha */}
                 <View style={styles.secaoTitulo}>
-                  <Ionicons name="lock-closed-outline" size={18} color={VERDE} />
+                  <Ionicons name="lock-closed-outline" size={18} color={paleta.VERDE} />
                   <Text style={styles.secaoTexto}>ALTERAR SENHA</Text>
                 </View>
 
@@ -315,7 +316,7 @@ export default function PerfilScreen() {
 
                 {/* Botão sair */}
                 <TouchableOpacity style={styles.botaoSair} onPress={sair}>
-                  <Ionicons name="log-out-outline" size={18} color={VERMELHO} />
+                  <Ionicons name="log-out-outline" size={18} color={paleta.VERMELHO} />
                   <Text style={styles.botaoSairTexto}>Sair da conta</Text>
                 </TouchableOpacity>
 
@@ -332,10 +333,6 @@ export default function PerfilScreen() {
 }
 
 // ─── Estilos ──────────────────────────────────────────────────────────────────
-
-const ROXO = '#46295A';
-const VERDE = '#5EB85E';
-const VERMELHO = '#e53e3e';
 
 const styles = StyleSheet.create({
   gradient: { flex: 1 },
@@ -360,7 +357,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTitulo: {
-    color: VERDE,
+    color: paleta.VERDE,
     fontSize: 22,
     fontFamily: 'Lexend_800ExtraBold',
     letterSpacing: 2,
@@ -447,7 +444,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   secaoTexto: {
-    color: VERDE,
+    color: paleta.VERDE,
     fontFamily: 'Lexend_700Bold',
     fontSize: 12,
     letterSpacing: 2,
@@ -469,14 +466,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.95)',
     borderRadius: 14,
     borderWidth: 2,
-    borderColor: VERDE,
+    borderColor: paleta.VERDE,
     paddingHorizontal: 16,
   },
   senhaInput: {
     flex: 1,
     paddingVertical: 14,
     fontFamily: 'Lexend_400Regular',
-    color: ROXO,
+    color: paleta.ROXO,
     fontSize: 14,
   },
   olho: { padding: 4 },
@@ -495,7 +492,7 @@ const styles = StyleSheet.create({
   // Botões
   botaoSalvar: {
     marginTop: 24,
-    backgroundColor: VERDE,
+    backgroundColor: paleta.VERDE,
     paddingVertical: 16,
     borderRadius: 14,
     alignItems: 'center',
@@ -514,10 +511,10 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 14,
     borderWidth: 1.5,
-    borderColor: VERMELHO + '55',
+    borderColor: paleta.VERMELHO + '55',
   },
   botaoSairTexto: {
-    color: VERMELHO,
+    color: paleta.VERMELHO,
     fontFamily: 'Lexend_700Bold',
     fontSize: 14,
   },

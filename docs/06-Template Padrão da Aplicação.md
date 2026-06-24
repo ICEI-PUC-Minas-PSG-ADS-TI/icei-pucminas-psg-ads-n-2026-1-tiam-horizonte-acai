@@ -4,7 +4,7 @@
 
 ## Identidade Visual
 
-A identidade visual do sistema foi desenvolvida utilizando uma paleta de cores predominante em tons de roxo, associada a elementos visuais que remetem diretamente ao produto principal da empresa, o açaí.
+A identidade visual do sistema foi desenvolvida utilizando uma paleta de cores predominante em tons de paleta.ROXO, associada a elementos visuais que remetem diretamente ao produto principal da empresa, o açaí.
 
 A logo da aplicação foi posicionada na parte superior das telas, garantindo fácil reconhecimento da marca e reforçando a identidade do sistema. O design da logo utiliza elementos gráficos simples e modernos, alinhados com a proposta da aplicação.
 

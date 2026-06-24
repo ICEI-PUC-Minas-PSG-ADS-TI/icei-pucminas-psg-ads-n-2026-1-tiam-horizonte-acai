@@ -14,7 +14,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useFonts, Lexend_400Regular, Lexend_700Bold, Lexend_800ExtraBold } from '@expo-google-fonts/lexend';
 import { LinearGradient } from 'expo-linear-gradient';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '@/lib/supabase';
+import { paleta } from '@/constants/theme';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -112,10 +113,10 @@ export default function ColaboradoresScreen() {
     }
   }
 
-  if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color={VERDE} />;
+  if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color={paleta.VERDE} />;
 
   function CardFuncionario({ item }: { item: Funcionario }) {
-    const cor = TIPO_COR[item.tipo] ?? VERDE;
+    const cor = TIPO_COR[item.tipo] ?? paleta.VERDE;
     return (
       <View style={styles.card}>
         <View style={styles.cardConteudo}>
@@ -134,7 +135,7 @@ export default function ColaboradoresScreen() {
             <Text style={styles.cardUsuario}>@{item.usuario}</Text>
 
             <View style={styles.cardStatusRow}>
-              <View style={[styles.statusDot, { backgroundColor: item.ativo ? VERDE : VERMELHO }]} />
+              <View style={[styles.statusDot, { backgroundColor: item.ativo ? paleta.VERDE : paleta.VERMELHO }]} />
               <Text style={styles.cardStatus}>{item.ativo ? 'Ativo' : 'Inativo'}</Text>
             </View>
 
@@ -171,7 +172,7 @@ export default function ColaboradoresScreen() {
   }
 
   return (
-    <LinearGradient colors={[ROXO, '#2E1840', '#1A0E26']} style={styles.container}>
+    <LinearGradient colors={[paleta.ROXO, '#2E1840', '#1A0E26']} style={styles.container}>
 
       {/* Header */}
       <View style={styles.header}>
@@ -198,7 +199,7 @@ export default function ColaboradoresScreen() {
 
       {/* Lista */}
       {carregando ? (
-        <ActivityIndicator size="large" color={VERDE} style={{ marginTop: 40 }} />
+        <ActivityIndicator size="large" color={paleta.VERDE} style={{ marginTop: 40 }} />
       ) : (
         <FlatList
           data={filtrados}
@@ -267,10 +268,6 @@ export default function ColaboradoresScreen() {
 
 // ─── Estilos ──────────────────────────────────────────────────────────────────
 
-const ROXO = '#46295A';
-const VERDE = '#5EB85E';
-const VERMELHO = '#e53e3e';
-
 const styles = StyleSheet.create({
   container: { flex: 1 },
 
@@ -285,7 +282,7 @@ const styles = StyleSheet.create({
   headerTitulo: {
     fontSize: 20,
     fontFamily: 'Lexend_800ExtraBold',
-    color: VERDE,
+    color: paleta.VERDE,
     letterSpacing: 2,
   },
 
@@ -309,7 +306,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 14,
     borderWidth: 3,
-    borderColor: VERDE,
+    borderColor: paleta.VERDE,
     overflow: 'hidden',
   },
   cardConteudo: {
@@ -379,14 +376,14 @@ const styles = StyleSheet.create({
   cardBotoes: { flexDirection: 'row', gap: 8 },
   botaoCard: { paddingVertical: 5, paddingHorizontal: 14, borderRadius: 6 },
   botaoCardTexto: { color: '#fff', fontFamily: 'Lexend_700Bold', fontSize: 12 },
-  botaoEditar: { backgroundColor: ROXO },
-  botaoExcluir: { backgroundColor: VERMELHO },
+  botaoEditar: { backgroundColor: paleta.ROXO },
+  botaoExcluir: { backgroundColor: paleta.VERMELHO },
 
   botaoNovo: {
     position: 'absolute',
     bottom: 28,
     alignSelf: 'center',
-    backgroundColor: VERDE,
+    backgroundColor: paleta.VERDE,
     paddingVertical: 12,
     paddingHorizontal: 28,
     borderRadius: 30,
@@ -409,7 +406,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a0e26',
     borderRadius: 18,
     borderWidth: 2,
-    borderColor: VERMELHO,
+    borderColor: paleta.VERMELHO,
     padding: 28,
     alignItems: 'center',
   },
@@ -417,7 +414,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: VERMELHO,
+    backgroundColor: paleta.VERMELHO,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
@@ -458,7 +455,7 @@ const styles = StyleSheet.create({
     borderColor: '#555',
   },
   modalBotaoExcluir: {
-    backgroundColor: VERMELHO,
+    backgroundColor: paleta.VERMELHO,
   },
   modalBotaoTextoCancelar: {
     fontFamily: 'Lexend_700Bold',

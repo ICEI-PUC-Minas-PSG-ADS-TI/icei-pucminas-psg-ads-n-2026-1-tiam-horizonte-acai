@@ -6,7 +6,7 @@ import {
   Image, StyleSheet, Modal, Alert, SafeAreaView, StatusBar
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '@/lib/supabase';
 
 const logoAcai = "https://cdn-icons-png.flaticon.com/512/5917/5917321.png";
 

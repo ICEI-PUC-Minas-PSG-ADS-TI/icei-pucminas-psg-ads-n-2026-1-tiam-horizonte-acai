@@ -20,12 +20,10 @@ import {
     Lexend_700Bold,
     Lexend_800ExtraBold,
 } from "@expo-google-fonts/lexend";
-import { supabase } from '../../lib/supabase';
+import { supabase } from '@/lib/supabase';
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-
-const ROXO = "#46295A";
-const VERDE = "#5EB85E";
+import { paleta } from "@/constants/theme";
 
 export default function LoginScreen() {
     const router = useRouter();
@@ -87,11 +85,11 @@ export default function LoginScreen() {
         }
     }
 
-    if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color={VERDE} />;
+    if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color={paleta.VERDE} />;
 
     return (
         <LinearGradient
-            colors={[ROXO, "#2E1840", "#1A0E26"]}
+            colors={[paleta.ROXO, "#2E1840", "#1A0E26"]}
             style={{ flex: 1 }}
         >
             <KeyboardAvoidingView
@@ -218,7 +216,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         borderRadius: 10,
         borderWidth: 2,
-        borderColor: VERDE,
+        borderColor: paleta.VERDE,
         paddingHorizontal: 14,
         paddingVertical: 13,
         fontFamily: "Lexend_400Regular",
@@ -231,7 +229,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         borderRadius: 10,
         borderWidth: 2,
-        borderColor: VERDE,
+        borderColor: paleta.VERDE,
         paddingHorizontal: 14,
     },
     senhaInput: {
@@ -247,7 +245,7 @@ const styles = StyleSheet.create({
     botaoLogin: {
         marginTop: 40,
         width: "40%",
-        backgroundColor: VERDE,
+        backgroundColor: paleta.VERDE,
         paddingVertical: 14,
         borderRadius: 30,
         alignItems: "center",

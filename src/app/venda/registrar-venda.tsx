@@ -11,14 +11,14 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '@/lib/supabase';
 import {
     SafeAreaView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
     salvarVendaOffline
-} from '../../utils/venda-service';
+} from '@/utils/venda-service';
 
 export default function RegistrarVenda() {
 

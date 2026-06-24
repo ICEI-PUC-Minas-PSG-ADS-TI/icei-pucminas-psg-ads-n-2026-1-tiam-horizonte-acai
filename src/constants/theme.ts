@@ -9,6 +9,7 @@ export const paleta = {
   ROXO : '#46295A',
   ROXO_CLARO : '#5C3876',
   VERDE : '#5EB85E',
+  VERMELHO: '#C0392B',
   BRANCO : '#FFFFFF',
 }
 

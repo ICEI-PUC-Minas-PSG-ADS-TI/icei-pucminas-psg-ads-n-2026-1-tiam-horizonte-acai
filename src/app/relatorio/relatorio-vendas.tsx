@@ -13,7 +13,7 @@ import {
   Text,
   View
 } from 'react-native'
-import { supabase } from '../../services/supabase'
+import { supabase } from '@/services/supabase'
 
 export default function Home() {
   const [totalVendas, setTotalVendas] = useState(0)

@@ -23,7 +23,8 @@ import {
   Lexend_700Bold,
   Lexend_800ExtraBold,
 } from '@expo-google-fonts/lexend';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '@/lib/supabase';
+import { paleta } from '@/constants/theme';
 
 // ───────────────── Helpers ─────────────────
 
@@ -114,7 +115,7 @@ export default function EditarClienteScreen() {
   }
 
   if (!fontsLoaded) {
-    return <ActivityIndicator style={{ flex: 1 }} color={VERDE} />;
+    return <ActivityIndicator style={{ flex: 1 }} color={paleta.VERDE} />;
   }
 
   return (
@@ -125,7 +126,7 @@ export default function EditarClienteScreen() {
       'ADMINISTRADOR',
     ]}
   >
-    <LinearGradient colors={[ROXO, '#2E1840', '#1A0E26']} style={styles.gradient}>
+    <LinearGradient colors={[paleta.ROXO, '#2E1840', '#1A0E26']} style={styles.gradient}>
       <StatusBar barStyle="light-content" />
       <SafeAreaView style={styles.safe}>
         <KeyboardAvoidingView
@@ -255,10 +256,6 @@ export default function EditarClienteScreen() {
 
 // ───────────────── Estilos ─────────────────
 
-const ROXO = '#46295A';
-const VERDE = '#5EB85E';
-const VERMELHO = '#C0392B';
-
 const styles = StyleSheet.create({
   gradient: { flex: 1 },
   safe: { flex: 1, paddingHorizontal: 24 },
@@ -278,13 +275,13 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     borderWidth: 1.5,
-    borderColor: VERDE,
+    borderColor: paleta.VERDE,
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerTituloContainer: { alignItems: 'center' },
   headerLinha: {
-    color: VERDE,
+    color: paleta.VERDE,
     fontSize: 26,
     fontFamily: 'Lexend_800ExtraBold',
     letterSpacing: 2,
@@ -314,11 +311,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 14,
     borderWidth: 2,
-    borderColor: VERDE,
+    borderColor: paleta.VERDE,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontFamily: 'Lexend_400Regular',
-    color: ROXO,
+    color: paleta.ROXO,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
@@ -339,8 +336,8 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: 'center',
   },
-  botaoSalvar: { backgroundColor: VERDE },
-  botaoCancelar: { backgroundColor: VERMELHO },
+  botaoSalvar: { backgroundColor: paleta.VERDE },
+  botaoCancelar: { backgroundColor: paleta.VERMELHO },
   botaoTextoSalvar: {
     color: '#1a1a1a',
     fontSize: 14,

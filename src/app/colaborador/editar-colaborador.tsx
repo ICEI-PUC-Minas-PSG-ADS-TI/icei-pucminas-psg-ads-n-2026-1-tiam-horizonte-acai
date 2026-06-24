@@ -16,7 +16,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useFonts, Lexend_400Regular, Lexend_700Bold, Lexend_800ExtraBold } from '@expo-google-fonts/lexend';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '@/lib/supabase';
+import { paleta } from '@/constants/theme';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -100,10 +101,10 @@ export default function EditarColaboradorScreen() {
     }
   }
 
-  if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color={VERDE} />;
+  if (!fontsLoaded) return <ActivityIndicator style={{ flex: 1 }} color={paleta.VERDE} />;
 
   return (
-    <LinearGradient colors={[ROXO, '#2E1840', '#1A0E26']} style={styles.gradient}>
+    <LinearGradient colors={[paleta.ROXO, '#2E1840', '#1A0E26']} style={styles.gradient}>
       <StatusBar barStyle="light-content" />
       <SafeAreaView style={styles.safe}>
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -157,7 +158,7 @@ export default function EditarColaboradorScreen() {
               {/* Nova senha (opcional) */}
               <View style={styles.campo}>
                 <Text style={styles.label}>Nova senha</Text>
-                <Text style={styles.labelHint}>Deixe em branco para manter a senha atual</Text>
+                <Text style={styles.labelHint}>Deixe em paleta.BRANCO para manter a senha atual</Text>
                 <View style={styles.senhaContainer}>
                   <TextInput
                     style={styles.senhaInput}
@@ -205,7 +206,7 @@ export default function EditarColaboradorScreen() {
                   <TouchableOpacity
                     style={[
                       styles.tipoBotao,
-                      ativo && { backgroundColor: VERDE, borderColor: VERDE },
+                      ativo && { backgroundColor: paleta.VERDE, borderColor: paleta.VERDE },
                     ]}
                     onPress={() => setAtivo(true)}
                   >
@@ -214,7 +215,7 @@ export default function EditarColaboradorScreen() {
                   <TouchableOpacity
                     style={[
                       styles.tipoBotao,
-                      !ativo && { backgroundColor: VERMELHO, borderColor: VERMELHO },
+                      !ativo && { backgroundColor: paleta.VERMELHO, borderColor: paleta.VERMELHO },
                     ]}
                     onPress={() => setAtivo(false)}
                   >
@@ -266,10 +267,6 @@ export default function EditarColaboradorScreen() {
 
 // ─── Estilos ──────────────────────────────────────────────────────────────────
 
-const ROXO = '#46295A';
-const VERDE = '#5EB85E';
-const VERMELHO = '#C0392B';
-
 const styles = StyleSheet.create({
   gradient: { flex: 1 },
   safe: { flex: 1, paddingHorizontal: 24 },
@@ -288,12 +285,12 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     borderWidth: 1.5,
-    borderColor: VERDE,
+    borderColor: paleta.VERDE,
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerLinha: {
-    color: VERDE,
+    color: paleta.VERDE,
     fontSize: 18,
     fontFamily: 'Lexend_800ExtraBold',
     letterSpacing: 2,
@@ -331,11 +328,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 14,
     borderWidth: 2,
-    borderColor: VERDE,
+    borderColor: paleta.VERDE,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontFamily: 'Lexend_400Regular',
-    color: ROXO,
+    color: paleta.ROXO,
     elevation: 3,
   },
 
@@ -345,7 +342,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 14,
     borderWidth: 2,
-    borderColor: VERDE,
+    borderColor: paleta.VERDE,
     paddingHorizontal: 16,
     elevation: 3,
   },
@@ -353,7 +350,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 14,
     fontFamily: 'Lexend_400Regular',
-    color: ROXO,
+    color: paleta.ROXO,
   },
   senhaOlho: { padding: 4 },
 
@@ -401,8 +398,8 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: 'center',
   },
-  botaoSalvar: { backgroundColor: VERDE },
-  botaoCancelar: { backgroundColor: VERMELHO },
+  botaoSalvar: { backgroundColor: paleta.VERDE },
+  botaoCancelar: { backgroundColor: paleta.VERMELHO },
   botaoTextoSalvar: { color: '#1a1a1a', fontSize: 14, fontFamily: 'Lexend_800ExtraBold' },
   botaoTextoCancelar: { color: '#fff', fontSize: 14, fontFamily: 'Lexend_800ExtraBold' },
 });
