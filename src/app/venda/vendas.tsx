@@ -25,7 +25,7 @@ const menuItems = [
   {
     label: 'Registrar Nova Venda',
     icon: 'add-circle-outline',
-    route: '/relatorio/nova-venda',
+    route: '/venda/registrar-venda',
   },
   {
     label: 'Meta Mensal',

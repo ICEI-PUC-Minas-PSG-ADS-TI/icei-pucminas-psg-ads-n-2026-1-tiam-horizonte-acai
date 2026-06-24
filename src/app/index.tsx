@@ -19,6 +19,7 @@ import {
   Lexend_800ExtraBold,
 } from "@expo-google-fonts/lexend";
 import { Ionicons } from '@expo/vector-icons';
+import { sincronizarVendas } from '../utils/sincronizar-vendas';
 
 const ROXO = '#46295A';
 const ROXO_CLARO = '#5C3876';
@@ -58,6 +59,7 @@ export default function Index() {
 
 
 useEffect(() => {
+  sincronizarVendas();
   async function carregar() {
     const tipo = await AsyncStorage.getItem('tipoFuncionario');
 
