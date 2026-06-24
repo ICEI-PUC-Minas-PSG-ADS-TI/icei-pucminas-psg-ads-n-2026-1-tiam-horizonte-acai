@@ -304,7 +304,7 @@ export default function ProdutosScreen() {
         {podeGerenciar && (
           <TouchableOpacity
             style={styles.botaoNovo}
-            onPress={() => router.push('/produto/cadastrar-produto' as any)}
+            onPress={() => router.push('/produto/novo-produto' as any)}
           >
             <Text style={styles.botaoNovoTexto}>Novo Produto +</Text>
           </TouchableOpacity>
