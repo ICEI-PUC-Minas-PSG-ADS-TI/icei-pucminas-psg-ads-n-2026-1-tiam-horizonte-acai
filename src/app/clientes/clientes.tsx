@@ -245,9 +245,9 @@ export default function ClientesScreen() {
 
           <Text style={styles.headerTitulo}>CLIENTES</Text>
 
-          <TouchableOpacity>
-            <Ionicons name="menu" size={28} color="#fff" />
-          </TouchableOpacity>
+           <TouchableOpacity onPress={() => router.push('/clientes/ranking-cliente' as any)}>
+              <Ionicons name="bar-chart-outline" size={26} color={paleta.VERDE} />
+            </TouchableOpacity>
         </View>
 
         {/* Busca */}

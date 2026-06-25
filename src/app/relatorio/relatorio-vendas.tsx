@@ -7,7 +7,6 @@ import { Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
   Modal,
-  Pressable,
   ScrollView,
   Text,
   View,
@@ -114,7 +113,6 @@ export default function Home() {
     else if (tipo === 'trimestral') await relatorioTrimestral();
     else await relatorioAnual();
 
-    // vendas state ainda não atualizou, usamos o retorno direto
     const now = new Date();
     let dataInicial: Date, dataFinal: Date;
     if (tipo === 'mensal') {
@@ -145,9 +143,9 @@ export default function Home() {
   }
 
   const periodos = [
-    { label: 'Relatório Mensal',      tipo: 'mensal'      as const, icon: 'calendar-outline' },
-    { label: 'Relatório Trimestral',  tipo: 'trimestral'  as const, icon: 'stats-chart-outline' },
-    { label: 'Relatório Anual',       tipo: 'anual'       as const, icon: 'bar-chart-outline' },
+    { label: 'Relatório Mensal',    tipo: 'mensal'     as const, icon: 'calendar-outline' },
+    { label: 'Relatório Trimestral', tipo: 'trimestral' as const, icon: 'stats-chart-outline' },
+    { label: 'Relatório Anual',      tipo: 'anual'      as const, icon: 'bar-chart-outline' },
   ];
 
   return (
@@ -165,7 +163,7 @@ export default function Home() {
               style={styles.iconBtn}
               onPress={() => router.back()}
             >
-              <Ionicons name="arrow-back" size={24} color={paleta.BRANCO} />
+              <Ionicons name="arrow-back" size={22} color={paleta.BRANCO} />
             </TouchableOpacity>
 
             <Image
@@ -194,11 +192,11 @@ export default function Home() {
                 Resumo Atual{periodoAtual ? ` — ${periodoAtual}` : ''}
               </Text>
               <View style={styles.resumoRow}>
-                <Ionicons name="receipt-outline" size={18} color={paleta.BRANCO} />
+                <Ionicons name="receipt-outline" size={18} color={paleta.ROXO} />
                 <Text style={styles.resumoTexto}>Total de vendas: {totalVendas}</Text>
               </View>
               <View style={styles.resumoRow}>
-                <Ionicons name="cash-outline" size={18} color={paleta.BRANCO} />
+                <Ionicons name="cash-outline" size={18} color={paleta.ROXO} />
                 <Text style={styles.resumoTexto}>
                   Faturamento: R$ {faturamento.toFixed(2)}
                 </Text>
@@ -208,23 +206,25 @@ export default function Home() {
             {/* Seção períodos */}
             <Text style={styles.secaoTitulo}>Selecionar período</Text>
 
-            {periodos.map(({ label, tipo, icon }) => (
-              <TouchableOpacity
-                key={tipo}
-                style={styles.card}
-                activeOpacity={0.75}
-                onPress={() => abrirRelatorio(tipo)}
-                disabled={carregando}
-              >
-                <View style={styles.cardInner}>
-                  <View style={styles.iconWrapper}>
-                    <Ionicons name={icon as any} size={32} color={paleta.VERDE} />
+            <View style={styles.cardsContainer}>
+              {periodos.map(({ label, tipo, icon }) => (
+                <TouchableOpacity
+                  key={tipo}
+                  style={styles.card}
+                  activeOpacity={0.75}
+                  onPress={() => abrirRelatorio(tipo)}
+                  disabled={carregando}
+                >
+                  <View style={styles.cardInner}>
+                    <View style={styles.iconWrapper}>
+                      <Ionicons name={icon as any} size={28} color={paleta.VERDE} />
+                    </View>
+                    <Text style={styles.cardLabel} numberOfLines={1} adjustsFontSizeToFit>{label}</Text>
+                    <Ionicons name="chevron-forward" size={20} color={paleta.VERDE} style={{ marginLeft: 'auto' }} />
                   </View>
-                  <Text style={styles.cardLabel}>{label}</Text>
-                  <Ionicons name="chevron-forward" size={20} color={paleta.VERDE} style={{ marginLeft: 'auto' }} />
-                </View>
-              </TouchableOpacity>
-            ))}
+                </TouchableOpacity>
+              ))}
+            </View>
           </ScrollView>
 
           {/* Footer */}
@@ -245,11 +245,11 @@ export default function Home() {
             {/* Resumo no modal */}
             <View style={styles.modalResumo}>
               <View style={styles.resumoRow}>
-                <Ionicons name="receipt-outline" size={16} color={paleta.BRANCO} />
+                <Ionicons name="receipt-outline" size={16} color={paleta.ROXO} />
                 <Text style={styles.modalResumoTexto}>Total de vendas: {totalVendas}</Text>
               </View>
               <View style={styles.resumoRow}>
-                <Ionicons name="cash-outline" size={16} color={paleta.BRANCO} />
+                <Ionicons name="cash-outline" size={16} color={paleta.ROXO} />
                 <Text style={styles.modalResumoTexto}>
                   Faturamento total: R$ {faturamento.toFixed(2)}
                 </Text>
@@ -258,7 +258,7 @@ export default function Home() {
 
             <Text style={styles.modalSecao}>Produtos mais vendidos</Text>
 
-            <ScrollView style={{ maxHeight: 280 }} showsVerticalScrollIndicator={false}>
+            <ScrollView style={{ maxHeight: 250 }} showsVerticalScrollIndicator={false}>
               {produtosMaisVendidos.length === 0 ? (
                 <Text style={styles.vazio}>Nenhum produto encontrado.</Text>
               ) : (
@@ -268,7 +268,7 @@ export default function Home() {
                       <Text style={styles.posicaoTexto}>{index + 1}</Text>
                     </View>
                     <View style={{ flex: 1 }}>
-                      <Text style={styles.produtoNome}>{item.nome}</Text>
+                      <Text style={styles.produtoNome} numberOfLines={1}>{item.nome}</Text>
                       <Text style={styles.produtoQtd}>{item.quantidade} unidades vendidas</Text>
                     </View>
                   </View>
@@ -294,7 +294,11 @@ export default function Home() {
 const styles = StyleSheet.create({
   gradient: { flex: 1 },
 
-  safe: { flex: 1, paddingHorizontal: 24 },
+  // Margem lateral responsiva aplicada globalmente aqui
+  safe: { 
+    flex: 1, 
+    paddingHorizontal: 24,
+  },
 
   // ── Header ───────────────────────────────────────────────
   header: {
@@ -305,12 +309,12 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
 
-  logo: { width: 160, height: 72 },
+  logo: { width: SCREEN_WIDTH * 0.4, height: 60 },
 
   iconBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 38,
+    height: 38,
+    borderRadius: 19,
     borderWidth: 1.5,
     borderColor: paleta.VERDE,
     alignItems: 'center',
@@ -319,41 +323,40 @@ const styles = StyleSheet.create({
 
   // ── Scroll ───────────────────────────────────────────────
   scroll: {
-    paddingBottom: 8,
-    gap: 0,
+    paddingBottom: 24,
   },
 
   titulo: {
     color: paleta.BRANCO,
-    fontSize: 26,
+    fontSize: SCREEN_WIDTH > 400 ? 26 : 22,
     fontFamily: 'Lexend_800ExtraBold',
     textAlign: 'center',
-    marginBottom: 10,
-    marginTop: 4,
+    marginBottom: 8,
+    marginTop: 8,
   },
 
   subtitulo: {
     color: 'rgba(255,255,255,0.6)',
-    fontSize: 14,
+    fontSize: SCREEN_WIDTH > 400 ? 14 : 13,
     fontFamily: 'Lexend_400Regular',
     textAlign: 'center',
-    lineHeight: 22,
+    lineHeight: 20,
     marginBottom: 24,
   },
 
   // ── Resumo Card ──────────────────────────────────────────
   resumoCard: {
     backgroundColor: paleta.BRANCO,
-    borderRadius: 20,
+    borderRadius: 16,
     borderWidth: 2,
     borderColor: paleta.VERDE,
-    padding: 20,
-    marginBottom: 28,
+    padding: 16,
+    marginBottom: 24,
     elevation: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
-    shadowRadius: 6,
+    shadowRadius: 4,
   },
 
   resumoTitulo: {
@@ -366,8 +369,8 @@ const styles = StyleSheet.create({
   resumoRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 6,
+    gap: 10,
+    marginBottom: 8,
   },
 
   resumoTexto: {
@@ -383,36 +386,38 @@ const styles = StyleSheet.create({
     fontFamily: 'Lexend_700Bold',
     letterSpacing: 1.1,
     textTransform: 'uppercase',
-    marginBottom: 14,
+    marginBottom: 12,
   },
 
   // ── Cards período ────────────────────────────────────────
+  cardsContainer: {
+    gap: 12,
+  },
+
   card: {
     width: '100%',
-    borderRadius: 20,
+    borderRadius: 16,
     backgroundColor: paleta.BRANCO,
     borderWidth: 2,
     borderColor: paleta.VERDE,
-    marginBottom: 12,
-    elevation: 4,
+    elevation: 3,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-    margin: 10,
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
 
   cardInner: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 18,
-    gap: 16,
+    padding: 14,
+    gap: 12,
   },
 
   iconWrapper: {
-    width: 52,
-    height: 52,
-    borderRadius: 14,
+    width: 46,
+    height: 46,
+    borderRadius: 12,
     backgroundColor: 'rgba(94,184,94,0.12)',
     alignItems: 'center',
     justifyContent: 'center',
@@ -420,13 +425,13 @@ const styles = StyleSheet.create({
 
   cardLabel: {
     color: paleta.ROXO,
-    fontSize: 16,
+    fontSize: SCREEN_WIDTH > 400 ? 16 : 15,
     fontFamily: 'Lexend_700Bold',
     flex: 1,
   },
 
   // ── Footer ───────────────────────────────────────────────
-  footer: { paddingVertical: 20 },
+  footer: { paddingVertical: 16 },
 
   footerLine: { height: 1, backgroundColor: 'rgba(255,255,255,0.1)' },
 
@@ -436,34 +441,35 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.75)',
+    paddingHorizontal: 24, // Garante que o Modal também não morda os cantos da tela externa
   },
 
   modalBox: {
-    width: '88%',
-    maxHeight: '80%',
+    width: '100%',
+    maxHeight: '85%',
     backgroundColor: '#2E1840',
-    borderRadius: 24,
-    padding: 24,
+    borderRadius: 20,
+    padding: 20,
     borderWidth: 2,
     borderColor: paleta.VERDE,
   },
 
   modalTitulo: {
     color: paleta.BRANCO,
-    fontSize: 22,
+    fontSize: SCREEN_WIDTH > 400 ? 22 : 18,
     fontFamily: 'Lexend_800ExtraBold',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 16,
   },
 
   modalResumo: {
     backgroundColor: paleta.BRANCO,
-    borderRadius: 16,
+    borderRadius: 14,
     borderWidth: 1.5,
     borderColor: paleta.VERDE,
-    padding: 16,
-    marginBottom: 20,
-    gap: 6,
+    padding: 14,
+    marginBottom: 16,
+    gap: 4,
   },
 
   modalResumoTexto: {
@@ -476,23 +482,23 @@ const styles = StyleSheet.create({
     color: paleta.BRANCO,
     fontSize: 16,
     fontFamily: 'Lexend_700Bold',
-    marginBottom: 12,
+    marginBottom: 10,
   },
 
   produtoItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 10,
     backgroundColor: 'rgba(255,255,255,0.07)',
-    padding: 14,
-    borderRadius: 14,
+    padding: 12,
+    borderRadius: 12,
     marginBottom: 8,
   },
 
   posicaoBadge: {
-    width: 32,
-    height: 32,
-    borderRadius: 10,
+    width: 30,
+    height: 30,
+    borderRadius: 8,
     backgroundColor: 'rgba(94,184,94,0.2)',
     borderWidth: 1,
     borderColor: paleta.VERDE,
@@ -502,28 +508,28 @@ const styles = StyleSheet.create({
 
   posicaoTexto: {
     color: paleta.VERDE,
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: 'Lexend_700Bold',
   },
 
   produtoNome: {
     color: paleta.BRANCO,
-    fontSize: 15,
+    fontSize: 14,
     fontFamily: 'Lexend_700Bold',
   },
 
   produtoQtd: {
     color: paleta.VERDE,
-    fontSize: 13,
+    fontSize: 12,
     fontFamily: 'Lexend_400Regular',
-    marginTop: 3,
+    marginTop: 2,
   },
 
   fecharBtn: {
-    marginTop: 18,
+    marginTop: 16,
     backgroundColor: paleta.VERDE,
-    paddingVertical: 14,
-    borderRadius: 16,
+    paddingVertical: 12,
+    borderRadius: 14,
     alignItems: 'center',
   },
 
@@ -538,6 +544,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Lexend_400Regular',
     fontSize: 14,
     textAlign: 'center',
-    paddingVertical: 20,
+    paddingVertical: 16,
   },
 });

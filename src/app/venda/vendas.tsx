@@ -62,23 +62,14 @@ export default function Vendas() {
       <SafeAreaView style={styles.safe}>
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.iconBtn}
-            onPress={() => router.back()}
-          >
-            <View style={styles.avatarCircle}>
-              <Ionicons
-                name="arrow-back-outline"
-                size={22}
-                color={paleta.BRANCO}
-              />
-            </View>
+          <TouchableOpacity onPress={() => router.push('/' as any)}
+            style={{ marginLeft: 24 }}>
+            <Ionicons name="home" size={26} color="#fff" />
           </TouchableOpacity>
 
           <View style={styles.titleWrapper}>
             <Text style={styles.titleGreen}>VENDAS</Text>
           </View>
-
           <View style={{ width: 36 }} />
         </View>
 
@@ -123,6 +114,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
 
+  
   // Header
   header: {
     width: '100%',
