@@ -8,6 +8,7 @@ import {
   StatusBar,
   SafeAreaView,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import {
   useFonts,
@@ -74,7 +75,10 @@ export default function Vendas() {
         </View>
 
         {/* Cards */}
-        <View style={styles.grid}>
+        <ScrollView
+          contentContainerStyle={styles.grid}
+          showsVerticalScrollIndicator={false}
+        >
           {menuItems.map((item) => (
             <TouchableOpacity
               key={item.label}
@@ -97,7 +101,7 @@ export default function Vendas() {
               </View>
             </TouchableOpacity>
           ))}
-        </View>
+        </ScrollView>
 
         {/* Linha decorativa inferior */}
         <View style={styles.footer}>
@@ -161,10 +165,11 @@ const styles = StyleSheet.create({
 
   // Grid
   grid: {
-    flex: 1,
+    flexGrow: 1,
     flexDirection: 'column',
     gap: 12,
     justifyContent: 'center',
+    paddingBottom: 16,
   },
 
   card: {
