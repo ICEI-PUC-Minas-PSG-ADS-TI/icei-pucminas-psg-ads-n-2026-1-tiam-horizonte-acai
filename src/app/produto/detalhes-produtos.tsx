@@ -6,10 +6,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
-  SafeAreaView
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { supabase } from '@/lib/supabase';
+import { LinearGradient } from 'expo-linear-gradient';
+import { pageGradientProps, paleta } from '@/constants/theme';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function DetalhesProduto() {
   const router = useRouter();
@@ -34,10 +37,12 @@ export default function DetalhesProduto() {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#7ed957" />
-        <Text style={{ color: 'white', marginTop: 10 }}>Carregando detalhes...</Text>
-      </View>
+      <LinearGradient {...pageGradientProps()}>
+        <SafeAreaView style={styles.safe}>
+          <ActivityIndicator size="large" color={paleta.VERDE} />
+          <Text style={{ color: 'white', marginTop: 10 }}>Carregando detalhes...</Text>
+        </SafeAreaView>
+      </LinearGradient>
     );
   }
 
@@ -48,44 +53,92 @@ export default function DetalhesProduto() {
         'ESTOQUISTA',
       ]}
     >
-      <SafeAreaView style={styles.container}>
-        <View style={styles.card}>
-          <Text style={styles.titulo}>{produto?.nome}</Text>
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Descrição:</Text>
-            <Text style={styles.value}>{produto?.descricao || 'Sem descrição'}</Text>
+      <LinearGradient {...pageGradientProps()}>
+        <SafeAreaView style={styles.safe}>
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.iconBtn} onPress={() => router.back()}>
+              <Ionicons name="arrow-back" size={24} color={paleta.BRANCO} />
+            </TouchableOpacity>
+            <View style={{ width: 36 }} />
           </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Preço:</Text>
-            <Text style={[styles.value, { color: '#28a745', fontWeight: 'bold' }]}>
-              R$ {produto?.preco?.toFixed(2)}
-            </Text>
+
+          <View style={styles.content}>
+            <View style={styles.card}>
+              <Text style={styles.titulo}>{produto?.nome}</Text>
+              <View style={styles.infoRow}>
+                <Text style={styles.label}>Descrição:</Text>
+                <Text style={styles.value}>{produto?.descricao || 'Sem descrição'}</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Text style={styles.label}>Preço:</Text>
+                <Text style={[styles.value, { color: paleta.VERDE, fontWeight: 'bold' }]}>
+                  R$ {produto?.preco?.toFixed(2)}
+                </Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Text style={styles.label}>Quantidade:</Text>
+                <Text style={styles.value}>{produto?.quantidade} UND</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Text style={styles.label}>Categoria:</Text>
+                <Text style={styles.value}>{produto?.categoria || 'Não definida'}</Text>
+              </View>
+            </View>
           </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Quantidade:</Text>
-            <Text style={styles.value}>{produto?.quantidade} UND</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Categoria:</Text>
-            <Text style={styles.value}>{produto?.categoria || 'Não definida'}</Text>
-          </View>
-          <TouchableOpacity style={styles.btnVoltar} onPress={() => router.back()}>
-            <Text style={styles.btnText}>Voltar</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </LinearGradient>
     </ProtectedRoute>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#4a3061', justifyContent: 'center', padding: 20 },
-  loadingContainer: { flex: 1, backgroundColor: '#4a3061', justifyContent: 'center', alignItems: 'center' },
-  card: { backgroundColor: 'white', padding: 30, borderRadius: 15, width: '100%', elevation: 5, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84 },
-  titulo: { color: '#4a3061', fontSize: 24, fontWeight: 'bold', marginBottom: 20, borderBottomWidth: 2, borderBottomColor: '#7ed957', paddingBottom: 10 },
+  safe: { flex: 1, paddingHorizontal: 24 },
+
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 20,
+    paddingBottom: 12,
+  },
+
+  iconBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1.5,
+    borderColor: paleta.VERDE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  content: { flex: 1, justifyContent: 'center' },
+
+  card: {
+    backgroundColor: paleta.BRANCO,
+    padding: 30,
+    borderRadius: 15,
+    width: '100%',
+    borderWidth: 1,
+    borderColor: paleta.VERDE,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+
+  titulo: {
+    color: paleta.ROXO,
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    borderBottomWidth: 2,
+    borderBottomColor: paleta.VERDE,
+    paddingBottom: 10,
+  },
+
   infoRow: { marginBottom: 15 },
-  label: { fontWeight: 'bold', color: '#4a3061', fontSize: 14, marginBottom: 2 },
+  label: { fontWeight: 'bold', color: paleta.ROXO, fontSize: 14, marginBottom: 2 },
   value: { fontSize: 16, color: '#333' },
-  btnVoltar: { width: '100%', padding: 15, marginTop: 20, backgroundColor: '#4a3061', borderRadius: 8, alignItems: 'center' },
-  btnText: { color: 'white', fontWeight: 'bold', fontSize: 16 }
 });

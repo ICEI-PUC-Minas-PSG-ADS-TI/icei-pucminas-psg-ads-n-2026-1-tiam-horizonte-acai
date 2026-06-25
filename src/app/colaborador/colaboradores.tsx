@@ -181,10 +181,10 @@ export default function ColaboradoresScreen() {
         <TouchableOpacity onPress={() => router.push('/' as any)}>
           <Ionicons name="home" size={26} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitulo}>COLABORADORES</Text>
-        <TouchableOpacity>
-          <Ionicons name="menu" size={28} color="#fff" />
-        </TouchableOpacity>
+        <View style={styles.titleWrapper}>
+            <Text style={styles.headerTitulo}>COLABORADORES</Text>
+          </View>
+          <View style={{ width: 36 }} />
       </View>
 
       {/* Busca */}
@@ -278,14 +278,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingTop: 56,
-    paddingBottom: 16,
+    paddingTop: 20,
+    paddingBottom: 12,
   },
   headerTitulo: {
-    fontSize: 20,
+    fontSize: 32,
     fontFamily: 'Lexend_800ExtraBold',
     color: paleta.VERDE,
     letterSpacing: 2,
+  },
+
+  titleWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 
   buscaContainer: {

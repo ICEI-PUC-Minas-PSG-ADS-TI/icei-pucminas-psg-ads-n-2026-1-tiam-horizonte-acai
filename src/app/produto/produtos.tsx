@@ -230,7 +230,7 @@ export default function ProdutosScreen() {
 
           <TouchableOpacity
             style={[styles.botaoCard, styles.botaoVerMais]}
-            onPress={() => router.push({ pathname: '/produto/detalhes-produto' as any, params: { id: item.id } })}
+            onPress={() => router.push({ pathname: '/produto/detalhes-produtos' as any, params: { id: item.id } })}
           >
             <Text style={[styles.botaoCardTexto, { color: '#1a1a1a' }]}>Ver Mais</Text>
           </TouchableOpacity>
@@ -504,7 +504,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingTop: 56,
+    paddingTop: 20,
     paddingBottom: 16,
   },
   headerTitulo: {

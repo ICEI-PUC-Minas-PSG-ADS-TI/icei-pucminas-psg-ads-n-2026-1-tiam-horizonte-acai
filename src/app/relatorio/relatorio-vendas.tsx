@@ -305,8 +305,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 12,
-    paddingBottom: 8,
+    paddingTop: 20,
+    paddingBottom: 12,
   },
 
   logo: { width: SCREEN_WIDTH * 0.4, height: 60 },

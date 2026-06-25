@@ -24,29 +24,6 @@ import { sincronizarVendas } from '@/utils/sincronizar-vendas';
 import { paleta } from '@/constants/theme'
 import { pageGradientProps } from '@/constants/theme'
 
-/*const menuItems = [
-  {
-    label: 'Produtos',
-    icon: 'cube-outline',
-    route: '/produto/produtos',
-  },
-  {
-    label: 'Clientes',
-    icon: 'people-outline',
-    route: '/clientes/clientes',
-  },
-  {
-    label: 'Vendas',
-    icon: 'cash-outline',
-    route: '/venda/vendas',
-  },
-  {
-    label: 'Colaboradores',
-    icon: 'briefcase-outline',
-    route: '/colaborador/colaboradores',
-  },
-];*/
-
 export default function Index() {
   const router = useRouter();
 
@@ -213,10 +190,9 @@ useEffect(() => {
             </TouchableOpacity>
           ))}
         </ScrollView>
-
-              </SafeAreaView>
-            </LinearGradient>
-          );
+      </SafeAreaView>
+    </LinearGradient>
+  );
 }
 
 const styles = StyleSheet.create({

@@ -186,8 +186,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 12,
-    paddingBottom: 8,
+    paddingTop: 20,
+    paddingBottom: 12,
   },
 
   iconBtn: {
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
   titulo: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: paleta.BRANCO,
     textAlign: 'center',
     marginBottom: 4,
   },

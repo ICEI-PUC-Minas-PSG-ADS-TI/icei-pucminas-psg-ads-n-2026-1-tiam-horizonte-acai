@@ -569,7 +569,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingTop: 56,
+    paddingTop: 20,
     paddingBottom: 16,
   },
   headerTitulo: { fontSize: 32, fontFamily: 'Lexend_800ExtraBold', color: paleta.VERDE, letterSpacing: 2 },
