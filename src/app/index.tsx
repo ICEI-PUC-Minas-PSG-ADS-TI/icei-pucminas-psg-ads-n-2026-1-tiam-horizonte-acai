@@ -114,11 +114,6 @@ useEffect(() => {
             icon: 'cash-outline',
             route: '/venda/vendas',
           },
-          {
-            label: 'Ranking',
-            icon: 'trophy-outline',
-            route: '/clientes/ranking-cliente',
-          },
         ]);
         break;
 
