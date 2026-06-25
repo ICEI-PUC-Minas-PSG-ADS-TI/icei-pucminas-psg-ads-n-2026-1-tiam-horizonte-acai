@@ -167,7 +167,7 @@ export default function Home() {
             </TouchableOpacity>
 
             <Image
-              source={require('../../assets/images/logo-sem-fundo.png')}
+              source={require('@/assets/images/logo_sem_nome.png')}
               style={styles.logo}
               resizeMode="contain"
             />

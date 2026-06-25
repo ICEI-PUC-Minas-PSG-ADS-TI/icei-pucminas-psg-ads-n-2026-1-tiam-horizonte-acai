@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   headerTitulo: {
-    fontSize: 32,
+    fontSize: 29,
     fontFamily: 'Lexend_800ExtraBold',
     color: paleta.VERDE,
     letterSpacing: 2,
