@@ -163,10 +163,8 @@ export default function PerfilScreen() {
 
             {/* Header */}
             <View style={styles.header}>
-              <TouchableOpacity style={styles.iconBtn} onPress={() => router.back()}>
-                <View style={styles.avatarCircle}>
-                  <Ionicons name="arrow-back-outline" size={22} color="#fff" />
-                </View>
+              <TouchableOpacity onPress={() => router.push('/' as any)}>
+                <Ionicons name="home" size={26} color="#fff" />
               </TouchableOpacity>
               <Text style={styles.headerTitulo}>MEU PERFIL</Text>
               <TouchableOpacity style={styles.iconBtn} onPress={sair}>
