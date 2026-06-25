@@ -84,6 +84,11 @@ useEffect(() => {
             icon: 'briefcase-outline',
             route: '/colaborador/colaboradores',
           },
+          {
+            label: 'Metas',
+            icon: 'trophy-outline',
+            route: '/meta/criar-meta',
+          }
         ]);
         break;
 
@@ -104,6 +109,11 @@ useEffect(() => {
             icon: 'briefcase-outline',
             route: '/colaborador/colaboradores',
           },
+          {
+            label: 'Metas',
+            icon: 'trophy-outline',
+            route: '/meta/criar-meta',
+          }
         ]);
         break;
 

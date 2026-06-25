@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { useState, useEffect } from 'react'
 import {
   View,
@@ -10,7 +10,9 @@ import {
   Alert,
 } from 'react-native'
 import { paleta } from '@/constants/theme'
-import { pageGradientProps } from '@/constants/gradients'
+import { pageGradientProps } from '@/constants/theme'
+import { LinearGradient } from 'expo-linear-gradient'
+import { formatarMoeda } from '@/helpers/format'
 
 const MESES = [
   'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
@@ -27,7 +29,8 @@ function getMesAtual() {
 }
 
 export default function CriarMeta() {
-  const [valor, setValor] = useState('')
+  const [valorDisplay, setValorDisplay] = useState('')
+  const [valorNumerico, setValorNumerico] = useState(0)
   const [metaExistente, setMetaExistente] = useState(null)
   const [loading, setLoading] = useState(true)
   const [salvando, setSalvando] = useState(false)
@@ -37,6 +40,14 @@ export default function CriarMeta() {
   useEffect(() => {
     buscarMetaAtual()
   }, [])
+
+  function handleChangeValor(texto) {
+  const apenasNumeros = texto.replace(/\D/g, '')
+  const centavos = parseInt(apenasNumeros || '0', 10)
+  const reais = centavos / 100
+  setValorNumerico(reais)
+  setValorDisplay(reais > 0 ? formatarMoeda(reais) : '')
+}
 
   async function buscarMetaAtual() {
     setLoading(true)
@@ -53,19 +64,18 @@ export default function CriarMeta() {
     }
 
     if (data) {
-      setMetaExistente(data)
-      setValor(String(data.valor_meta))
+        setMetaExistente(data)
+        setValorNumerico(Number(data.valor_meta))
+setValorDisplay(formatarMoeda(Number(data.valor_meta)))
     }
 
     setLoading(false)
   }
 
   async function salvarMeta() {
-    const valorNumerico = parseFloat(valor.replace(',', '.'))
-
-    if (!valor.trim() || isNaN(valorNumerico) || valorNumerico <= 0) {
-      Alert.alert('Valor inválido', 'Digite um valor maior que zero.')
-      return
+    if (valorNumerico <= 0) {
+        Alert.alert('Valor inválido', 'Digite um valor maior que zero.')
+        return
     }
 
     setSalvando(true)
@@ -125,19 +135,19 @@ export default function CriarMeta() {
 
       {metaExistente && (
         <Text style={styles.metaAtual}>
-          Meta atual: R$ {Number(metaExistente.valor_meta).toFixed(2)}
+          Meta atual: {formatarMoeda(Number(metaExistente.valor_meta))}
         </Text>
       )}
 
       <Text style={styles.label}>Valor da meta (R$)</Text>
       <TextInput
         style={styles.input}
-        placeholder="Ex: 10000.00"
+        placeholder="R$ 0,00"
         placeholderTextColor="#aaa"
         keyboardType="numeric"
-        value={valor}
-        onChangeText={setValor}
-      />
+        value={valorDisplay}
+        onChangeText={handleChangeValor}
+        />
 
       <TouchableOpacity
         style={styles.botao}
