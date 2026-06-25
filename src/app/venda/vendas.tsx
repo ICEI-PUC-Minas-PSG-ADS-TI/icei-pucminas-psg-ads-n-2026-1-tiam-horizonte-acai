@@ -26,19 +26,19 @@ const menuItems = [
     route: '/venda/registrar-venda',
   },
   {
-    label: 'Meta Mensal',
-    icon: 'trophy-outline',
-    route: '/relatorio/meta-mensal',
-  },
-  {
-    label: 'Gerar Relatórios',
+    label: 'Relatórios',
     icon: 'bar-chart-outline',
-    route: '/relatorio/gerar-relatorios',
+    route: '/relatorio/relatorio-vendas',
   },
   {
-    label: 'Exibir Ranking',
+    label: 'Ranking de Clientes',
     icon: 'medal-outline',
-    route: '/relatorio/ranking',
+    route: '/clientes/ranking-cliente',
+  },
+  {
+    label: 'Ranking de Vendedores',
+    icon: 'medal-outline',
+    route: '/colaborador/ranking-vendedores',
   },
 ];
 
