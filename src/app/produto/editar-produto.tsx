@@ -136,7 +136,7 @@ export default function EditarProdutoScreen() {
   }
 
   return (
-    <ProtectedRoute permitidos={['GESTOR', 'ADMINISTRADOR']}>
+    <ProtectedRoute permitidos={['GESTOR', 'ADMINISTRADOR', 'ESTOQUISTA']}>
       <LinearGradient {...pageGradientProps()}>
         <StatusBar barStyle="light-content" />
         <SafeAreaView style={styles.safe}>
