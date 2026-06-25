@@ -6,12 +6,16 @@ import {
   StyleSheet,
   FlatList,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { paleta } from '@/constants/theme'
 import BarraMeta from '@/components/barra-meta'
 import { formatarMoeda } from '@/helpers/format'
 import { LinearGradient } from 'expo-linear-gradient'
 import { pageGradientProps } from '@/constants/theme'
+import { useRouter } from 'expo-router'
+import { Ionicons } from '@expo/vector-icons'
 
 function getInicioMesAtual() {
   const agora = new Date()
@@ -29,6 +33,7 @@ function getMesAnoAtual() {
 }
 
 export default function RankingVendedores() {
+  const router = useRouter()
   const [ranking, setRanking] = useState([])
   const [totalGeral, setTotalGeral] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -81,6 +86,13 @@ export default function RankingVendedores() {
 
   return (
     <LinearGradient {...pageGradientProps()}>
+    <SafeAreaView style={styles.safe}>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.iconBtn} onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={24} color={paleta.BRANCO} />
+        </TouchableOpacity>
+        <View style={{ width: 36 }} />
+      </View>
     <View style={styles.container}>
       <Text style={styles.titulo}>Ranking de Vendedores</Text>
       <Text style={styles.subtitulo}>{getMesAnoAtual()}</Text>
@@ -135,15 +147,36 @@ export default function RankingVendedores() {
         </>
       )}
     </View>
+    </SafeAreaView>
     </LinearGradient>
   )
 }
 
 const styles = StyleSheet.create({
+  safe: { flex: 1, paddingHorizontal: 16 },
+
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 12,
+    paddingBottom: 8,
+  },
+
+  iconBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1.5,
+    borderColor: paleta.VERDE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
   container: {
     flex: 1,
-    paddingTop: 60,
-    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingHorizontal: 0,
   },
   titulo: {
     fontSize: 24,

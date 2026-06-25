@@ -12,9 +12,7 @@ import {
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '@/lib/supabase';
-import {
-    SafeAreaView,
-} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import {
     salvarVendaOffline
@@ -423,7 +421,13 @@ export default function RegistrarVenda() {
               ]}
             >
             <LinearGradient {...pageGradientProps()}>
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView style={styles.safe}>
+                <View style={styles.header}>
+                    <TouchableOpacity style={styles.iconBtn} onPress={() => router.back()}>
+                        <Ionicons name="arrow-back" size={24} color={paleta.BRANCO} />
+                    </TouchableOpacity>
+                    <View style={{ width: 36 }} />
+                </View>
                 <ScrollView contentContainerStyle={styles.container}>
 
                     <Text style={styles.titulo}>
@@ -633,8 +637,28 @@ export default function RegistrarVenda() {
     );
 }
 const styles = StyleSheet.create({
+    safe: { flex: 1, paddingHorizontal: 20 },
+
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingTop: 12,
+        paddingBottom: 8,
+    },
+
+    iconBtn: {
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        borderWidth: 1.5,
+        borderColor: paleta.VERDE,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
     container: {
-        padding: 20,
+        padding: 0,
     },
 
     titulo: {

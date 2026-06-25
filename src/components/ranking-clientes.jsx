@@ -8,10 +8,13 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { paleta } from '@/constants/theme'
 import { formatarMoeda } from '@/helpers/format'
 import { LinearGradient } from 'expo-linear-gradient'
 import { pageGradientProps } from '@/constants/theme'
+import { useRouter } from 'expo-router'
+import { Ionicons } from '@expo/vector-icons'
 
 const PERIODOS = ['Mensal', 'Trimestral', 'Anual']
 
@@ -31,6 +34,7 @@ function getIntervalo(periodo) {
 }
 
 export default function RankingClientes() {
+  const router = useRouter()
   const [periodo, setPeriodo] = useState('Mensal')
   const [ranking, setRanking] = useState([])
   const [loading, setLoading] = useState(false)
@@ -80,6 +84,13 @@ export default function RankingClientes() {
 
   return (
     <LinearGradient {...pageGradientProps()}>
+    <SafeAreaView style={styles.safe}>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.iconBtn} onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={24} color={paleta.BRANCO} />
+        </TouchableOpacity>
+        <View style={{ width: 36 }} />
+      </View>
     <View style={styles.container}>
       <Text style={styles.titulo}>Ranking de Clientes</Text>
 
@@ -145,15 +156,36 @@ export default function RankingClientes() {
         </>
       )}
     </View>
+    </SafeAreaView>
     </LinearGradient>
   )
 }
 
 const styles = StyleSheet.create({
+  safe: { flex: 1, paddingHorizontal: 16 },
+
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 12,
+    paddingBottom: 8,
+  },
+
+  iconBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1.5,
+    borderColor: paleta.VERDE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
   container: {
     flex: 1,
-    paddingTop: 60,
-    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingHorizontal: 0,
   },
   titulo: {
     fontSize: 24,
